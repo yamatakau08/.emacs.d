@@ -33,4 +33,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;; google-translate
 (load "~/.emacs.d/.google-translate.el")
 
+;; migemo
+(load "~/.emacs.d/.migemo.el")
 
