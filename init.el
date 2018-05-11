@@ -1,10 +1,12 @@
-; Since emacs 24.5.1 on Mac Japanese character is bloken
-; need the following 
-(set-language-environment "Japanese")
+;; package
+;(package-initialize) ; need this line with comment! to prevent form inserting the message automatically 
+(load "~/.emacs.d/.package.el")
 
-; font
-;(add-to-list 'default-frame-alist '(font . "ricty-12"))
-(add-to-list 'default-frame-alist '(font . "Menlo-16"))
+(set-language-environment "Japanese")
+(setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zoneが日本になっていないので、実時間と mode-line 時間表示が異なるので設定
+;; no backup files
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 (defun set-exec-path-from-shell-PATH ()
@@ -21,8 +23,14 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 (set-exec-path-from-shell-PATH)
 
-;; package
-(load "~/.emacs.d/.package.el")
+;; window setting
+(load "~/.emacs.d/window-setting.el")
+
+;; font setting
+(load "~/.emacs.d/font-setting.el")
+
+;; mode-line setting
+(load "~/.emacs.d/.mode-line.el")
 
 ;; ddskk
 (load "~/.emacs.d/.ddskk.el")
@@ -33,4 +41,14 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;; google-translate
 (load "~/.emacs.d/.google-translate.el")
 
+;; migemo
+(load "~/.emacs.d/.migemo.el")
 
+;; migemo
+(load "~/.emacs.d/.search-web.el")
+
+;; for google
+(load "~/.emacs.d/google")
+
+;; dired
+(load "~/.emacs.d/.dired.el")

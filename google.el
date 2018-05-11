@@ -1,6 +1,6 @@
 (require 'browse-url)
 (require 'thingatpt)
-;; w3m-url-encode-string $B$N(B rename $BHG(B (w3m.el $B$rF~$l$F$J$$$+$i(B)
+;; w3m-url-encode-string の rename 版 (w3m.el を入れてないから)
 (defun my-url-encode-string (str &optional coding)
   (apply (function concat)
          (mapcar
@@ -18,22 +18,22 @@
           (append (encode-coding-string (or str "") (or coding 'iso-2022-jp))
                   nil))))
 
-;; google $B$G8!:w!#0z?tL5$7$@$H(B mini-buffer $B$GJT=8$G$-$k!#(B
+;; google で検索。引数無しだと mini-buffer で編集できる。
 (defun google (str &optional flag)
-  "google $B$G8!:w!#0z?tL5$7$@$H(B mini-buffer $B$GJT=8$G$-$k!#(B"
+  "google で検索。引数無しだと mini-buffer で編集できる。"
   (interactive
    (list (cond ((or
-                 ;; mouse drag $B$N8e$G8F$S=P$5$l$?>l9g(B
+                 ;; mouse drag の後で呼び出された場合
                  (eq last-command 'mouse-drag-region) ; for emacs
                  (and (eq last-command 'mouse-track) ; for xemacs
                       (boundp 'primary-selection-extent)
                       primary-selection-extent)
-                 ;; region $B$,3h@-(B
+                 ;; region が活性
                  (and (boundp 'transient-mark-mode) transient-mark-mode
                       (boundp 'mark-active) mark-active) ; for emacs
                  (and (fboundp 'region-active-p)
                       (region-active-p)) ; for xemacs
-                 ;; point $B$H(B mark $B$rF~$lBX$($?8e(B
+                 ;; point と mark を入れ替えた後
                  (eq last-command 'exchange-point-and-mark))
                 (buffer-substring-no-properties
                  (region-beginning) (region-end)))
