@@ -14,6 +14,9 @@
 (setq eol-mnemonic-dos "(CRLF)")
 (setq eol-mnemonic-mac "(CR)")
 
+;; 新規作成時のファイルの文字コードを utf-8-unix
+(set-default-coding-systems 'utf-8-unix)
+
 ;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 (defun set-exec-path-from-shell-PATH ()
   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
