@@ -1,4 +1,4 @@
-; dired にて、windows に関連付けられたファイルを起動する。
+; dired 縺ｫ縺ｦ縲『indows 縺ｫ髢｢騾｣莉倥￠繧峨ｌ縺溘ヵ繧｡繧､繝ｫ繧定ｵｷ蜍輔☆繧九�
 ; http://uenox.ld.infoseek.co.jp/elisp/index.html
 (defun uenox-dired-winstart ()
   "Type '\\[uenox-dired-winstart]': win-start the current line's file."

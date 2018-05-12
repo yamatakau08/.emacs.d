@@ -8,6 +8,12 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
+;; 改行コードを、DOS等の環境名ではなくコード名で表示する
+;; http://d.hatena.ne.jp/mhrs/20061227/p2
+(setq eol-mnemonic-unix "(LF)")
+(setq eol-mnemonic-dos "(CRLF)")
+(setq eol-mnemonic-mac "(CR)")
+
 ;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 (defun set-exec-path-from-shell-PATH ()
   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.

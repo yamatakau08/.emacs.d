@@ -36,7 +36,8 @@
 ;; (set-frame-parameter nil 'alpha 0.85)
 ;; (set-frame-parameter nil 'alpha 50)
 
-; http://d.hatena.ne.jp/khiker/20090809/emacs_opacity
+;; http://d.hatena.ne.jp/khiker/20090809/emacs_opacity
+;; 関数で、alpha度合いを確認
 (defun my-set-frame-alpha (alpha)
 ;  (let ((prompt (format "nalpha:%s" (frame-parameter (selected-frame) 'alpha)))
   (interactive "nalpha:")

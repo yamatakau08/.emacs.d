@@ -4,8 +4,8 @@
   (c-set-style "k&r")
   ;; other customizations can go here
   (setq c-basic-offset 4)
-; case ¤Î label¤ÎÀèÆ¬¤òswitch¤Ë¤½¤í¤¨¤ë
-; c-set-style ¤¬ "ellemtel" ¤Î»ş¤Ë¤ÏÍ­¸ú¤Ë¤¹¤ë¡£ 
+; case ã® labelã®å…ˆé ­ã‚’switchã«ãã‚ãˆã‚‹
+; c-set-style ãŒ "ellemtel" ã®æ™‚ã«ã¯æœ‰åŠ¹ã«ã™ã‚‹ã€‚ 
 ;  (setq c-offsets-alist (append (list '(case-label . 0))
 ;				c-offsets-alist))
   (gtags-mode 1)
