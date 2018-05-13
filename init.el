@@ -61,3 +61,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;; dired
 (load "~/.emacs.d/.dired.el")
+
+;; helm
+(load "~/.emacs.d/.helm.el")
+
