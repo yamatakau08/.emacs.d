@@ -17,6 +17,9 @@
 ;; 新規作成時のファイルの文字コードを utf-8-unix
 (set-default-coding-systems 'utf-8-unix)
 
+(if (file-exists-p "~/.emacs.d/private.el")
+    (load "~/.emacs.d/private.el"))
+
 ;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 (defun set-exec-path-from-shell-PATH ()
   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
@@ -64,3 +67,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;; helm
 (load "~/.emacs.d/.helm.el")
+
+;; magit
+(load "~/.emacs.d/.magit.el")
+
+;; wl
+(load "~/.emacs.d/.wl.el")
