@@ -1,4 +1,7 @@
 ;; for imap connection
+
+(setq ssl-program-name "openssl")
+
 (cond 
   ((equal ssl-program-name "openssl")
    (setq elmo-imap4-default-port 993) ; imap over ssl
