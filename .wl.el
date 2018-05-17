@@ -2,17 +2,13 @@
 
 (setq ssl-program-name "openssl")
 
-(cond 
-  ((equal ssl-program-name "openssl")
-   (setq elmo-imap4-default-port 993) ; imap over ssl
-   (setq ssl-program-arguments '("s_client" "-quiet" "-host" host "-port" service))
-   )
-  ((equal ssl-program-name "gnutls-cli")
-   (setq elmo-imap4-default-port 993)
-;  (setq ssl-program-arguments '("-p" service host))
-   (setq ssl-program-arguments '("--insecure" "-p" service host))
-   )
-  )
+(cond ((equal elmo-imap4-default-stream-type 'ssl)
+       (setq elmo-imap4-default-port 993)
+       (cond ((equal ssl-program-name "openssl")
+	      (setq ssl-program-arguments '("s_client" "-quiet" "-host" host "-port" service)))
+	     ((equal ssl-program-name "gnutls-cli")
+	      ;(setq ssl-program-arguments '("-p" service host)))
+	      (setq ssl-program-arguments '("--insecure" "-p" service host))))))
 
 ;; for summary
 (setq wl-summary-line-format "%n%T%P %Y/%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s") ; %Y 年追加
