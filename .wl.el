@@ -17,9 +17,11 @@
 ; サマリーモードに入った際に、日付逆順でソート
 (defun my-wl-summary-mode-hook ()
   (interactive)
-  (wl-summary-sort-by-date t))
+  (wl-summary-sort-by-date t)
+  (beginning-of-buffer) ; sort後、bufferのトップにカーソルを移動
+)
 ; http://www.ss.scphys.kyoto-u.ac.jp/person/yasui/emacs/mail.html
-; より、サマリモードに入った直後のhookにする事で、正常動作
+; より、サマリモードに入った直後は、wl-summary-prepared-hook にする事で、正常動作
 (add-hook  'wl-summary-prepared-hook 'my-wl-summary-mode-hook) 
 ;(add-hook 'wl-summary-mode-hook     'my-wl-summary-mode-hook)
 
