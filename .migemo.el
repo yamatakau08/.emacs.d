@@ -31,4 +31,7 @@
 (load-library "migemo")
 (migemo-init)
 
-;(setq migemo-isearch-enable-p nil) ; C-s でいつでもmigemoが有効になる
+(unless (file-exists-p migemo-command)
+  (setq migemo-isearch-enable-p nil) ; disable migemo when type C-s
+)
+
