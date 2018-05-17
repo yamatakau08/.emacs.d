@@ -8,6 +8,9 @@
   ;; "正しい設定" より、windows環境の外部コマンドを使うような場合には、絶対パスで記述するほうがよいようだ。
   ;(setq migemo-command "C:/yama/bin/cmigemo-default-win64/cmigemo.exe")
   (setq migemo-command "C:/yama/bin/cmigemo-default-win64/cmigemo") ; file suffixの.exeを指定しなくても動作する
+
+  (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo") ; 相対パスでも動作する
+
   (setq migemo-options '("-q" "--emacs" "-i" "\a")) ;cygwin ruby では動作せず 調査必要!
 
   ;; windows環境では、cp932-unix,utf-8-unixどちらでも動く
