@@ -1,5 +1,10 @@
-;; for imap connection
+;; my .folders setting
+;; # pop
+;; &popuser@pop01.itscom.net "itscom"
+;; # imap
+;; %inbox:user/clear@imap.gmail.com:993! "Gmail"
 
+;; for imap connection
 (setq ssl-program-name "openssl")
 
 (cond ((equal elmo-imap4-default-stream-type 'ssl)
