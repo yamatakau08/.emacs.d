@@ -13,7 +13,8 @@
   (add-to-list 'default-frame-alist '(font . "Ricty Diminished-12")))
   ((eq system-type 'darwin)
    ; (add-to-list 'default-frame-alist '(font . "ricty-15"))) ; フォント名 ricty でも問題ないようだが、windows版と併せておく
-   (add-to-list 'default-frame-alist '(font . "Ricty Diminished-15")))
+   (when (member "Ricty Diminished" (font-family-list))
+     (add-to-list 'default-frame-alist '(font . "Ricty Diminished-15"))))
    ;(add-to-list 'default-frame-alist '(font . "Menlo-16"))
   (t (message "defautl font"))
 )

@@ -1,0 +1,1 @@
+(setq vr/engine 'emacs)
