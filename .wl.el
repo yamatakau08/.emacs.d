@@ -42,22 +42,22 @@
 (setq wl-draft-config-alist
       '(((string-match isp-local-domain wl-draft-parent-folder)
          (template . isp-local-domain)
-         (wl-smtp-posting-user . isp-smtp-posting-user)
-         (wl-smtp-posting-server . isp-smtp-posting-server)
-         (wl-local-domain . isp-local-domain)
+         (wl-smtp-posting-user      . isp-smtp-posting-user)
+         (wl-smtp-posting-server    . isp-smtp-posting-server)
+         (wl-local-domain           . isp-local-domain)
          (wl-smtp-authenticate-type . isp-smtp-authenticate-type)
-         (wl-smtp-posting-port . isp-smtp-posting-port)
-         (wl-smtp-connection-type . isp-smtp-connection-type)
+         (wl-smtp-posting-port      . isp-smtp-posting-port)
+         (wl-smtp-connection-type   . isp-smtp-connection-type)
 	 )
         (
 	 (string-match gmail-local-domain wl-draft-parent-folder)
          (template . gmail-local-domain)
-         (wl-smtp-posting-user . gmail-smtp-posting-user)
-         (wl-smtp-posting-server . gmail-posting-server)
+         (wl-smtp-posting-user      . gmail-smtp-posting-user)
+         (wl-smtp-posting-server    . gmail-posting-server)
          (wl-smtp-authenticate-type . gmail-smtp-authenticate-type)
-         (wl-smtp-posting-port . gmail-smtp-posting-port)
-         (wl-local-domain . gmail-local-domain)
-	 (wl-smtp-connection-type . gmail-connection-type) ; http://tototoshi.hatenablog.com/entry/20100602/1275486312
+         (wl-smtp-posting-port      . gmail-smtp-posting-port)
+         (wl-local-domain           . gmail-local-domain)
+	 (wl-smtp-connection-type   . gmail-connection-type) ; http://tototoshi.hatenablog.com/entry/20100602/1275486312
 	 )))
 
 (setq wl-template-alist
