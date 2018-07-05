@@ -29,14 +29,16 @@
   (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict"))
 )
 
-(setq migemo-user-dictionary  nil)
-(setq migemo-regex-dictionary nil)
-
 (load-library "migemo")
 (migemo-init)
 
-(unless (file-exists-p migemo-command) ; migemo-command が存在しない場合
-  (message "%s is not found!" migemo-command)
+(setq migemo-user-dictionary  nil)
+(setq migemo-regex-dictionary nil)
+
+;; judge if migemo-command exists
+(unless (file-exists-p migemo-command)
+  (message "Install migemo-command: %s" migemo-command)
+  (message "web site for cmigemo on windows https://www.kaoriya.net/software/cmigemo/")
   (setq migemo-isearch-enable-p nil) ; disable migemo
 )
 
