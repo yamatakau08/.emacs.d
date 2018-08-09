@@ -11,12 +11,16 @@
 ;; 改行コードを、DOS等の環境名ではなくコード名で表示する
 ;; http://d.hatena.ne.jp/mhrs/20061227/p2
 (setq eol-mnemonic-unix "(LF)")
-(setq eol-mnemonic-dos "(CRLF)")
-(setq eol-mnemonic-mac "(CR)")
+(setq eol-mnemonic-dos  "(CRLF)")
+(setq eol-mnemonic-mac  "(CR)")
 
 ;; 新規作成時のファイルの文字コードを utf-8-unix
 (set-default-coding-systems 'utf-8-unix)
 
+;;; 対応する括弧(),ブレース{},大括弧［] を強調
+(show-paren-mode t)
+
+;;; 個人設定読み込み
 (if (file-exists-p "~/.emacs.d/private.el")
     (load "~/.emacs.d/private.el"))
 
