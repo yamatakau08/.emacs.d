@@ -1,3 +1,5 @@
+;;; https://gist.github.com/tkhoa2711/ef99938c8752ca3e52c2
+
 (defun get-ip-address (&optional dev)
   "Get the IP-address for device DEV (default: eth0) of the current machine."
   (let ((dev (if dev dev "eth0")))
