@@ -24,8 +24,10 @@
 	(format "%s:%s" host service)
 	"-proxy"
 	(format "%s" wl-proxy-server)
-	"-crlf" ; need this option for Gmail through proxy environment
 	))
+
+(when (eq system-type 'windows-nt) ; may be cygwin is better
+  (nconc ssl-program-arguments '("-crlf"))) ; need this option for Gmail through proxy environment
 
 ;; https://github.com/fumiyas/home-dot-files/blob/master/.wl#L142
 (setq wl-user-mail-address-list
