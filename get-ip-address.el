@@ -17,12 +17,13 @@
       nil)))
     
 (defun private-network-p (first-octet)
-  (if (string= first-octet "192") t nil))
+  (if (string= first-octet "192") t nil)) ; "192" private
 
 (defun check-private-network ()
   (cond 
    ((eq system-type 'windows-nt)
-    (private-network-p (get-ip-address-first-octet "eth0")))
+    (or (private-network-p (get-ip-address-first-octet "eth0"))
+	(private-network-p (get-ip-address-first-octet "wlan0"))))
    ((eq system-type 'darwin) 
     (private-network-p (get-ip-address-first-octet "en0")))
    ((eq system-type 'gnu/linux) ; Linux Mint
