@@ -32,7 +32,7 @@
 	  "-connect"
 	  (format "%s:%s" host service)
 	  "-proxy"
-	  (format "%s" wl-proxy-server)
+	  (format "%s:%s" wl-proxy-server wl-proxy-port)
 	  )))
 
 (when (eq system-type 'windows-nt) ; may be cygwin is better
