@@ -17,14 +17,23 @@
 	("!socks" socks socks socks-open-network-stream)
 	("!direct" direct nil open-network-stream)))
 
-(setq ssl-program-arguments
-      '("s_client"
-	"-quiet"
-	"-connect"
-	(format "%s:%s" host service)
-	"-proxy"
-	(format "%s" wl-proxy-server)
-	))
+(if (check-private-network)
+    ;; for private network
+    (setq ssl-program-arguments
+	  '("s_client"
+	    "-quiet"
+	    "-connect"
+	    (format "%s:%s" host service)
+	    ))
+  ;; for company network
+  (setq ssl-program-arguments
+	'("s_client"
+	  "-quiet"
+	  "-connect"
+	  (format "%s:%s" host service)
+	  "-proxy"
+	  (format "%s" wl-proxy-server)
+	  )))
 
 (when (eq system-type 'windows-nt) ; may be cygwin is better
   (nconc ssl-program-arguments '("-crlf"))) ; need this option for Gmail through proxy environment
