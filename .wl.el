@@ -64,11 +64,11 @@
 	 (string-match gmail-local-domain wl-draft-parent-folder)
          (template . gmail-local-domain)
          (wl-smtp-posting-user      . gmail-smtp-posting-user)
-         (wl-smtp-posting-server    . gmail-posting-server)
+         (wl-smtp-posting-server    . gmail-smtp-posting-server)
          (wl-smtp-authenticate-type . gmail-smtp-authenticate-type)
          (wl-smtp-posting-port      . gmail-smtp-posting-port)
          (wl-local-domain           . gmail-local-domain)
-	 (wl-smtp-connection-type   . gmail-connection-type) ; http://tototoshi.hatenablog.com/entry/20100602/1275486312
+	 (wl-smtp-connection-type   . gmail-smtp-connection-type) ; http://tototoshi.hatenablog.com/entry/20100602/1275486312
 	 )))
 
 (setq wl-template-alist
