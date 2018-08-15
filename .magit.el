@@ -5,6 +5,7 @@
 ;;; https://magit.vc/manual/magit/Repository-Setup.html
 (setq magit-clone-set-remote.pushDefault t)
 
+(autoload 'magit-read-string-ns "magit-utils.el") ; for the following redefine magit-clone
 (defun magit-clone (repository directory)
   (interactive
    (let ((url (magit-read-string-ns "Clone repository" "git@github.com:Username/Repository.git")))
