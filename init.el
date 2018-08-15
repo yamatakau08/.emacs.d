@@ -20,6 +20,10 @@
 ;;; 対応する括弧(),ブレース{},大括弧［] を強調
 (show-paren-mode t)
 
+;;; check if ip-address is private
+(if (file-exists-p "~/.emacs.d/get-ip-address.el")
+    (load "~/.emacs.d/get-ip-address.el"))
+
 ;;; 個人設定読み込み
 (if (file-exists-p "~/.emacs.d/private.el")
     (load "~/.emacs.d/private.el"))
