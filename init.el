@@ -85,3 +85,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;; cygwin-mount
 (if (eq system-type 'windows-nt)
     (load "~/.emacs.d/.cygwin-mount.el"))
+
+;; wl
+(load "~/.emacs.d/.org-mode.el")
+
