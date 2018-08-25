@@ -94,3 +94,7 @@
 ;; より、サマリモードに入った直後は、wl-summary-prepared-hook にする事で、正常動作
 (add-hook  'wl-summary-prepared-hook 'my-wl-summary-mode-hook) 
 ;(add-hook 'wl-summary-mode-hook     'my-wl-summary-mode-hook)
+
+;;; http://www.kaisei.org/person/waasuke/2012/12/05/elmo_message_fetch_confirm/
+;;; "Wanderlustで大きいサイズのメールも確認なくフェッチ" より
+(setq elmo-message-fetch-confirm nil)
