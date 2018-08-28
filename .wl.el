@@ -1,15 +1,18 @@
-;; set t in trouble
+;;; set t in trouble
 (setq elmo-imap4-debug t)
 (setq elmo-pop3-debug  t)
 
-;; need to use openssl in https://github.com/wanderlust/wanderlust/blob/master/utils/ssl.el
-;; Since package doesn't install ssl.el, install manualy.
+;;; need to use openssl in https://github.com/wanderlust/wanderlust/blob/master/utils/ssl.el
+;;; Since package doesn't install ssl.el, install manualy.
 (load "ssl.el")
 
-;; for imap connection
-(setq ssl-program-name "openssl") ; should be OpenSSL 1.1.1-pre6 (beta) 1 May 2018 to use proxy
+;;; for imap connection
+(if (eq system-type 'windows-nt)
+    ; should be OpenSSL Ver 1.1 above to use proxy option
+    (setq ssl-program-name "/cygdrive/c/winbin/OpenSSL-Win64/bin/openssl.exe")
+  (setq ssl-program-name "openssl"))
 
-(setq elmo-imap4-default-stream-type 'ssl)
+(setq elmo-imap4-default-stream-type 'ssl) ; Infoより、これを設定した場合は、.foldersに '!' を付けなくてもよい
 
 (setq elmo-network-stream-type-alist
       '(("!" ssl ssl open-ssl-stream)
@@ -35,19 +38,21 @@
 	  (format "%s:%s" wl-proxy-server wl-proxy-port)
 	  )))
 
-(when (eq system-type 'windows-nt) ; may be cygwin is better
-  (nconc ssl-program-arguments '("-crlf"))) ; need this option for Gmail through proxy environment
+;;; In case of openssl ver 1.1 above my own compiled on cygwin environment, need to "-crlf"
+;;; It's the best to user Windows openssl until openssl ver1.1 above on cygin is released
+;(when (eq system-type 'windows-nt) ; may be cygwin is better
+;  (nconc ssl-program-arguments '("-crlf"))) ; need this option for Gmail through proxy environment
 
-;; https://github.com/fumiyas/home-dot-files/blob/master/.wl#L142
+;;; https://github.com/fumiyas/home-dot-files/blob/master/.wl#L142
 (setq wl-user-mail-address-list
       (list wl-from isp-smtp-posting-user gmail-smtp-posting-user))
 ;(setq wl-user-mail-address-list
 ;      `(,wl-from ,isp-smtp-posting-user ,gmail-smtp-posting-user)) ; care backquote '`' before '(' and ',' to evaluate the argument
 
-;; select correct email address when we _start_ writing a draft.
+;;; select correct email address when we _start_ writing a draft.
 (add-hook 'wl-mail-setup-hook 'wl-draft-config-exec)
-;; don't apply the templates when sending the draft otherwise
-;; choosing another template with C-c C-j won't have any effect
+;;; don't apply the templates when sending the draft otherwise
+;;; choosing another template with C-c C-j won't have any effect
 (remove-hook 'wl-draft-send-hook 'wl-draft-config-exec)
 
 (setq wl-draft-config-alist
@@ -80,17 +85,42 @@
          ("From"  . wl-from))
 	))
 
-;; for summary
+;;; for summary
 (setq wl-summary-line-format "%n%T%P %Y/%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s") ; %Y 年追加
 
-;; サマリーモードに入った際に、日付逆順でソート
+;;; サマリーモードに入った際に、日付逆順でソート
 (defun my-wl-summary-mode-hook ()
   (interactive)
   (wl-summary-sort-by-date t)
   (beginning-of-buffer) ; sort後、bufferのトップにカーソルを移動
 )
 
-;; http://www.ss.scphys.kyoto-u.ac.jp/person/yasui/emacs/mail.html
-;; より、サマリモードに入った直後は、wl-summary-prepared-hook にする事で、正常動作
+;;; http://www.ss.scphys.kyoto-u.ac.jp/person/yasui/emacs/mail.html
+;;; より、サマリモードに入った直後は、wl-summary-prepared-hook にする事で、正常動作
 (add-hook  'wl-summary-prepared-hook 'my-wl-summary-mode-hook) 
 ;(add-hook 'wl-summary-mode-hook     'my-wl-summary-mode-hook)
+
+;;;
+;;; 通常の設定では、表示できない文字対応
+;;;
+;;; gb2312(中国からのメール)の場合に必要
+(when (coding-system-p 'gbk)
+  (define-coding-system-alias 'cn-gb-2312 'gbk)
+  (define-coding-system-alias 'gb2312 'gbk))
+
+;;; 丸付数字が表示されない対応
+;;; "丸付き数字" "はしごだか"が入った JISメールを読むための設定
+(coding-system-put 'iso-2022-jp :decode-translation-table
+       '(cp51932-decode japanese-ucs-cp932-to-jis-map))
+
+;;; "丸付き数字" "はしごだか"が入った JISメールを送るための設定
+;;; 以下設定をしない場合は、本来の utf-8 で送付 (消極 Windows派になる)
+(coding-system-put 'iso-2022-jp :encode-translation-table
+      '(cp51932-encode))
+
+;;; charset の判定する際に cp932 を sjis より優先順位を上げておくことで
+;;; 機種依存文字を表示できるようにする (charset と coding-system の優先度設定)。
+(if (>= emacs-major-version 23)
+    (progn
+      (set-charset-priority 'ascii 'japanese-jisx0208 'latin-jisx0201 'katakana-jisx0201 'iso-8859-1 'cp1252 'unicode)
+      (set-coding-system-priority 'utf-8 'euc-jp 'iso-2022-jp 'cp932)))
