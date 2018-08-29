@@ -104,10 +104,15 @@
 ;;; "Wanderlustで大きいサイズのメールも確認なくフェッチ" より
 (setq elmo-message-fetch-confirm nil)
 
+;;; 大きなメッセージを分割して送信しない
+(setq mime-edit-split-message nil)
+
 ;;;
 ;;; 通常の設定では、表示できない文字対応
 ;;;
 ;;; gb2312(中国からのメール)の場合に必要
+;;; Windows環境?で、Rictiy dimishedフォントを用いていると、summary bufferでのsubject一部文字化けしてしまうので、
+;;; init.el 中の font-setting.el をloadしている所をコメントアウトする
 (when (coding-system-p 'gbk)
   (define-coding-system-alias 'cn-gb-2312 'gbk)
   (define-coding-system-alias 'gb2312 'gbk))
