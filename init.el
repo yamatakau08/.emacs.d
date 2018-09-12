@@ -64,7 +64,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;; migemo
 (load "~/.emacs.d/.migemo.el")
 
-;; migemo
+;; serach-web
 (load "~/.emacs.d/.search-web.el")
 
 ;; for google
