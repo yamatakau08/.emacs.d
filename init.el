@@ -56,7 +56,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (load "~/.emacs.d/.ddskk.el")
 
 ;; howm
-(load "~/.emacs.d/.howm.el")
+;(load "~/.emacs.d/.howm.el")
 
 ;; google-translate
 (load "~/.emacs.d/.google-translate.el")
@@ -64,8 +64,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;; migemo
 (load "~/.emacs.d/.migemo.el")
 
-;; serach-web
-(load "~/.emacs.d/.search-web.el")
+;; search-web
+;(load "~/.emacs.d/.search-web.el")
 
 ;; for google
 (load "~/.emacs.d/google")
