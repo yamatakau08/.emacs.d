@@ -133,3 +133,7 @@
     (progn
       (set-charset-priority 'ascii 'japanese-jisx0208 'latin-jisx0201 'katakana-jisx0201 'iso-8859-1 'cp1252 'unicode)
       (set-coding-system-priority 'utf-8 'euc-jp 'iso-2022-jp 'cp932)))
+
+;;; http://d.hatena.ne.jp/buzztaiki/20071030/1193765910
+;;; IMAP 日本語フォルダ文字化け対策
+(setq elmo-imap4-use-modified-utf7 t)
