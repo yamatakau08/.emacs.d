@@ -28,7 +28,7 @@
 ;;	(font . "bdf-fontset")    ; BDF
 ;;	(font . "tt-fontset")    ; for Meadow2
 	    (width . 80)
-	    (height . 43)
+	    (height . 45)
 	    (top  . 0)
 	    (left . 100)
 	    (alpha . 80) ; 透明度
