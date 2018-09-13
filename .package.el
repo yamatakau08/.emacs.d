@@ -2,8 +2,9 @@
 ;(require 'package)
 
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
-(unless package--initialized
-  (package-initialize)) ; Unnecessary call on Emacs 27
+(package-initialize)
+;(unless package--initialized 
+;  (package-initialize t)) ; Unnecessary call on Emacs 27
 
 ; defaultでは、("gnu" . "http://elpa.gnu.org/packages/") しかなかったので、以下を追加 
 (add-to-list 'package-archives
