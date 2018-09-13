@@ -6,7 +6,7 @@
 ;(unless package--initialized 
 ;  (package-initialize t)) ; Unnecessary call on Emacs 27
 
-; defaultでは、("gnu" . "http://elpa.gnu.org/packages/") しかなかったので、以下を追加 
+;;; defaultでは、("gnu" . "http://elpa.gnu.org/packages/") しかなかったので、以下を追加 
 (add-to-list 'package-archives
  '("melpa" . "http://melpa.org/packages/")
  '("org"   . "http://orgmode.org/elpa/"))
