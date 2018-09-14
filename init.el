@@ -1,10 +1,10 @@
-;; package
-;(package-initialize) ; need this line with comment! to prevent form inserting the message automatically 
+;;; package
+;;; (package-initialize) ; need this line with comment! to prevent form inserting the message automatically 
 (load "~/.emacs.d/.package.el")
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zoneが日本になっていないので、実時間と mode-line 時間表示が異なるので設定
-;; no backup files
+;;; no backup files
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
@@ -82,7 +82,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;; wl
 (load "~/.emacs.d/.wl.el")
 
-;; cygwin-mount
+;;; cygwin-mount
 (if (eq system-type 'windows-nt)
     (load "~/.emacs.d/.cygwin-mount.el"))
 
