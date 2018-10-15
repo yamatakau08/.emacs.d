@@ -27,6 +27,12 @@
   (setq migemo-options '("-q" "--emacs"))
   (setq migemo-coding-system 'utf-8-unix)
   (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict"))
+
+ ((eq system-type 'gnu/linux)
+  (setq migemo-command "/usr/bin/cmigemo")
+  (setq migemo-options '("-q" "--emacs"))
+  (setq migemo-coding-system 'utf-8-unix)
+  (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict"))
 )
 
 (load-library "migemo")

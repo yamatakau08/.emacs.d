@@ -1,20 +1,20 @@
-;; package
-;(package-initialize) ; need this line with comment! to prevent form inserting the message automatically 
+;;; package
+;;; (package-initialize) ; need this line with comment! to prevent form inserting the message automatically 
 (load "~/.emacs.d/.package.el")
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zoneが日本になっていないので、実時間と mode-line 時間表示が異なるので設定
-;; no backup files
+;;; no backup files
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
-;; 改行コードを、DOS等の環境名ではなくコード名で表示する
-;; http://d.hatena.ne.jp/mhrs/20061227/p2
+;;; 改行コードを、DOS等の環境名ではなくコード名で表示する
+;;; http://d.hatena.ne.jp/mhrs/20061227/p2
 (setq eol-mnemonic-unix "(LF)")
 (setq eol-mnemonic-dos  "(CRLF)")
 (setq eol-mnemonic-mac  "(CR)")
 
-;; 新規作成時のファイルの文字コードを utf-8-unix
+;;; 新規作成時のファイルの文字コードを utf-8-unix
 (set-default-coding-systems 'utf-8-unix)
 
 ;;; 対応する括弧(),ブレース{},大括弧［] を強調
@@ -28,7 +28,7 @@
 (if (file-exists-p "~/.emacs.d/private.el")
     (load "~/.emacs.d/private.el"))
 
-;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
+;;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 (defun set-exec-path-from-shell-PATH ()
   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
 
@@ -43,49 +43,51 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 (set-exec-path-from-shell-PATH)
 
-;; window setting
+;;; window setting
 (load "~/.emacs.d/window-setting.el")
 
-;; font setting
+;;; font setting
 (load "~/.emacs.d/font-setting.el")
 
-;; mode-line setting
+;;; mode-line setting
 (load "~/.emacs.d/.mode-line.el")
 
-;; ddskk
+;;; ddskk
 (load "~/.emacs.d/.ddskk.el")
 
-;; howm
-(load "~/.emacs.d/.howm.el")
+;;; howm
+;(load "~/.emacs.d/.howm.el")
 
-;; google-translate
+;;; google-translate
 (load "~/.emacs.d/.google-translate.el")
 
-;; migemo
+;;; migemo
 (load "~/.emacs.d/.migemo.el")
 
-;; serach-web
-(load "~/.emacs.d/.search-web.el")
+;;; search-web
+;(load "~/.emacs.d/.search-web.el")
 
-;; for google
+;;; for google
 (load "~/.emacs.d/google")
 
-;; dired
+;;; dired
 (load "~/.emacs.d/.dired.el")
 
-;; helm
+;;; helm
 (load "~/.emacs.d/.helm.el")
 
-;; magit
+;;; magit
 (load "~/.emacs.d/.magit.el")
 
-;; wl
+;;; wl
 (load "~/.emacs.d/.wl.el")
 
-;; cygwin-mount
+;;; cygwin-mount
 (if (eq system-type 'windows-nt)
     (load "~/.emacs.d/.cygwin-mount.el"))
 
-;; wl
+;;; org-mode
 (load "~/.emacs.d/.org-mode.el")
 
+;;; helm-google
+;(load "~/.emacs.d/.helm-google.el")
