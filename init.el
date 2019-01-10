@@ -56,7 +56,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (load "~/.emacs.d/.ddskk.el")
 
 ;;; howm
-;(load "~/.emacs.d/.howm.el")
+(load "~/.emacs.d/.howm.el")
 
 ;;; google-translate
 (load "~/.emacs.d/.google-translate.el")

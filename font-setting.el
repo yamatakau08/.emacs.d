@@ -13,5 +13,8 @@
 ;;; fontの設定を行なわない場合、"Courie New 標準 サイズ10 文字セット 欧米" が選択される様だが、SKKの変換モードに入れると非常に重くなってしまうので、使用を止める
 ;(if (member "Ricty Diminished" (font-family-list))
 ;    (add-to-list 'default-frame-alist '(font . "Ricty Diminished-15")))
-(if (member "Meiryo UI" (font-family-list))
-    (add-to-list 'default-frame-alist '(font . "Meiryo UI-12")))
+
+;(if (member "Meiryo UI" (font-family-list))
+;    (add-to-list 'default-frame-alist '(font . "Meiryo UI-12"))) ; 等幅フォントでないので使用をやめる
+(if (member "Myrica M" (font-family-list))
+    (add-to-list 'default-frame-alist '(font . "Myrica M")))
