@@ -3,7 +3,7 @@
 (setq magit-push-current-set-remote-if-missing nil)
 
 ;;; https://magit.vc/manual/magit/Repository-Setup.html
-(setq magit-clone-set-remote.pushDefault t)
+;(setq magit-clone-set-remote.pushDefault t)
 
 (autoload 'magit-read-string-ns "magit-utils.el") ; for the following redefine magit-clone
 (defun magit-clone (repository directory)
