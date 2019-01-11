@@ -1,10 +1,13 @@
 ;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:package:start
 ;(require 'package)
 
+; Unnecessary call on Emacs 27
+; https://github.com/jkitchin/scimax/issues/194#issuecomment-380470596
+(if (< emacs-major-version 27)
+    (package-initialize))
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
-(package-initialize)
 ;(unless package--initialized 
-;  (package-initialize t)) ; Unnecessary call on Emacs 27
+;  (package-initialize t))
 
 ;;; to avoid the following error message in company network on Emacs 27.0
 ;;; in case, M-x pakage-refresh-contents
