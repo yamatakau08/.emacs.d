@@ -20,9 +20,6 @@
 	  `(("http"  . ,proxy-server-port)
 	    ("https" . ,proxy-server-port)))))
 
-;(setq url-proxy-services
-;      '(("http"  . "proxy.kanto.sony.co.jp:10080")
-;        ("https" . "proxy.kanto.sony.co.jp:10080")))
 ;;; in case, M-x list-packages with the above settings
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547100014738900
 ;;; Error while verifying signature archive-contents.sig:
