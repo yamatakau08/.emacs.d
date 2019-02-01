@@ -8,3 +8,6 @@
 (global-set-key "\C-xt"    'skk-tutorial)
 
 ;(setq skk-tut-file "~/mylisp/ddskk/etc/SKK.tut")
+
+;;; https://www.arat.xyz/wordpress/?p=129
+(setq skk-jisyo-code 'utf-8) ; refer skk-vars.el
