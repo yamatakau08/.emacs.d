@@ -52,6 +52,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;; mode-line setting
 (load "~/.emacs.d/.mode-line.el")
 
+;;; cursr setting
+(load "~/.emacs.d/.cursor-setting.el")
+
 ;;; ddskk
 (load "~/.emacs.d/.ddskk.el")
 
