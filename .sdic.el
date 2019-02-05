@@ -15,7 +15,7 @@
 ;;; http://pogin.hatenablog.com/entry/20110418/1303062923
 (setq sdic-eiwa-dictionary-list
       ;;英和検索で使用する辞書
-      '((sdicf-client "~/.emacs.d/sdic/gene.sdic"))
+      '((sdicf-client "~/.emacs.d/dict/gene.sdic"))
       ;; 和英検索で使用する辞書
 ;      sdic-waei-dictionary-list
 ;     '((sdicf-client "/usr/share/dict/jedict.sdic"))
