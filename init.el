@@ -24,6 +24,8 @@
 
 ;;; 新規作成時のファイルの文字コードを utf-8-unix
 (set-default-coding-systems 'utf-8-unix)
+;;; sdic 和英検索がcygwinで正しく動作しない対応
+(prefer-coding-system 'utf-8-unix)
 
 ;;; 対応する括弧(),ブレース{},大括弧［] を強調
 (show-paren-mode t)

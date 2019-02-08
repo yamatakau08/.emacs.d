@@ -1,10 +1,14 @@
 ;;; sdic-mode 用の設定
+;;; for Windows Emacs+Cygwin
+;;; default
+(setq sdic-default-coding-system  'utf-8) 
+(setq sdicf-default-coding-system 'utf-8)
+
 (setq load-path (cons "~/.emacs.d/sdic/lisp" load-path))
 (autoload 'sdic-describe-word "sdic" "英単語の意味を調べる" t nil)
-(global-set-key "\C-cw" 'sdic-describe-word)
-(global-set-key "\C-t" 'sdic-describe-word)
+(global-set-key "\C-cW" 'sdic-describe-word) ; original mapping C-cw
 (autoload 'sdic-describe-word-at-point "sdic" "カーソルの位置の英単語の意味を調べる" t nil)
-(global-set-key "\C-cW" 'sdic-describe-word-at-point)
+(global-set-key "\C-cw" 'sdic-describe-word-at-point) ; original mapping C-cW
 
 ;;; work arround for
 ;;; eval-buffer: Symbol’s value as variable is void: default-fill-column
@@ -15,8 +19,14 @@
 ;;; http://pogin.hatenablog.com/entry/20110418/1303062923
 (setq sdic-eiwa-dictionary-list
       ;;英和検索で使用する辞書
-      '((sdicf-client "~/.emacs.d/dict/gene.sdic"))
+      '(
+	(sdicf-client "~/.emacs.d/dict/gene-euc.sdic")   ; Mac/Linux?
+	(sdicf-client "~/.emacs.d/dict/gene-utf8.sdic")  ; Win+cygwin
+	)
       ;; 和英検索で使用する辞書
-;      sdic-waei-dictionary-list
-;     '((sdicf-client "/usr/share/dict/jedict.sdic"))
+      sdic-waei-dictionary-list
+      '(
+	(sdicf-client "~/.emacs.d/dict/jgene-euc.sdic")  ; Mac/Linux?
+	(sdicf-client "~/.emacs.d/dict/jgene-utf8.sdic" (strategy direct)) ; Win+cygwin
+	)
 )
