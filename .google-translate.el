@@ -19,3 +19,7 @@
 
 (setq google-translate-default-source-language "en"
       google-translate-default-target-language "ja")
+
+;;; see google-translate-default-ui.el
+(global-set-key (kbd "C-c r") 'google-translate-at-point-reverse)
+(global-set-key (kbd "C-c R") 'google-translate-query-translate-reverse)
