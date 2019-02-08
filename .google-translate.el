@@ -14,7 +14,10 @@
 ; http://emacs.1067599.n8.nabble.com/bug-11788-url-http-does-not-properly-handle-https-over-proxy-td46070.html
 ; のパッチをあてる事で解決 
 
-(global-set-key "\C-ct" 'google-translate-at-point)
+(require 'google-translate-default-ui) ; need for my-google-translate-at-point
+
+;(global-set-key "\C-ct" 'google-translate-at-point)
+(global-set-key "\C-ct" 'my-google-translate-at-point)
 (global-set-key "\C-cT" 'google-translate-query-translate)
 
 (setq google-translate-default-source-language "en"
@@ -23,3 +26,12 @@
 ;;; see google-translate-default-ui.el
 (global-set-key (kbd "C-c r") 'google-translate-at-point-reverse)
 (global-set-key (kbd "C-c R") 'google-translate-query-translate-reverse)
+
+
+(defun my-google-translate-at-point ()
+  (interactive)
+  (if (string-match "\\cj" (thing-at-point 'word))
+      (%google-translate-at-point nil t)
+    (%google-translate-at-point nil nil)
+    )
+  )
