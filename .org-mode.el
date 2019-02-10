@@ -9,3 +9,7 @@
 ;;; auto-mode-alist の設定だけで一旦対応
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.txt$"  . org-mode))
+
+;;; DONEの時刻を記録 
+;;; TODOをC-c C-tでDONEした際に、CLOSED: [YYYY-MM-DD...] が追加される
+;(setq org-log-done 'time) ; C-c C-x C-i(IN)後、C-c C-tで、DONEした際に、:LOGBOOK:.. END内に終了時間が自動でつくので不要 
