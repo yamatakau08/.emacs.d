@@ -20,13 +20,13 @@
 (setq sdic-eiwa-dictionary-list
       ;;英和検索で使用する辞書
       '(
-	(sdicf-client "~/.emacs.d/dict/gene-euc.sdic")   ; Mac/Linux?
+;	(sdicf-client "~/.emacs.d/dict/gene-euc.sdic")   ; Mac/Linux?
 	(sdicf-client "~/.emacs.d/dict/gene-utf8.sdic")  ; Win+cygwin
 	)
       ;; 和英検索で使用する辞書
       sdic-waei-dictionary-list
       '(
-	(sdicf-client "~/.emacs.d/dict/jgene-euc.sdic")  ; Mac/Linux?
+;	(sdicf-client "~/.emacs.d/dict/jgene-euc.sdic")  ; Mac/Linux?
 	(sdicf-client "~/.emacs.d/dict/jgene-utf8.sdic" (strategy direct)) ; Win+cygwin
 	)
 )
