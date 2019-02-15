@@ -28,10 +28,18 @@
 ;;; gpg: no valid OpenPGP data found.
 (setq package-check-signature nil)
 
-;;; defaultでは、("gnu" . "http://elpa.gnu.org/packages/") しかなかったので、以下を追加 
-(add-to-list 'package-archives
- '("melpa" . "https://melpa.org/packages/")
- '("org"   . "https://orgmode.org/elpa/"))
+;;; defaultでは、("gnu" . "https://elpa.gnu.org/packages/") しかなかったので、以下を追加 
+(if  (check-private-network)
+    ;; for private network
+    (add-to-list 'package-archives
+		 '("melpa" . "https://melpa.org/packages/")
+		 '("org"   . "https://orgmode.org/elpa/"))
+  ;; for company network
+  ;; Since suddenly cannot connect to ("gnu" . "https://elpa.gnu.org/packages/")
+  ;; use setq, not add-to-list
+  (setq package-archives
+	'(("org"   . "https://orgmode.org/elpa/")
+	  ("melpa" . "https://melpa.org/packages/"))))
 
 ;; no effect! need to study
 ;; avoid to write custom-set-variables setting automatically in init.el
