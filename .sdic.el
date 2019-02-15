@@ -30,3 +30,25 @@
 	(sdicf-client "~/.emacs.d/dict/jgene-utf8.sdic" (strategy direct)) ; Win+cygwin
 	)
 )
+
+;;;
+;(defun my-sdic-register-item (from to)
+;  (interactive
+;   (let ((from (read-string "From: " (sdic-word-at-point)))
+;           (to (read-string "To: ")))
+;     (list from to)))
+;  (message "From: %s, To: %s" from to))
+
+(defun my-sdic-register-item (from to)
+  (interactive
+   (let ((from (read-string "From: " (sdic-word-at-point)))
+           (to (read-string "To: ")))
+     (list from to)))
+  ; refer https://sleepy-yoshi.hatenablog.com/entry/20110322/p1
+  (with-temp-buffer 
+    (insert (format "%s : %s\n" from to))
+    (append-to-file nil t "~/.mydic")))
+
+(setq sdic-mode-hook
+      '(lambda ()
+	 (define-key sdic-mode-map "r" 'my-sdic-register-item)))
