@@ -97,5 +97,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;; helm-google
 ;(load "~/.emacs.d/.helm-google.el")
 
-;;;
+;;; sdic
 (load "~/.emacs.d/.sdic.el")
+
+;;; org-drill
+(load "~/.emacs.d/.org-drill.el")
