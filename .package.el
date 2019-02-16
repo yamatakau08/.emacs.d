@@ -29,17 +29,23 @@
 (setq package-check-signature nil)
 
 ;;; defaultでは、("gnu" . "https://elpa.gnu.org/packages/") しかなかったので、以下を追加 
-(if  (check-private-network)
+(if (check-private-network)
     ;; for private network
-    (add-to-list 'package-archives
-		 '("melpa" . "https://melpa.org/packages/")
-		 '("org"   . "https://orgmode.org/elpa/"))
+;    (add-to-list 'package-archives
+;		 '(("melpa" . "https://melpa.org/packages/")
+;		   ("org"   . "https://orgmode.org/elpa/")))
+    ;; add-to-list時、自宅でも Failed to download ‘(melpa . https://melpa.org/packages/)’ archive. になる場合があったので、setqにする
+    (setq package-archives
+	  '(("gnu" . "https://elpa.gnu.org/packages/")
+	    ("org"   . "https://orgmode.org/elpa/")
+	    ("melpa" . "https://melpa.org/packages/")))
   ;; for company network
   ;; Since suddenly cannot connect to ("gnu" . "https://elpa.gnu.org/packages/")
   ;; use setq, not add-to-list
   (setq package-archives
 	'(("org"   . "https://orgmode.org/elpa/")
 	  ("melpa" . "https://melpa.org/packages/"))))
+
 
 ;; no effect! need to study
 ;; avoid to write custom-set-variables setting automatically in init.el
