@@ -27,7 +27,9 @@
 (global-set-key (kbd "C-c r") 'google-translate-at-point-reverse)
 (global-set-key (kbd "C-c R") 'google-translate-query-translate-reverse)
 
-
+;;;
+;;; my original function is enable not to care the word is English or Japanese
+;;;
 (defun my-google-translate-at-point ()
   (interactive)
   (if (string-match "\\cj" (thing-at-point 'word))
@@ -35,3 +37,25 @@
     (%google-translate-at-point nil nil)
     )
   )
+
+;;; window (buffer with translation) gets focus in google-translate-core-ui.el
+(setq google-translate-pop-up-buffer-set-focus t)
+
+(setq mydic_org "~/.emacs.d/dict/mydic.org") ; share for sdic
+
+(defun my-google-translate-register-item (from to)
+  (interactive
+   (if (string= "*Google Translate*" (buffer-name))
+       (let ((from (read-string "From: " (thing-at-point 'word)))
+	     (to (read-string "To: ")))
+	 (list from to))))
+  (if (string-match "\\cj" from)
+      (progn (setq jword from)
+	     (setq eword to))
+    (progn (setq eword from)
+	   (setq jword to)))
+  ; refer https://sleepy-yoshi.hatenablog.com/entry/20110322/p1
+  (with-temp-buffer
+    (insert (format "* English :drill:\n%s\n** Answer\n%s\n" eword jword))
+    (append-to-file nil t mydic_org))
+)
