@@ -39,6 +39,8 @@
 ;     (list from to)))
 ;  (message "From: %s, To: %s" from to))
 
+(setq mydic_org "~/.emacs.d/dict/mydic.org")
+
 (defun my-sdic-register-item (from to)
   (interactive
    (let ((from (read-string "From: " (sdic-word-at-point)))
@@ -51,8 +53,8 @@
 	   (setq jword to)))
   ; refer https://sleepy-yoshi.hatenablog.com/entry/20110322/p1
   (with-temp-buffer 
-    (insert (format "%s : %s\n" eword jword))
-    (append-to-file nil t "~/.mydic")))
+    (insert (format "* English :drill:\n%s\n** Answer\n%s\n" eword jword))
+    (append-to-file nil t mydic_org)))
 
 (setq sdic-mode-hook
       '(lambda ()
