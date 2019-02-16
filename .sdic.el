@@ -42,11 +42,16 @@
 (defun my-sdic-register-item (from to)
   (interactive
    (let ((from (read-string "From: " (sdic-word-at-point)))
-           (to (read-string "To: ")))
+         (to (read-string "To: ")))
      (list from to)))
+  (if (string-match "\\cj" from)
+      (progn (setq jword from)
+	     (setq eword to))
+    (progn (setq eword from)
+	   (setq jword to)))
   ; refer https://sleepy-yoshi.hatenablog.com/entry/20110322/p1
   (with-temp-buffer 
-    (insert (format "%s : %s\n" from to))
+    (insert (format "%s : %s\n" eword jword))
     (append-to-file nil t "~/.mydic")))
 
 (setq sdic-mode-hook
