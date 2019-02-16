@@ -1,3 +1,8 @@
+;;; org-version changed to Ver. 9.2.1,、"<e TAB" template doesn't work
+;;; supported by emacs-jp slack
+(when (version< "9.1.4" (org-version))
+      (add-to-list 'org-modules 'org-tempo))
+
 (setq org-edit-src-content-indentation 0) ; ソースブロックの中身が右にずらさないように左端にする
 
 ;;; to remove "Validate" link at the bottom of exported html
