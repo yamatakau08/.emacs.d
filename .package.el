@@ -1,8 +1,8 @@
-;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:package:start
+;;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:package:start
 ;(require 'package)
 
-; Unnecessary call on Emacs 27
-; https://github.com/jkitchin/scimax/issues/194#issuecomment-380470596
+;;; Unnecessary call on Emacs 27
+;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-380470596
 (if (< emacs-major-version 27)
     (package-initialize))
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
@@ -28,24 +28,23 @@
 ;;; gpg: no valid OpenPGP data found.
 (setq package-check-signature nil)
 
-;;; defaultでは、("gnu" . "https://elpa.gnu.org/packages/") しかなかったので、以下を追加 
 (if (check-private-network)
     ;; for private network
-;    (add-to-list 'package-archives
-;		 '(("melpa" . "https://melpa.org/packages/")
-;		   ("org"   . "https://orgmode.org/elpa/")))
+    ;; if package-initialize is not executed, the followin add-to-list make emacs fail
+    (add-to-list 'package-archives
+		 '("melpa" . "https://melpa.org/packages/")
+		 '("org"   . "https://orgmode.org/elpa/"))
     ;; add-to-list時、自宅でも Failed to download ‘(melpa . https://melpa.org/packages/)’ archive. になる場合があったので、setqにする
-    (setq package-archives
-	  '(("gnu" . "https://elpa.gnu.org/packages/")
-	    ("org"   . "https://orgmode.org/elpa/")
-	    ("melpa" . "https://melpa.org/packages/")))
+;    (setq package-archives
+;	  '(("gnu" . "https://elpa.gnu.org/packages/")
+;	    ("org"   . "https://orgmode.org/elpa/")
+;	    ("melpa" . "https://melpa.org/packages/")))
   ;; for company network
   ;; Since suddenly cannot connect to ("gnu" . "https://elpa.gnu.org/packages/")
   ;; use setq, not add-to-list
   (setq package-archives
 	'(("org"   . "https://orgmode.org/elpa/")
 	  ("melpa" . "https://melpa.org/packages/"))))
-
 
 ;; no effect! need to study
 ;; avoid to write custom-set-variables setting automatically in init.el
