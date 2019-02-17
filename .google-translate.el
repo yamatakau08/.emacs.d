@@ -32,7 +32,7 @@
 ;;;
 (defun my-google-translate-at-point ()
   (interactive)
-  (if (string-match "\\cj" (thing-at-point 'word))
+  (if (string-match "\\cj" (thing-at-point 'word)) ; utilize '\\cj' is used in "sdic" 
       (%google-translate-at-point nil t)
     (%google-translate-at-point nil nil)
     )
@@ -41,7 +41,7 @@
 ;;; window (buffer with translation) gets focus in google-translate-core-ui.el
 (setq google-translate-pop-up-buffer-set-focus t)
 
-(setq mydic_org "~/.emacs.d/dict/mydic.org") ; share for sdic
+(setq mydic_org "~/.emacs.d/dict/mydic.org") ; share with "sdic"
 
 (defun my-google-translate-register-item (from to)
   (interactive
@@ -59,3 +59,51 @@
     (insert (format "* English :drill:\n%s\n** Answer\n%s\n" eword jword))
     (append-to-file nil t mydic_org))
 )
+
+;;; modify google-translate-buffer-insert-translation in google-translate-core-ui.el
+(defun google-translate-buffer-insert-translation (gtos)
+  "Insert translation to the current temp buffer."
+  (let ((translation (gtos-translation gtos))
+        (detailed-translation (gtos-detailed-translation gtos))
+        (detailed-definition (gtos-detailed-definition gtos))
+        (source-language (gtos-source-language gtos))
+        (target-language (gtos-target-language gtos))
+        (auto-detected-language (gtos-auto-detected-language gtos))
+        (text (gtos-text gtos)))
+
+    ;;; for enable key action in "*Google Translate*" buffer
+    (local-set-key "r" 'my-google-translate-register-item)
+
+    (insert
+     (google-translate--translation-title gtos "xTranslate from %s to %s:\n")
+     "\n"
+     (google-translate--translating-text
+      gtos
+      (if (null google-translate-listen-program)
+          "%s\n"
+        "%s"))
+     (if google-translate-listen-program
+         (google-translate--listen-button
+          (if (string-equal source-language "auto")
+              auto-detected-language
+            source-language) text) "")
+     (google-translate--text-phonetic gtos "\n%s\n")
+     "\n"
+     (google-translate--translated-text
+      gtos
+      (if (null google-translate-listen-program)
+          "%s\n"
+        "%s"))
+     (if google-translate-listen-program
+         (google-translate--listen-button target-language translation) "")
+     (google-translate--translation-phonetic gtos "\n%s\n")
+     (if detailed-translation
+         (google-translate--detailed-translation
+          detailed-translation translation
+          "\n%s\n" "%2d. %s\n")
+       (google-translate--suggestion gtos))
+     (if detailed-definition
+         (google-translate--detailed-definition
+          detailed-definition translation
+          "\n%s\n" "%2d. %s\n")
+       ""))))
