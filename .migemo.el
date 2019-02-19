@@ -11,16 +11,23 @@
   ;; file-exist-p 等での存在確認時には、.exe がないと nil になってしまう
   (setq migemo-command "C:/yama/bin/cmigemo-default-win64/cmigemo.exe")
   (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo.exe") ; 相対パスでも動作する
+;  (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo") ; 相対パスでも動作する
 
   (setq migemo-options '("-q" "--emacs" "-i" "\a")) ;cygwin ruby では動作せず 調査必要!
 
   ;; windows環境では、cp932-unix,utf-8-unixどちらでも動く→utf-8-unixでしか動作しなくなった？ 
   ;; cp932-unix
   ;(setq migemo-coding-system 'cp932-unix)
-  ;(setq migemo-dictionary "C:/yama/.emacs.d/conf/migemo/dict/cp932/migemo-dict")
+  ;(setq migemo-dictionary "~/.emacs.d/conf/migemo/dict/cp932/migemo-dict")
   ;; utf-8-unix
   (setq migemo-coding-system 'utf-8-unix)
-  (setq migemo-dictionary "C:/yama/.emacs.d/conf/migemo/dict/utf-8/migemo-dict"))
+  (setq migemo-dictionary "~/.emacs.d/conf/migemo/dict/utf-8/migemo-dict"))
+
+ ((eq system-type 'cygwin)
+  (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo")
+  (setq migemo-options '("-q" "--emacs" "-i" "\a")) ;cygwin ruby では動作せず 調査必要!
+  (setq migemo-coding-system 'utf-8-unix)
+  (setq migemo-dictionary "~/.emacs.d/conf/migemo/dict/utf-8/migemo-dict"))
 
  ((eq system-type 'darwin)
   (setq migemo-command "/usr/local/bin/cmigemo")
