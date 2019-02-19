@@ -1,3 +1,9 @@
+;;; for emergency debug
+(setq debug-on-quit nil) ; enable interrupt C-g when Emacs is super slow.
+
+;;; to suppress Emacs file open is extremly slow
+(setq vc-handled-backends nil)
+
 ;;; 個人設定読み込み
 (if (file-exists-p "~/.emacs.d/private.el")
     (load "~/.emacs.d/private.el"))
