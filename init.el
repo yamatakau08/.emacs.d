@@ -1,5 +1,9 @@
 ;;; for emergency debug
+<<<<<<< HEAD
 (setq debug-on-error nil) ; enable interrupt C-g when Emacs is super slow.
+=======
+(setq debug-on-error nil) ; enable enter debugger if an error is signaled
+>>>>>>> origin/master
 (setq debug-on-quit  nil) ; enable interrupt C-g when Emacs is super slow.
 
 ;;; to suppress Emacs file open is extremly slow
