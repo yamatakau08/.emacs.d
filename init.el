@@ -1,5 +1,6 @@
 ;;; for emergency debug
-(setq debug-on-quit nil) ; enable interrupt C-g when Emacs is super slow.
+(setq debug-on-error nil) ; enable interrupt C-g when Emacs is super slow.
+(setq debug-on-quit  nil) ; enable interrupt C-g when Emacs is super slow.
 
 ;;; to suppress Emacs file open is extremly slow
 (setq vc-handled-backends nil)
@@ -21,12 +22,6 @@
 ;;; no backup files
 (setq make-backup-files nil)
 (setq auto-save-default nil)
-
-;;; 改行コードを、DOS等の環境名ではなくコード名で表示する
-;;; http://d.hatena.ne.jp/mhrs/20061227/p2
-(setq eol-mnemonic-unix "(LF)")
-(setq eol-mnemonic-dos  "(CRLF)")
-(setq eol-mnemonic-mac  "(CR)")
 
 ;;; 新規作成時のファイルの文字コードを utf-8-unix
 (set-default-coding-systems 'utf-8-unix)
@@ -94,8 +89,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (load "~/.emacs.d/.wl.el")
 
 ;;; cygwin-mount
-(if (eq system-type 'windows-nt)
-    (load "~/.emacs.d/.cygwin-mount.el"))
+;(if (eq system-type 'windows-nt)
+;    (load "~/.emacs.d/.cygwin-mount.el"))
 
 ;;; org-mode
 (load "~/.emacs.d/.org-mode.el")
@@ -107,4 +102,4 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (load "~/.emacs.d/.sdic.el")
 
 ;;; org-drill
-(load "~/.emacs.d/.org-drill.el")
+;(load "~/.emacs.d/.org-drill.el")
