@@ -1,5 +1,6 @@
 ;;; for emergency debug
-(setq debug-on-quit nil) ; enable interrupt C-g when Emacs is super slow.
+(setq debug-on-error nil) ; enable enter debugger if an error is signaled
+(setq debug-on-quit  nil) ; enable interrupt C-g when Emacs is super slow.
 
 ;;; to suppress Emacs file open is extremly slow
 (setq vc-handled-backends nil)
