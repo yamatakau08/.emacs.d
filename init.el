@@ -89,8 +89,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (load "~/.emacs.d/.wl.el")
 
 ;;; cygwin-mount
-(if (eq system-type 'windows-nt)
-    (load "~/.emacs.d/.cygwin-mount.el"))
+;(if (eq system-type 'windows-nt)
+;    (load "~/.emacs.d/.cygwin-mount.el"))
 
 ;;; org-mode
 (load "~/.emacs.d/.org-mode.el")
@@ -102,4 +102,4 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (load "~/.emacs.d/.sdic.el")
 
 ;;; org-drill
-(load "~/.emacs.d/.org-drill.el")
+;(load "~/.emacs.d/.org-drill.el")
