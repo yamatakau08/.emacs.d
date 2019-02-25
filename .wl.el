@@ -7,9 +7,15 @@
 (load "ssl.el")
 
 ;;; for imap connection
+;;; ssl-program-name default value is "openssl"
+;;; should be OpenSSL Ver 1.1 above to use proxy option
+;;; you can check openssl version with $openssl version
+;;; explicitly set because cannot judge which kernel is used cygwin or msys2 minge64.
 (if (eq system-type 'windows-nt)
-    ; should be OpenSSL Ver 1.1 above to use proxy option
-    (setq ssl-program-name "/cygdrive/c/winbin/OpenSSL-Win64/bin/openssl.exe")
+    ;; on cygwin
+    ;; (setq ssl-program-name "/cygdrive/c/winbin/OpenSSL-Win64/bin/openssl.exe")
+    ;; on msys2 mingw64, 
+    (setq ssl-program-name "openssl")
   (setq ssl-program-name "openssl"))
 
 (setq elmo-imap4-default-stream-type 'ssl) ; Infoより、これを設定した場合は、.foldersに '!' を付けなくてもよい
