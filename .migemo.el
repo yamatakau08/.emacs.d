@@ -30,7 +30,7 @@
   (setq migemo-dictionary "c:/yama/.emacs.d/conf/migemo/dict/utf-8/migemo-dict")
   )
 
- ((eq system-type 'cygwin)
+ ((eq system-type 'cygwin) ; cygwin terminal emacs
   ;; 'cygwin時も'windows-nt で代用可能かと試したが動作せず
   (setq migemo-command "~/bin/cmigemo-cygwin/build/cmigemo")
 
