@@ -1,3 +1,4 @@
-(load "~/.emacs.d/cygwin-mount.el")
-;(require 'cygwin-mount)
-(cygwin-mount-activate)
+(if (eq system-type 'windows-nt)
+    (progn 
+      (load "~/.emacs.d/cygwin-mount.el")
+      (cygwin-mount-activate)))
