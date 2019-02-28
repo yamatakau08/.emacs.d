@@ -1,5 +1,8 @@
 ;;; font setting
 
+;;; you can check the font you are using
+;;; (w32-select-font)
+
 ;; ricty (diminished)
 ;; refer the folloing page install
 ;; on mac
