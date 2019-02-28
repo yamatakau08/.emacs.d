@@ -26,7 +26,7 @@
 (if (member "Myrica M" (font-family-list))
     (cond
      ((equal (system-name) "JPC20165182") ; to big font size on laptop environment
-      (add-to-list 'default-frame-alist '(font . "Myrica M-14")))
+      (add-to-list 'default-frame-alist '(font . "Myrica M-10")))
      (t
       (add-to-list 'default-frame-alist '(font . "Myrica M")))
      ))
