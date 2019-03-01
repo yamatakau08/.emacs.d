@@ -39,7 +39,8 @@
 ;     (list from to)))
 ;  (message "From: %s, To: %s" from to))
 
-(setq mydic_org "~/.emacs.d/dict/mydic.org")
+;(setq mydic  "~/.emacs.d/dict/mydic.org")
+(setq mydic "~/.emacs.d/dict/mydic.foranki")
 
 (defun my-sdic-register-item (from to)
   (interactive
@@ -52,9 +53,12 @@
     (progn (setq eword from)
 	   (setq jword to)))
   ; refer https://sleepy-yoshi.hatenablog.com/entry/20110322/p1
-  (with-temp-buffer 
-    (insert (format "* English :drill:\n%s\n** Answer\n%s\n" eword jword))
-    (append-to-file nil t mydic_org)))
+  (with-temp-buffer
+    ;; for org-dril
+;   (insert (format "* English :drill:\n%s\n** Answer\n%s\n" from to))
+    ;; for anki
+    (insert (format "%s\t%s\n" from to))
+    (append-to-file nil t mydic)))
 
 (setq sdic-mode-hook
       '(lambda ()
