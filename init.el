@@ -102,3 +102,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;; org-drill
 ;(load "~/.emacs.d/.org-drill.el")
+
+;;; anki-editor
+(load "~/.emacs.d/.anki-editor.el")

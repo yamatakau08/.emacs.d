@@ -5,6 +5,7 @@
 (setq sdicf-default-coding-system 'utf-8)
 
 (setq load-path (cons "~/.emacs.d/sdic/lisp" load-path))
+
 (autoload 'sdic-describe-word "sdic" "英単語の意味を調べる" t nil)
 (global-set-key "\C-cW" 'sdic-describe-word) ; original mapping C-cw
 (autoload 'sdic-describe-word-at-point "sdic" "カーソルの位置の英単語の意味を調べる" t nil)
@@ -21,45 +22,28 @@
       ;;英和検索で使用する辞書
       '(
 ;	(sdicf-client "~/.emacs.d/dict/gene-euc.sdic")   ; Mac/Linux?
-	(sdicf-client "~/.emacs.d/dict/gene-utf8.sdic")  ; Win+cygwin
+	(sdicf-client "~/.emacs.d/dict/gene-utf8.sdic")  ; Win+cygwin,Mac
 	)
       ;; 和英検索で使用する辞書
       sdic-waei-dictionary-list
       '(
 ;	(sdicf-client "~/.emacs.d/dict/jgene-euc.sdic")  ; Mac/Linux?
-	(sdicf-client "~/.emacs.d/dict/jgene-utf8.sdic" (strategy direct)) ; Win+cygwin
+	(sdicf-client "~/.emacs.d/dict/jgene-utf8.sdic" (strategy direct)) ; Win+cygwin,Mac
 	)
 )
 
-;;;
-;(defun my-sdic-register-item (from to)
-;  (interactive
-;   (let ((from (read-string "From: " (sdic-word-at-point)))
-;           (to (read-string "To: ")))
-;     (list from to)))
-;  (message "From: %s, To: %s" from to))
-
-;(setq mydic  "~/.emacs.d/dict/mydic.org")
-(setq mydic "~/.emacs.d/dict/mydic.foranki")
-
+;;; push note into Anki web directly
+(setq sdic-anki-deck "英語")
 (defun my-sdic-register-item (from to)
   (interactive
    (let ((from (read-string "From: " (sdic-word-at-point)))
          (to (read-string "To: ")))
      (list from to)))
-  (if (string-match "\\cj" from)
-      (progn (setq jword from)
-	     (setq eword to))
-    (progn (setq eword from)
-	   (setq jword to)))
-  ; refer https://sleepy-yoshi.hatenablog.com/entry/20110322/p1
-  (with-temp-buffer
-    ;; for org-dril
-;   (insert (format "* English :drill:\n%s\n** Answer\n%s\n" from to))
-    ;; for anki
-    (insert (format "%s\t%s\n" from to))
-    (append-to-file nil t mydic)))
+  ;; defined in ~/.anki-editor
+  (my-anki-editor-push-note sdic-anki-deck from to)
+  )
 
+;;; register my function
 (setq sdic-mode-hook
       '(lambda ()
 	 (define-key sdic-mode-map "r" 'my-sdic-register-item)))
