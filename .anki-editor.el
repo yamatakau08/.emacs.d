@@ -13,3 +13,14 @@
     (anki-editor-mode) ; need to push the item to Anki Web via anki-editor
     (insert (format "\n* Item\n  :PROPERTIES:\n  :ANKI_DECK: %s\n  :ANKI_NOTE_TYPE: Basic\n  :END:\n** Front\n   %s\n** Back\n   %s\n" deck front back))
     (anki-editor-push-notes)))
+
+;;; 
+(defun my-anki-editor-english-register-item (deck from to)
+  (interactive
+   (let ((from (read-string "From: "))
+         (to (read-string "To: "))
+	 (deck nil))
+     `(,deck ,from ,to)))
+  ;; defined in ~/.anki-editor
+  (my-anki-editor-push-note "英語" from to)
+)
