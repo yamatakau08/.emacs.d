@@ -1,5 +1,7 @@
 ;;;
-(start-process "Anki" nil "/Applications/Anki.app/Contents/MacOS/Anki")
+(cond
+ ((eq system-type 'darwin)
+  (start-process "Anki" nil "/Applications/Anki.app/Contents/MacOS/Anki")))
 
 (require 'anki-editor) ; to register item to upload the note directly in Anki Web
 
