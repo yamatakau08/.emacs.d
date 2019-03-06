@@ -15,7 +15,7 @@
     (anki-editor-push-notes)))
 
 ;;; 
-(defun my-anki-editor-english-register-item (deck from to)
+(defun my-anki-connect-english-register-item (deck from to)
   (interactive
    (let ((from (read-string "From: "))
          (to (read-string "To: "))
@@ -25,6 +25,29 @@
   (my-anki-editor-push-note "英語" from to)
   )
 
-(custom-set-variables '(request-curl-options "--noproxy localhost"))
+;;; curl --noproxy localhost localhost:8765 -X POST -d "{\"action\": \"addNote\", \"version\": 6, \"params\": {\"note\": {\"deckName\": \"Default\", \"modelName\": \"Basic\", \"fields\": {\"Front\": \"front content\", \"Back\": \"back content\"}, \"tags\": []}}}"
+;;; need --noproxy localhost on Windows Environment to communicate anki-connect
+;;; option -X is as same as --request
 
+;;; refer https://qiita.com/tadsan/items/17d32514b81f1e8f208a
+;(shell-command-to-string "curl --noproxy localhost localhost:8765 -X POST -d "{\"action\": \"addNote\", \"version\": 6, \"params\": {\"note\": {\"deckName\": \"Default\", \"modelName\": \"Basic\", \"fields\": {\"Front\": \"front content\", \"Back\": \"back content\"}, \"tags\": []}}}")
+(defun my-anki-connect-push-note (deck front back)
+  ""
+  (let ((cmd
+	 (format
+	  "curl     \
+--noproxy localhost \
+localhost:8765      \
+--request POST      \
+--data \"{\\\"action\\\": \\\"addNote\\\", \\\"version\\\": 6, \\\"params\\\": {\\\"note\\\": {\\\"deckName\\\": \\\"%s\\\", \\\"modelName\\\": \\\"Basic\\\", \\\"fields\\\": {\\\"Front\\\": \\\"%s\\\", \\\"Back\\\": \\\"%s\\\"}, \\\"tags\\\": []}}}\"" 
+	  (shell-quote-argument deck)
+	  (shell-quote-argument front)
+	  (shell-quote-argument back))))
+    (message "%s" cmd)
+    (shell-command-to-string cmd)))
 
+(defun my-anki-connect-version ()
+  ""
+  (let ((cmd (format "curl --noproxy localhost localhost:8765 -X POST -d \"{\\\"action\\\": \\\"version\\\", \\\"version\\\": 6}\"")))
+    (message "%s" cmd)
+    (shell-command-to-string cmd)))

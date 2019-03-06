@@ -37,7 +37,7 @@
   (interactive
    (if (string= "*Google Translate*" (buffer-name))
        (let ((from (read-string "From: " (thing-at-point 'word)))
-	     (to (read-string "To: ")))
+	     (to   (read-string "To: " )))
 	 (list from to))))
   ;; defined in ~/.anki-editor
   (my-anki-editor-push-note gt-anki-deck from to)
