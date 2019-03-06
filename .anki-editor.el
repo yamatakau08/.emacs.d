@@ -40,9 +40,11 @@
 localhost:8765      \
 --request POST      \
 --data \"{\\\"action\\\": \\\"addNote\\\", \\\"version\\\": 6, \\\"params\\\": {\\\"note\\\": {\\\"deckName\\\": \\\"%s\\\", \\\"modelName\\\": \\\"Basic\\\", \\\"fields\\\": {\\\"Front\\\": \\\"%s\\\", \\\"Back\\\": \\\"%s\\\"}, \\\"tags\\\": []}}}\"" 
-	  (shell-quote-argument deck)
-	  (shell-quote-argument front)
-	  (shell-quote-argument back))))
+	  deck front back
+;	  (shell-quote-argument deck) ; this doesn't work because deck 英語 quotes 英\語
+;	  (shell-quote-argument front)
+;	  (shell-quote-argument back)
+	  )))
     (message "%s" cmd)
     (shell-command-to-string cmd)))
 

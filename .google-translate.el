@@ -40,7 +40,8 @@
 	     (to   (read-string "To: " )))
 	 (list from to))))
   ;; defined in ~/.anki-editor
-  (my-anki-editor-push-note gt-anki-deck from to)
+;  (my-anki-editor-push-note gt-anki-deck from to)
+  (my-anki-connect-push-note gt-anki-deck from to)
 )
 
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer

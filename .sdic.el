@@ -40,7 +40,8 @@
          (to (read-string "To: ")))
      (list from to)))
   ;; defined in ~/.anki-editor
-  (my-anki-editor-push-note sdic-anki-deck from to)
+;  (my-anki-editor-push-note sdic-anki-deck from to)
+  (my-anki-connect-push-note sdic-anki-deck from to)
   )
 
 ;;; register my function
