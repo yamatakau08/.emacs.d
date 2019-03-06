@@ -26,22 +26,21 @@
 	("!socks" socks socks socks-open-network-stream)
 	("!direct" direct nil open-network-stream)))
 
-(if (check-private-network)
-    ;; for private network
+(if (company-network-p)
     (setq ssl-program-arguments
 	  '("s_client"
 	    "-quiet"
 	    "-connect"
 	    (format "%s:%s" host service)
+	    "-proxy"
+	    (format "%s:%s" wl-proxy-server wl-proxy-port)
 	    ))
-  ;; for company network
+  ;; for private network
   (setq ssl-program-arguments
 	'("s_client"
 	  "-quiet"
 	  "-connect"
 	  (format "%s:%s" host service)
-	  "-proxy"
-	  (format "%s:%s" wl-proxy-server wl-proxy-port)
 	  )))
 
 ;;; In case of openssl ver 1.1 above my own compiled on cygwin environment, need to "-crlf"

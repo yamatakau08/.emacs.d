@@ -1,6 +1,6 @@
 ;(add-to-list 'load-path "~/.emacs.d/elpa/howm-20180225.205")
 
-(require 'howm)
+(require 'howm) ; to check if howm package is installed.
 
 ;(setq howm-menu-lang 'ja)
 ;(global-set-key "\C-c,," 'howm-menu)

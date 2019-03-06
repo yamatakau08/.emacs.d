@@ -14,11 +14,11 @@
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547097797720600
 ;;; Importing package-keyring.gpg...done
 ;;; error in process sentinel: if: Error retrieving: http://melpa.org/packages/archive-contents (error connection-failed "failed with code 110" :host "melpa.org" :service 80)
-(unless (check-private-network)
-  (let ((proxy-server-port (format "%s:%s" wl-proxy-server wl-proxy-port)))
-    (setq url-proxy-services
-	  `(("http"  . ,proxy-server-port)
-	    ("https" . ,proxy-server-port)))))
+(if (company-network-p)
+    (let ((proxy-server-port (format "%s:%s" wl-proxy-server wl-proxy-port)))
+      (setq url-proxy-services
+	    `(("http"  . ,proxy-server-port)
+	      ("https" . ,proxy-server-port)))))
 
 ;;; in case, M-x list-packages with the above settings
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547100014738900
@@ -28,23 +28,24 @@
 ;;; gpg: no valid OpenPGP data found.
 (setq package-check-signature nil)
 
-(if (check-private-network)
-    ;; for private network
-    ;; if package-initialize is not executed, the followin add-to-list make emacs fail
-    (add-to-list 'package-archives
-		 '("melpa" . "https://melpa.org/packages/")
-		 '("org"   . "https://orgmode.org/elpa/"))
-    ;; add-to-list時、自宅でも Failed to download ‘(melpa . https://melpa.org/packages/)’ archive. になる場合があったので、setqにする
-;    (setq package-archives
-;	  '(("gnu" . "https://elpa.gnu.org/packages/")
-;	    ("org"   . "https://orgmode.org/elpa/")
-;	    ("melpa" . "https://melpa.org/packages/")))
-  ;; for company network
+(if (company-network-p)
   ;; Since suddenly cannot connect to ("gnu" . "https://elpa.gnu.org/packages/")
   ;; use setq, not add-to-list
   (setq package-archives
 	'(("org"   . "https://orgmode.org/elpa/")
-	  ("melpa" . "https://melpa.org/packages/"))))
+	  ("melpa" . "https://melpa.org/packages/")))
+
+  ;; for private network
+  ;; if package-initialize is not executed, the followin add-to-list make emacs fail
+  (add-to-list 'package-archives
+	       '("melpa" . "https://melpa.org/packages/")
+	       '("org"   . "https://orgmode.org/elpa/"))
+  ;; add-to-list時、自宅でも Failed to download ‘(melpa . https://melpa.org/packages/)’ archive. になる場合があったので、setqにする
+;    (setq package-archives
+;	  '(("gnu" . "https://elpa.gnu.org/packages/")
+;	    ("org"   . "https://orgmode.org/elpa/")
+;	    ("melpa" . "https://melpa.org/packages/")))
+)
 
 ;; no effect! need to study
 ;; avoid to write custom-set-variables setting automatically in init.el

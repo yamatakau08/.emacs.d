@@ -10,8 +10,7 @@
     (load "~/.emacs.d/private.el"))
 
 ;;; check if ip-address is private
-(if (file-exists-p "~/.emacs.d/get-ip-address.el")
-    (load "~/.emacs.d/get-ip-address.el"))
+(load "~/.emacs.d/company-network-p.el")
 
 ;; package
 ;(package-initialize) ; need this line with comment! to prevent form inserting the message automatically 
