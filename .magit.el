@@ -22,3 +22,6 @@
 ;    ad-do-it))
 ;(ad-activate 'magit-clone)
 
+;;;https://qiita.com/onjiro/items/15eda8d539937a9991f5
+(add-hook 'git-commit-mode-hook
+	  (setq auto-fill-mode nil))
