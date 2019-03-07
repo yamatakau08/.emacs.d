@@ -22,7 +22,7 @@
 	 (deck nil))
      `(,deck ,from ,to)))
   ;; defined in ~/.anki-editor
-  (my-anki-editor-push-note "英語" from to)
+  (my-anki-connect-push-note "英語" from to)
   )
 
 ;;; curl --noproxy localhost localhost:8765 -X POST -d "{\"action\": \"addNote\", \"version\": 6, \"params\": {\"note\": {\"deckName\": \"Default\", \"modelName\": \"Basic\", \"fields\": {\"Front\": \"front content\", \"Back\": \"back content\"}, \"tags\": []}}}"
@@ -40,12 +40,17 @@
 localhost:8765      \
 --request POST      \
 --data \"{\\\"action\\\": \\\"addNote\\\", \\\"version\\\": 6, \\\"params\\\": {\\\"note\\\": {\\\"deckName\\\": \\\"%s\\\", \\\"modelName\\\": \\\"Basic\\\", \\\"fields\\\": {\\\"Front\\\": \\\"%s\\\", \\\"Back\\\": \\\"%s\\\"}, \\\"tags\\\": []}}}\"" 
-	  deck front back
+	  (if (eq system-type 'windows-nt)
+	      (encode-coding-string deck  'sjis) deck)
+	  (if (eq system-type 'windows-nt)
+	      (encode-coding-string front 'sjis) front)
+	  (if (eq system-type 'windows-nt)
+	      (encode-coding-string back  'sjis) back)
 ;	  (shell-quote-argument deck) ; this doesn't work because deck 英語 quotes 英\語
 ;	  (shell-quote-argument front)
 ;	  (shell-quote-argument back)
 	  )))
-    (message "%s" cmd)
+;    (message "%s" cmd)
     (shell-command-to-string cmd)))
 
 (defun my-anki-connect-version ()
