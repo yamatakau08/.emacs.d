@@ -103,4 +103,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;(load "~/.emacs.d/.org-drill.el")
 
 ;;; anki-editor
-(load "~/.emacs.d/.anki-editor.el")
+;(load "~/.emacs.d/.anki-editor.el")
+
+;;;
+(load "~/.emacs.d/anki-connect.el")

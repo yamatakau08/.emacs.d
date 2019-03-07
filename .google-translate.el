@@ -1,9 +1,9 @@
 ; https://qiita.com/tadsan/items/6c658cc471be61cbc8f6
 ; "設定ファイルの書き方"より、packageを使用する場合
 ; load-path追加必要無し
-;(add-to-list 'load-path "~/.emacs.d/elpa/google-translate-20170713.119")
+; (add-to-list 'load-path "~/.emacs.d/elpa/google-translate-20170713.119")
 ; require する必要無し 
-;(require 'google-translate)
+; (require 'google-translate)
 (require 'google-translate-default-ui) ; need for my-google-translate-at-point
 
 ;(global-set-key "\C-ct" 'google-translate-at-point)
@@ -47,5 +47,6 @@
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer
 (defun google-translate-buffer-insert-translation-advice (&rest args)
   (local-set-key "r" 'my-google-translate-register-item))
+
 (advice-add 'google-translate-buffer-insert-translation :before
 	    #'google-translate-buffer-insert-translation-advice)
