@@ -142,3 +142,115 @@
 ;;; http://d.hatena.ne.jp/buzztaiki/20071030/1193765910
 ;;; IMAP 日本語フォルダ文字化け対策
 (setq elmo-imap4-use-modified-utf7 t)
+
+;;; 添付ファイル ATT00001.txt のメールを参照すると、エラー対応、wanderlustメーリングリストでサポート
+;;; file-missing ("Opening input file" "No such file or directory" "c:/yama/ATT00001.txt")
+(defun wl-message-buffer-display (folder number display-type
+					 &optional force-reload unread)
+  (let* ((msg-id (ignore-errors
+		   (elmo-message-field folder number 'message-id)))
+	 (fname (elmo-folder-name-internal folder))
+	 (hit (wl-message-buffer-cache-hit (list fname number msg-id)))
+	 (redisplay nil)
+	 entity)
+    (when (and hit (not (buffer-live-p hit)))
+      (wl-message-buffer-cache-delete (list fname number msg-id))
+      (setq hit nil))
+    (if hit
+	(progn
+	  ;; move hit to the top.
+	  (wl-message-buffer-cache-sort
+	   (wl-message-buffer-cache-entry-make (list fname number msg-id) hit))
+	  (with-current-buffer hit
+	    ;; Rewind to the top page
+	    (widen)
+	    (goto-char (point-min))
+	    (ignore-errors (wl-message-narrow-to-page))
+	    (setq entity wl-message-buffer-mime-entity)
+	    (unless (eq wl-message-buffer-cur-display-type display-type)
+	      (setq redisplay t))))
+      ;; delete tail and add new to the top.
+      (setq hit (wl-message-buffer-cache-add (list fname number msg-id)))
+      (setq redisplay t))
+    (when (or force-reload redisplay)
+      (with-current-buffer hit
+	(when (or force-reload
+		  (null entity)
+		  (not (elmo-mime-entity-display-p
+			entity
+			(if (wl-message-mime-analysis-p display-type)
+			    'mime
+			  'as-is)))
+		  (if (wl-message-display-no-merge-p display-type)
+		      (elmo-mime-entity-reassembled-p entity)
+		    (elmo-mime-entity-fragment-p entity)))
+	  (setq entity (elmo-message-mime-entity
+			folder
+			number
+			(wl-message-get-original-buffer)
+			(and wl-message-auto-reassemble-message/partial
+			     (not (wl-message-display-no-merge-p
+				   display-type)))
+			force-reload
+			unread
+			(not (wl-message-mime-analysis-p display-type)))))
+	(unless entity
+	  (error "Cannot display message %s/%s" fname number))
+	(wl-message-display-internal entity display-type))
+      ) ;; will not be used
+    hit))
+
+(eval-after-load "mime-tnef"
+  '(progn
+     (defun mime-tnef-insert-file (file data)
+       (let*  ((guess (mime-find-file-type file))
+	       (type (nth 0 guess))
+	       (subtype (nth 1 guess))
+	       (parameters (nth 2 guess))
+	       (encoding "8bit")
+	       (disposition-type (nth 4 guess))
+	       (disposition-params (nth 5 guess)))
+	 (setq parameters
+	       (concat
+		(when (consp parameters)
+		  (mime-tnef-insert-file-parameters parameters file data))
+		(when disposition-type
+		  (concat "\n" "Content-Disposition: " disposition-type
+			  (mime-edit-insert-file-parameters
+			   disposition-params file)))))
+	 (insert
+	  ;; multibyte buffer is needed for non-ASCII filename.
+	  (with-temp-buffer
+	    (mime-edit-insert-tag type subtype parameters)
+	    (mime-edit-define-encoding encoding)
+	    (goto-char (point-min))
+	    (mime-tnef-translate-single-part-tag)
+	    (buffer-string)))
+	 (insert data "\n")
+	 ))
+
+     (defun mime-tnef-insert-file-parameters (params file data)
+       (let (charset
+	     result)
+	 (dolist (elt params result)
+	   (setq result
+		 (cons
+		  (cons
+		   (car elt)
+		   (if (eq (cdr elt) 'charset)
+		       (or charset
+			   (let ((codings (detect-coding-string data)))
+			     (while codings
+			       (when (coding-system-to-mime-charset
+				      (car codings))
+				 (setq charset
+				       (symbol-name
+					(coding-system-to-mime-charset
+					 (car codings)))
+				       codings nil))
+			       (setq codings (cdr codings)))
+			     charset))
+		     (cdr elt)))
+		  result)))
+	 (mime-edit-insert-file-parameters (nreverse result) file)))
+     ))
