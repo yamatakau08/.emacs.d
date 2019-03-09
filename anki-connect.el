@@ -25,16 +25,6 @@
     (shell-command-to-string cmd)))
 
 ;;;
-(defun my-anki-connect-english-register-item (deck from to)
-  (interactive
-   (let ((from (read-string "From: "))
-         (to (read-string "To: "))
-	 (deck nil))
-     `(,deck ,from ,to)))
-  ;; defined in ~/.anki-editor
-  (my-anki-connect-push-note "英語" from to))
-
-;;;
 (defun my-anki-encode-string (string)
   "convert string based on AnkiConnect to accept json data with curl command
    AnkiConnect on Windows accept sjis, other is utf-8"
@@ -47,7 +37,7 @@
 ;;; 入れ子にするには、ドット表記のcdr にリスト (:note (:deckName "Default")) のようにする
 ;;; :action の表記で、json-encode 文字列に変換してくれる
 (defun my-anki-connect-make-json-addNotes (deck front back)
-  "make json data is availabe AnkiConnect can accept"
+  "make json data AnkiConnect can accept"
   (let ((edeck  (my-anki-encode-string deck))
 	(efront (my-anki-encode-string front))
 	(eback  (my-anki-encode-string front)))
@@ -61,7 +51,7 @@
 
 ;;;
 (defun my-anki-connect-push-note (deck front back)
-  "Push note which has front and back in deck specified by argments"
+  "Push note which has front and back in deck specified by json data argment with func use json-encode "
   (let ((cmd 
 	 ;; need --noproxy localhost on Windows Environment to communicate AnkiConnect and other environmet is available --noproxy option
 	 (format "curl --noproxy localhost localhost:8765 --request POST --data \"%s\""
@@ -75,7 +65,7 @@
 ;;; option -X is as same as --request
 ;;; refer https://qiita.com/tadsan/items/17d32514b81f1e8f208a
 (defun my-anki-connect-push-notex (deck front back)
-  "Push note which has front and back in deck specified by argments"
+  "Push note which has front and back in deck specified by argments with json data argument directly"
   (let ((cmd
 	 (format
 	  "curl     \
