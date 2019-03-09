@@ -1,6 +1,5 @@
 ;;; sdic-mode 用の設定
-;;; for Windows Emacs+Cygwin
-;;; default
+;;; for Windows Emacs
 (setq sdic-default-coding-system  'utf-8) 
 (setq sdicf-default-coding-system 'utf-8)
 
@@ -32,16 +31,17 @@
 	)
 )
 
-;;; push note into Anki web directly
-(setq sdic-anki-deck "英語")
+;;;
+(setq sdic-anki-push-deck "英語")
+
 (defun my-sdic-register-item (from to)
+  "push note into Anki through AnkiConnect"
   (interactive
    (let ((from (read-string "From: " (sdic-word-at-point)))
          (to (read-string "To: ")))
      (list from to)))
-  ;; defined in ~/.anki-editor
-;  (my-anki-editor-push-note sdic-anki-deck from to)
-  (my-anki-connect-push-note sdic-anki-deck from to)
+;  (my-anki-editor-push-note sdic-anki-push-deck from to) ; my function defined in .anki-editor.el
+  (my-anki-connect-push-note sdic-anki-push-deck from to) ; my function defined in anki-connect.el
   )
 
 ;;; register my function
