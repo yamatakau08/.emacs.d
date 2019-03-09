@@ -6,19 +6,21 @@
 ; (require 'google-translate)
 (require 'google-translate-default-ui) ; need for my-google-translate-at-point
 
-;(global-set-key "\C-ct" 'google-translate-at-point)
-(global-set-key "\C-ct" 'my-google-translate-at-point)
-(global-set-key "\C-cT" 'google-translate-query-translate)
-
+;;;
 (setq google-translate-default-source-language "en"
       google-translate-default-target-language "ja")
+
+;(global-set-key "\C-ct" 'google-translate-at-point)
+;(global-set-key "\C-cT" 'google-translate-query-translate)
+(global-set-key "\C-ct" 'my-google-translate-at-point)
+(global-set-key "\C-cT" 'my-google-query-translate)
 
 ;;; see google-translate-default-ui.el
 (global-set-key (kbd "C-c r") 'google-translate-at-point-reverse)
 (global-set-key (kbd "C-c R") 'google-translate-query-translate-reverse)
 
 ;;;
-;;; my original function is enable not to care the word is English or Japanese
+;;; my original function is enable not to care if the word is English or Japanese
 ;;;
 (defun my-google-translate-at-point ()
   (interactive)
@@ -28,20 +30,32 @@
     )
   )
 
+;;;
+;;;
+;;;
+(defun my-google-query-translate ()
+  (interactive)
+  (let ((from (read-string "From: ")))
+	(if (string-match "\\cj" from)
+	    (google-translate-translate "ja" "en" from nil)
+	  (google-translate-translate "en" "ja" from nil))))
+
 ;;; window (buffer with translation) gets focus in google-translate-core-ui.el
 (setq google-translate-pop-up-buffer-set-focus t)
 
-;;; push note into Anki web directly
-(setq gt-anki-deck "英語") ; gt: google-translate
+;;;
+(setq gt-anki-push-deck "英語") ; gt: google-translate
+
 (defun my-google-translate-register-item (from to)
+  "push note which have from and to word Basic note-type in Anki deck \
+   specified gt-anki-push-deck variable through AnkiConnect"
   (interactive
    (if (string= "*Google Translate*" (buffer-name))
        (let ((from (read-string "From: " (thing-at-point 'word)))
 	     (to   (read-string "To: " )))
 	 (list from to))))
-  ;; defined in ~/.anki-editor
-;  (my-anki-editor-push-note gt-anki-deck from to)
-  (my-anki-connect-push-note gt-anki-deck from to)
+;  (my-anki-editor-push-note gt-anki-push-deck from to) ; my function defined in .anki-editor.el
+  (my-anki-connect-push-note gt-anki-push-deck from to) ; my function defined in anki-connect.el
 )
 
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer
