@@ -40,7 +40,7 @@
   "make json data AnkiConnect can accept"
   (let ((edeck  (my-anki-encode-string deck))
 	(efront (my-anki-encode-string front))
-	(eback  (my-anki-encode-string front)))
+	(eback  (my-anki-encode-string back)))
     (json-encode `((:action  . "addNote")
 		   (:version . 6)
 		   (:params  (:note (:deckName  . ,edeck)

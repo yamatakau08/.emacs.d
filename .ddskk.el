@@ -1,3 +1,7 @@
+;;; require explicitly
+;;; if skk is not installed, face "command-execute: Wrong type argument: commandp, skk-mode"
+(require 'skk)
+
 ; install ddskk on Mac refer the following page
 ; http://yoppa.org/blog/6162.html
 ;(add-to-list 'load-path "~/.emacs.d/elpa/ddskk-20170709.839")
