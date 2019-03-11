@@ -51,21 +51,32 @@
 ;;;
 (setq gt-anki-push-deck "英語") ; gt: google-translate
 
-(defun my-google-translate-register-item (from to)
+;(defun my-google-translate-register-item (from to)
+;  "push note which have from and to word Basic note-type in Anki deck \
+;   specified gt-anki-push-deck variable through AnkiConnect"
+;  (interactive
+;   (if (string= "*Google Translate*" (buffer-name))
+;       (let ((from (read-string "From: " (thing-at-point 'word)))
+;	     (to   (read-string "To: " )))
+;	 (list from to))))
+;;  (my-anki-editor-push-note gt-anki-push-deck from to) ; my function defined in .anki-editor.el
+;  (my-anki-connect-push-note gt-anki-push-deck from to) ; my function defined in anki-connect.el
+;)
+
+(defun my-google-translate-register-item-in-anki ()
   "push note which have from and to word Basic note-type in Anki deck \
    specified gt-anki-push-deck variable through AnkiConnect"
   (interactive
    (if (string= "*Google Translate*" (buffer-name))
-       (let ((from (read-string "From: " (thing-at-point 'word)))
-	     (to   (read-string "To: " )))
-	 (list from to))))
-;  (my-anki-editor-push-note gt-anki-push-deck from to) ; my function defined in .anki-editor.el
-  (my-anki-connect-push-note gt-anki-push-deck from to) ; my function defined in anki-connect.el
-)
+       (let ((front (read-string "Front: " (thing-at-point 'word)))
+	     (back  (read-string "Back : " )))
+	; (my-anki-editor-push-note gt-anki-push-deck front back) ; my function defined in .anki-editor.el
+	 (my-anki-connect-push-note gt-anki-push-deck front back) ; my function defined in anki-connect.el
+	 ))))
 
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer
 (defun google-translate-buffer-insert-translation-advice (&rest args)
-  (local-set-key "r" 'my-google-translate-register-item))
+  (local-set-key "r" 'my-google-translate-register-item-in-anki))
 
 (advice-add 'google-translate-buffer-insert-translation :before
 	    #'google-translate-buffer-insert-translation-advice)
