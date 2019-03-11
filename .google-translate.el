@@ -1,9 +1,14 @@
-; https://qiita.com/tadsan/items/6c658cc471be61cbc8f6
-; "設定ファイルの書き方"より、packageを使用する場合
-; load-path追加必要無し
-; (add-to-list 'load-path "~/.emacs.d/elpa/google-translate-20170713.119")
-; require する必要無し 
-; (require 'google-translate)
+;;; https://qiita.com/tadsan/items/6c658cc471be61cbc8f6
+;;; "設定ファイルの書き方"より、packageを使用する場合
+;;; load-path追加必要無し
+;;; (add-to-list 'load-path "~/.emacs.d/elpa/google-translate-20170713.119")
+;;; require する必要無し 
+;;; (require 'google-translate)
+
+;;; for registering word in Anki
+(add-to-list 'load-path "~/.emacs.d/my-anki-connect")
+(require 'my-anki-connect)
+
 (require 'google-translate-default-ui) ; need for my-google-translate-at-point
 
 ;;;

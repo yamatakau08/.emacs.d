@@ -3,7 +3,7 @@
 (setq sdic-default-coding-system  'utf-8) 
 (setq sdicf-default-coding-system 'utf-8)
 
-(setq load-path (cons "~/.emacs.d/sdic/lisp" load-path))
+(add-to-list 'load-path "~/.emacs.d/sdic/lisp")
 
 (autoload 'sdic-describe-word "sdic" "英単語の意味を調べる" t nil)
 (global-set-key "\C-cW" 'sdic-describe-word) ; original mapping C-cw
@@ -32,6 +32,9 @@
 )
 
 ;;;
+(add-to-list 'load-path "~/.emacs.d/my-anki-connect")
+(require 'my-anki-connect)
+
 (setq sdic-anki-push-deck "英語")
 
 (defun my-sdic-register-item (from to)

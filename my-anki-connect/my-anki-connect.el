@@ -1,4 +1,20 @@
+;;; my-anki-connect.el --- function which communicate with anki-connect
+;;
+;; Copyright (C) 2019 by yamatakau08@gmail.com
+;;
+;; Author: yamatakau08@gmail.com
+;; Version: 0.01
+;; Package-Requires:
+;; URL:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Code:
+
 ;;; 
+;;; refer ank-connect supported actions
+;;; https://foosoft.net/projects/anki-connect/index.html#supported-actions
+;;;
+
 (defun my-anki-connect-version ()
   "get the version"
   (let ((jsondata (json-encode '((:action  . "version")
@@ -85,3 +101,7 @@ localhost:8765      \
 	  )))
 ;    (message "%s" cmd)
     (shell-command-to-string cmd)))
+
+(provide 'my-anki-connect)
+
+;;; my-anki-conn.el ends here
