@@ -10,7 +10,7 @@
 (defun my-anki-add-note-english ()
   "add note in Anki"
   (interactive)
-  (let ((deck "Default")
+  (let ((deck "英語")
 	(front (read-string "Front: "))
 	(back  (read-string "Back : ")))
     (my-anki-connect-push-note deck front back)))
