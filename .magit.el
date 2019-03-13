@@ -28,6 +28,5 @@
 ;;; Please supply the message using either -m or -F option.
 ;(add-hook 'git-commit-mode-hook
 ;	  (setq auto-fill-mode nil))
-;(setq git-commit-fill-column nil)
 (eval-after-load "magit"
   '(delq 'git-commit-turn-on-auto-fill git-commit-setup-hook))
