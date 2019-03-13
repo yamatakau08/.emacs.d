@@ -1,7 +1,7 @@
 ;;;
-(cond
- ((eq system-type 'darwin)
-  (start-process "Anki" nil "/Applications/Anki.app/Contents/MacOS/Anki")))
+;(cond
+; ((eq system-type 'darwin)
+;  (start-process "Anki" nil "/Applications/Anki.app/Contents/MacOS/Anki")))
 
 (require 'anki-editor) ; to register item to upload the note directly in Anki Web
 
@@ -15,6 +15,7 @@
       (anki-editor-mode) ; need to push the item to Anki Web via anki-editor
       (insert (format "\n* Item\n  :PROPERTIES:\n  :ANKI_DECK: %s\n  :ANKI_NOTE_TYPE: Basic\n  :END:\n** Front\n   %s\n** Back\n   %s\n" "Default" front back))
       (anki-editor-push-notes)))
-   (t (message "%s: anki-editor-push-notes doesnt support!" system-type)
-      nil) ; if there is not nil, error "command-execute: Wrong type argument: listp," occurs on call side
-   ))
+   (t (message "%s: anki-editor-push-notes doesnt support!" system-type))
+   )
+  nil ; if there is not nil, error "command-execute: Wrong type argument: listp," occurs on call side
+)

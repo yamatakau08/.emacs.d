@@ -74,7 +74,9 @@
 		 ;; json data '"' を '\"' に変換
 		 (replace-regexp-in-string "\"" "\\\\\"" (my-anki-connect-make-json-addNotes deck front back)))))
     (message "%s" cmd)
-    (shell-command-to-string cmd)))
+    (shell-command-to-string cmd))
+  nil
+)
 
 ;;; curl --noproxy localhost localhost:8765 -X POST -d "{\"action\": \"addNote\", \"version\": 6, \"params\": {\"note\": {\"deckName\": \"Default\", \"modelName\": \"Basic\", \"fields\": {\"Front\": \"front content\", \"Back\": \"back content\"}, \"tags\": []}}}"
 ;;; need --noproxy localhost on Windows Environment to communicate anki-connect
