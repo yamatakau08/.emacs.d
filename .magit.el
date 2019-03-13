@@ -22,6 +22,12 @@
 ;    ad-do-it))
 ;(ad-activate 'magit-clone)
 
-;;;https://qiita.com/onjiro/items/15eda8d539937a9991f5
-(add-hook 'git-commit-mode-hook
-	  (setq auto-fill-mode nil))
+;;; https://qiita.com/onjiro/items/15eda8d539937a9991f5
+;;; this setting makes
+;;; *ERROR*: Symbol’s function definition is void: nilerror: There was a problem with the editor '"c:/msys64/mingw64/bin/emacsclient.exe"'.
+;;; Please supply the message using either -m or -F option.
+;(add-hook 'git-commit-mode-hook
+;	  (setq auto-fill-mode nil))
+;(setq git-commit-fill-column nil)
+(eval-after-load "magit"
+  '(delq 'git-commit-turn-on-auto-fill git-commit-setup-hook))
