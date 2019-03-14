@@ -28,7 +28,7 @@
 ;;; Please supply the message using either -m or -F option.
 ;(add-hook 'git-commit-mode-hook
 ;	  (setq auto-fill-mode nil))
-; define-minor-mode git-commit-mode により git-commit-mode-hook が自動で作られる効果が発動．
+; git-commit-mode-hook は、 define-minor-mode git-commit-mode により自動で作られる
 
 (eval-after-load "magit"
   '(delq 'git-commit-turn-on-auto-fill git-commit-setup-hook))
