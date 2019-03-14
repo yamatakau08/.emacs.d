@@ -56,12 +56,14 @@
 (defun my-google-translate-register-item-in-anki ()
   "push note which have from and to word Basic note-type in Anki deck \
    specified gt-anki-push-deck variable through AnkiConnect"
-  (interactive
-   (if (string= "*Google Translate*" (buffer-name))
-       (let ((front (read-string "Front: " (thing-at-point 'word)))
-	     (back  (read-string "Back : " )))
-	 (funcall gt-anki-push-note-func gt-anki-push-deck front back) 
-	 ))))
+  (interactive)
+  (if (string= "*Google Translate*" (buffer-name))
+      (let ((front (read-string "Front: "
+				(if (region-active-p)
+				    (buffer-substring (region-beginning) (region-end))
+				  (thing-at-point 'word))))
+	    (back  (read-string "Back : " )))
+	(funcall gt-anki-push-note-func gt-anki-push-deck front back))))
 
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer
 (defun google-translate-buffer-insert-translation-advice (&rest args)
