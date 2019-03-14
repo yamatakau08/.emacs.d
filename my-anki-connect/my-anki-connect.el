@@ -104,6 +104,16 @@ localhost:8765      \
 ;    (message "%s" cmd)
     (shell-command-to-string cmd)))
 
+;;;
+(defun my-anki-connect-register-card (deck)
+  ;;; register card in deck specified args
+  (let ((front (read-string "Front: "
+			    (if (region-active-p)
+				(buffer-substring (region-beginning) (region-end))
+			      (thing-at-point 'word))))
+	(back  (read-string "Back : " )))
+    (my-anki-connect-push-note deck front back)))
+
 (provide 'my-anki-connect)
 
 ;;; my-anki-conn.el ends here

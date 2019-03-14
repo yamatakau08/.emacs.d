@@ -35,17 +35,12 @@
 (add-to-list 'load-path "~/.emacs.d/my-anki-connect")
 (require 'my-anki-connect)
 
-(setq sdic-anki-push-deck "英語")
+(setq sdic-anki-connect-push-deck "英語")
 
-(defun my-sdic-register-item (from to)
+(defun my-sdic-register-item ()
   "push note into Anki through AnkiConnect"
-  (interactive
-   (let ((from (read-string "From: " (sdic-word-at-point)))
-         (to (read-string "To: ")))
-     (list from to)))
-;  (my-anki-editor-push-note sdic-anki-push-deck from to) ; my function defined in .anki-editor.el
-  (my-anki-connect-push-note sdic-anki-push-deck from to) ; my function defined in anki-connect.el
-  )
+  (interactive)
+  (my-anki-connect-register-card sdic-anki-connect-push-deck))
 
 ;;; register my function
 (setq sdic-mode-hook

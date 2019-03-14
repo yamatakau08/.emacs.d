@@ -49,21 +49,13 @@
 (setq google-translate-pop-up-buffer-set-focus t)
 
 ;;;
-(setq gt-anki-push-deck "英語") ; gt: google-translate
-;(setq gt-anki-push-note-func 'my-anki-editor-push-note) ; my function defined in .anki-editor.el
-(setq gt-anki-push-note-func 'my-anki-connect-push-note) ; my function defined in anki-connect.el
-
+(setq gt-anki-connect-push-deck "英語")   ; gt: google-translate
 (defun my-google-translate-register-item-in-anki ()
   "push note which have from and to word Basic note-type in Anki deck \
    specified gt-anki-push-deck variable through AnkiConnect"
   (interactive)
   (if (string= "*Google Translate*" (buffer-name))
-      (let ((front (read-string "Front: "
-				(if (region-active-p)
-				    (buffer-substring (region-beginning) (region-end))
-				  (thing-at-point 'word))))
-	    (back  (read-string "Back : " )))
-	(funcall gt-anki-push-note-func gt-anki-push-deck front back))))
+      (my-anki-connect-register-card gt-anki-connect-push-deck)))
 
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer
 (defun google-translate-buffer-insert-translation-advice (&rest args)
