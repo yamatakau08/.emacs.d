@@ -2,8 +2,9 @@
 ;;; supported by emacs-jp slack
 ;;; need to (require 'org-temp)
 ;;; on Ver. 9.1.9 this cause "Problems while trying to load feature org-tempo"
-(when (version< "9.1.9" (org-version))
-  (add-to-list 'org-modules 'org-tempo))
+(if (version< "9.1.9" (org-version))
+      (require 'org-tempo)
+  (message "update org to 9.2.X"))
 
 (setq org-edit-src-content-indentation 0) ; ソースブロックの中身が右にずらさないように左端にする
 
@@ -27,9 +28,7 @@
 ;;; because org-mode loads org-gnus even though I don't use gnus.... makes movemail
 ;;; emacs-jp slack teach me how to not to load org-gnus
 (with-eval-after-load "org"
-  (delq 'org-gnus org-modules)
-  ;;; "<e TAB" template doesn't work, need to require to enable
-  (require 'org-tempo))
+  (delq 'org-gnus org-modules))
 
 ;;;
 ;;; to open the org file for skips is man-hour manage
