@@ -107,3 +107,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (load "~/.emacs.d/anki.el")
+
+;;;
+(load "~/.emacs.d/.tramp.el")
