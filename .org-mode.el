@@ -33,8 +33,38 @@
 ;;;
 ;;; to open the org file for skips is man-hour manage
 ;;; http://www.mhatta.org/wp/category/org-mode/#%E3%83%A1%E3%83%A2%E3%82%92%E5%8F%96%E3%82%8B
-(global-set-key (kbd "C-c c") 'my-skips-org-file-open)
-(defun my-skips-org-file-open ()
-  (interactive)
-  (let ((skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org")))
-    (find-file skips-org-file)))
+;(global-set-key (kbd "C-c c") 'my-skips-org-file-open)
+;(defun my-skips-org-file-open ()
+;  (interactive)
+;  (let ((skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org")))
+;    (find-file skips-org-file)))
+
+;; Org-captureを呼び出すキーシーケンス
+(define-key global-map "\C-cc" 'org-capture)
+;; Org-captureのテンプレート（メニュー）の設定
+(setq my-skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org"))
+(setq my-skips-headline-etc "その他")
+;; https://orgmode.org/manual/Template-elements.html
+;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:capture:start#%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88%E3%81%AE%E8%A8%AD%E5%AE%9A
+;; "e"      :keys
+;; "その他" :description
+;; entry    :type
+;; (file+headline my-skips-org-file "その他") :target
+;; "* %?\nEntered on %U\n" :template
+;; :clock-in 1 :properties 1などを付ける必要有り
+;; org-capture-templates
+;; https://orgmode.org/manual/Template-expansion.html#Template-expansion
+;; %? org-captureのバッファを開いたときのカーソルの位置
+;; \n 改行
+;; %U タイムスタンプ
+;; %i C-c c を叩いたときに選択されていたリージョンの内容
+;; %a C-c cを叩いたときに開いていたファイルへのリンク（本当はorg-store-linkで保存されたリンクだが）
+(setq org-capture-templates
+      `(("e"
+	 "その他"
+	 entry
+	 (file+headline my-skips-org-file ,my-skips-headline-etc)
+	 nil
+	 :clock-in 1)
+        ))
+
