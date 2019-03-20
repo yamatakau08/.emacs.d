@@ -30,41 +30,71 @@
 (with-eval-after-load "org"
   (delq 'org-gnus org-modules))
 
+;;; for "post skips" is managing man-hour in company
 ;;;
-;;; to open the org file for skips is man-hour manage
-;;; http://www.mhatta.org/wp/category/org-mode/#%E3%83%A1%E3%83%A2%E3%82%92%E5%8F%96%E3%82%8B
-;(global-set-key (kbd "C-c c") 'my-skips-org-file-open)
-;(defun my-skips-org-file-open ()
-;  (interactive)
-;  (let ((skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org")))
-;    (find-file skips-org-file)))
+;;; 社員工数分類
+;;; 評価プロジェクト:     プロマネ工程/エンジニアリング工程
+;;; 評価プロジェクト以外: SQA業務改善、学習・チャレンジ、その他
+;;;
+;; to open the org file for 
+;; http://www.mhatta.org/wp/category/org-mode/#%E3%83%A1%E3%83%A2%E3%82%92%E5%8F%96%E3%82%8B
+(setq my-skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org"))
+
+(global-set-key (kbd "C-c o") 'my-skips-org-file-open)
+
+(defun my-skips-org-file-open ()
+  "open skips file"
+  (interactive)
+  (let ((skips-org-file my-skips-org-file))
+    (find-file skips-org-file)))
 
 ;; Org-captureを呼び出すキーシーケンス
 (define-key global-map "\C-cc" 'org-capture)
-;; Org-captureのテンプレート（メニュー）の設定
-(setq my-skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org"))
-(setq my-skips-headline-etc "その他")
-;; https://orgmode.org/manual/Template-elements.html
+;; Org-capture テンプレート（メニュー）の設定
 ;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:capture:start#%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88%E3%81%AE%E8%A8%AD%E5%AE%9A
+;; https://orgmode.org/manual/Template-elements.html
 ;; "e"      :keys
 ;; "その他" :description
 ;; entry    :type
 ;; (file+headline my-skips-org-file "その他") :target
-;; "* %?\nEntered on %U\n" :template
+;; nil or "* %?\nEntered on %U\n" :template
 ;; :clock-in 1 :properties 1などを付ける必要有り
+;;
 ;; org-capture-templates
+;; about template
 ;; https://orgmode.org/manual/Template-expansion.html#Template-expansion
 ;; %? org-captureのバッファを開いたときのカーソルの位置
 ;; \n 改行
 ;; %U タイムスタンプ
 ;; %i C-c c を叩いたときに選択されていたリージョンの内容
 ;; %a C-c cを叩いたときに開いていたファイルへのリンク（本当はorg-store-linkで保存されたリンクだが）
-(setq org-capture-templates
-      `(("e"
-	 "その他"
-	 entry
-	 (file+headline my-skips-org-file ,my-skips-headline-etc)
-	 nil
-	 :clock-in 1)
-        ))
 
+(setq my-skips-headlines-alist
+        ;; description/heading     key
+       '(("プロマネ工程"         . "p")
+	 ("エンジニアリング工程" . "e")
+	 ("SQA業務改善"          . "i")
+	 ("学習・チャレンジ"     . "s")
+	 ("その他"               . "o")))
+
+(defun my-org-capture-templates-set (alist)
+  "set org-capture-templates with alist"
+  (interactive)
+  (cond ((null alist) nil)
+	(t (let ((key      (cdr (car alist)))
+		 (headline (car (car alist))))
+	     (add-to-list 'org-capture-templates
+			  `(,key      ; keys
+			    ,headline ; description
+			    entry
+			    (file+headline my-skips-org-file ,headline)
+					; pass with ',' before variable
+			  ; (file+headline ,my-skips-org-file ,headline)
+			    nil
+			    :clock-in 1))
+	     (my-org-capture-templates-set (cdr alist))))))
+
+;;; org-capture-mode-hook doesn't effect, (with-eval-after-load 'org-capture) effects
+;;; https://ox-hugo.scripter.co/doc/org-capture-setup/
+(with-eval-after-load 'org-capture
+  (my-org-capture-templates-set my-skips-headlines-alist))
