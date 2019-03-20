@@ -98,3 +98,13 @@
 ;;; https://ox-hugo.scripter.co/doc/org-capture-setup/
 (with-eval-after-load 'org-capture
   (my-org-capture-templates-set my-skips-headlines-alist))
+
+;;;
+(defun my-org-clock-in-last ()
+  "open org file and go to the headline is in clock-in status"
+  (interactive)
+  (if org-clock-history
+      (progn
+	(find-file my-skips-org-file)
+	(goto-char (car org-clock-history)))))
+
