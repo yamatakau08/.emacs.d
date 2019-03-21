@@ -38,7 +38,10 @@
 ;;;
 ;; to open the org file for 
 ;; http://www.mhatta.org/wp/category/org-mode/#%E3%83%A1%E3%83%A2%E3%82%92%E5%8F%96%E3%82%8B
-(setq my-skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org"))
+(if (company-network-p)
+    (setq my-skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org"))
+  ;; (setq org-default-notes-file (concat org-directory "/notes.org")) ; need to consider the org file
+  (setq my-skips-org-file (concat org-directory "/notes.org")))
 
 (global-set-key (kbd "C-c o") 'my-skips-org-file-open)
 
@@ -87,9 +90,9 @@
 			  `(,key      ; keys
 			    ,headline ; description
 			    entry
+			    ;; both ',' w and w/o my-skips-org-file, need to ',' with headline
 			    (file+headline my-skips-org-file ,headline)
-					; pass with ',' before variable
-			  ; (file+headline ,my-skips-org-file ,headline)
+			    ; (file+headline ,my-skips-org-file ,headline)
 			    nil
 			    :clock-in 1))
 	     (my-org-capture-templates-set (cdr alist))))))
@@ -99,7 +102,10 @@
 (with-eval-after-load 'org-capture
   (my-org-capture-templates-set my-skips-headlines-alist))
 
-;;;
+;;; C-c C-x C-j (org-clock-goto) 8.4.1 Clocking commands in https://orgmode.org/org.pdf
+;;; Jump to the headline of the currently clocked in task. With a C-u prefix
+;;; argument, select the target task from a list of recently clocked task
+;;; Since I didn't know the func org-clock-goto, I made the following function.
 (defun my-org-clock-in-last ()
   "open org file and go to the headline is in clock-in status"
   (interactive)
