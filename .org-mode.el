@@ -92,9 +92,11 @@
 			    entry
 			    ;; both ',' w and w/o my-skips-org-file, need to ',' with headline
 			    (file+headline my-skips-org-file ,headline)
-			    ; (file+headline ,my-skips-org-file ,headline)
+			    ;(file+headline ,my-skips-org-file ,headline)
 			    nil
-			    :clock-in 1))
+			    :clock-in   1 ; when capture, execute clock-in
+			    :clock-keep 1 ; when :clock-keep set 1, C-c C-c org-clock-finalize doesn't execute clock-out
+			    ))
 	     (my-org-capture-templates-set (cdr alist))))))
 
 ;;; org-capture-mode-hook doesn't effect, (with-eval-after-load 'org-capture) effects
