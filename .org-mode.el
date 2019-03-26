@@ -60,8 +60,8 @@
 ;; "その他" :description
 ;; entry    :type
 ;; (file+headline my-skips-org-file "その他") :target
-;; nil or "* %?\nEntered on %U\n" :template
-;; :clock-in 1 :properties 1などを付ける必要有り
+;; nil or "* %?\nEntered on %U\n" :template should nil or string start with one or some '*' and template expansion.
+;; :clock-in 1 :properties needs to set 1 to enable propertie
 ;;
 ;; org-capture-templates
 ;; about template
@@ -93,7 +93,7 @@
 			    ;; both ',' w and w/o my-skips-org-file, need to ',' with headline
 			    (file+headline my-skips-org-file ,headline)
 			    ;(file+headline ,my-skips-org-file ,headline)
-			    nil
+			    "** %?"       ; template %? is position point here. in case nil, annotation will be insert
 			    :clock-in   1 ; when capture, execute clock-in
 			    :clock-keep 1 ; when :clock-keep set 1, C-c C-c org-clock-finalize doesn't execute clock-out
 			    ))
@@ -103,6 +103,10 @@
 ;;; https://ox-hugo.scripter.co/doc/org-capture-setup/
 (with-eval-after-load 'org-capture
   (my-org-capture-templates-set my-skips-headlines-alist))
+
+;;; to suppress not to put the annotation whichi is link text in org capture buffer
+;;; without this settings, org-capture-templates template propertie "** %?" behave the same.
+;(setq org-capture-link-is-already-stored t)
 
 ;;; C-c C-x C-j (org-clock-goto) 8.4.1 Clocking commands in https://orgmode.org/org.pdf
 ;;; Jump to the headline of the currently clocked in task. With a C-u prefix
@@ -115,4 +119,3 @@
       (progn
 	(find-file my-skips-org-file)
 	(goto-char (car org-clock-history)))))
-
