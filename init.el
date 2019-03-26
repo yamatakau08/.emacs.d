@@ -110,3 +110,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (load "~/.emacs.d/.tramp.el")
+
+;;;
+;(load "~/.emacs.d/.ox-confluence.el")
+
+;;;
+(load "~/.emacs.d/.company.el")
