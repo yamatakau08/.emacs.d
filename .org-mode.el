@@ -119,3 +119,8 @@
       (progn
 	(find-file my-skips-org-file)
 	(goto-char (car org-clock-history)))))
+
+;;; to Daily report descending when :step day is set on org-clock-reprot
+(let ((f "~/.emacs.d/ad_org-clock-report.el"))
+  (if (file-exists-p f)
+      (load f)))
