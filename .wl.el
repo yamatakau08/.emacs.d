@@ -2,9 +2,11 @@
 (setq elmo-imap4-debug t)
 (setq elmo-pop3-debug  t)
 
+;;; when launch wl puts out errro
+;;; "wl: Cannot open load file: No such file or directory, ssl"
 ;;; need to use openssl in https://github.com/wanderlust/wanderlust/blob/master/utils/ssl.el
 ;;; Since package doesn't install ssl.el, install manualy.
-(load "ssl.el")
+(load "~/.emacs.d/wanderlust/utils/ssl.el")
 
 ;;; for imap connection
 ;;; ssl-program-name default value is "openssl"
