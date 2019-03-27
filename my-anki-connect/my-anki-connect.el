@@ -114,6 +114,16 @@ localhost:8765      \
 	(back  (read-string "Back : " )))
     (my-anki-connect-push-note deck front back)))
 
+(defun my-anki-connect-register-card-read-front ()
+  (interactive)
+  (goto-line (+ 2 1))
+  )
+
+(defun my-anki-connect-register-card-read-back ()
+  (interactive)
+  (goto-line (+ 4 1))
+  )
+
 (provide 'my-anki-connect)
 
 ;;; my-anki-conn.el ends here
