@@ -47,6 +47,12 @@
 ;	    ("melpa" . "https://melpa.org/packages/")))
 )
 
+;;; if use-package is not installed, install "use-package"
+;;; https://emacs.stackexchange.com/questions/39250/error-package-use-package-is-unavailable
+(package-refresh-contents) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
 ;; no effect! need to study
 ;; avoid to write custom-set-variables setting automatically in init.el
 ;; https://ymotongpoo.hatenablog.com/entry/2017/11/07/000921
