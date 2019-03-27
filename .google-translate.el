@@ -31,9 +31,7 @@
   (interactive)
   (if (string-match "\\cj" (thing-at-point 'word)) ; utilize '\\cj' is used in "sdic"
       (%google-translate-at-point nil t)
-    (%google-translate-at-point nil nil)
-    )
-  )
+    (%google-translate-at-point nil nil)))
 
 ;;;
 ;;;
@@ -49,13 +47,13 @@
 (setq google-translate-pop-up-buffer-set-focus t)
 
 ;;;
-(setq gt-anki-connect-push-deck "英語")   ; gt: google-translate
+(setq gt-anki-connect-push-deck "英語") ; gt: google-translate
 (defun my-google-translate-register-item-in-anki ()
   "push note which have from and to word Basic note-type in Anki deck \
    specified gt-anki-push-deck variable through AnkiConnect"
   (interactive)
   (if (string= "*Google Translate*" (buffer-name))
-      (my-anki-connect-register-card gt-anki-connect-push-deck)))
+      (my-google-translate-register-item gt-anki-connect-push-deck)))
 
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer
 (defun google-translate-buffer-insert-translation-advice (&rest args)
@@ -63,3 +61,22 @@
 
 (advice-add 'google-translate-buffer-insert-translation :before
 	    #'google-translate-buffer-insert-translation-advice)
+
+;;; move point for front in *Google Translate* buffer
+(defun my-google-translate-register-item-read-front ()
+  (interactive)
+  (goto-line 3)
+  (thing-at-point 'word))
+
+;;; move point for back in *Google Translate* buffer
+(defun my-google-translate-register-item-read-back ()
+  (interactive)
+  (goto-line 5)
+  (thing-at-point 'word))
+
+;;;
+(defun my-google-translate-register-item (deck)
+  ;; register card in deck specified args
+  (let ((front (read-string "Front: " (my-google-translate-register-item-read-front)))
+        (back  (read-string "Back : " (my-google-translate-register-item-read-back))))
+    (my-anki-connect-push-note deck front back)))
