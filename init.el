@@ -13,7 +13,6 @@
 (load "~/.emacs.d/company-network-p.el")
 
 ;; package
-;(package-initialize) ; need this line with comment! to prevent form inserting the message automatically 
 (load "~/.emacs.d/.package.el")
 
 (set-language-environment "Japanese")
