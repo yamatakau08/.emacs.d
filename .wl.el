@@ -6,7 +6,7 @@
 ;;; "wl: Cannot open load file: No such file or directory, ssl"
 ;;; need to use openssl in https://github.com/wanderlust/wanderlust/blob/master/utils/ssl.el
 ;;; Since package doesn't install ssl.el, install manualy.
-(load "~/.emacs.d/wanderlust/utils/ssl.el")
+(my-load "~/.emacs.d/wanderlust/utils/ssl.el")
 
 ;;; for imap connection
 ;;; ssl-program-name default value is "openssl"
@@ -256,3 +256,16 @@
 		  result)))
 	 (mime-edit-insert-file-parameters (nreverse result) file)))
      ))
+
+;;;
+(defun my-mime-preview-open ()
+  ""
+  (interactive)
+  (let ((f (helm-find-files-initial-input)))
+    (message "%s" f)
+    (w32-shell-execute "open" f)))
+
+(defun my-helm-find-files-initial-input ()
+  ""
+  (interactive)
+  (message "%s" (helm-find-files-initial-input)))
