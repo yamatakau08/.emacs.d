@@ -1,6 +1,13 @@
 ;;; for emergency debug
-(setq debug-on-error nil) ; enable enter debugger if an error is signaled
-(setq debug-on-quit  nil) ; enable interrupt C-g when Emacs is super slow.
+(setq debug-on-error  nil) ; enable enter debugger if an error is signaled
+(setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
+(setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
+
+;;; my-load
+(defun my-load (file)
+  (if (file-exists-p file)
+      (load file)
+    (y-or-n-p (message "%s is not found,proceed?" file))))
 
 ;;; to suppress Emacs file open is extremly slow
 (setq vc-handled-backends nil)
