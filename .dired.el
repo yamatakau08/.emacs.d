@@ -1,5 +1,4 @@
 ; dired にて、windows に関連付けられたファイルを起動する。
-; http://www.bookshelf.jp/soft/meadow_25.html#SEC282
 ; http://uenox.ld.infoseek.co.jp/elisp/index.html (site disappear)
 (defun uenox-dired-winstart ()
   "Type '\\[uenox-dired-winstart]': win-start the current line's file."
