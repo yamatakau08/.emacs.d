@@ -7,7 +7,10 @@
       (let ((fname (dired-get-filename)))
 	(cond
 	 ((eq system-type 'windows-nt)
-	  (w32-shell-execute "open" fname))
+	  (message "%s" fname)
+	  (message "%s" (convert-standard-filename fname))
+;	  (w32-shell-execute "open" fname))
+	  (my-app-open-file (convert-standard-filename fname)))
 	 ((eq system-type 'darwin)
 	  (shell-command-to-string (format "open %s" fname))))
 	(message "open %s" fname))))
