@@ -12,11 +12,10 @@
 ;;; to suppress Emacs file open is extremly slow
 (setq vc-handled-backends nil)
 
-;;; 個人設定読み込み
-(if (file-exists-p "~/.emacs.d/private.el")
-    (load "~/.emacs.d/private.el"))
+;;; load private settings
+(my-load "~/.emacs.d/private.el")
 
-;;; check if ip-address is private
+;;; check if ip-address is company's network
 (load "~/.emacs.d/company-network-p.el")
 
 ;; package
@@ -50,6 +49,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
     (setq exec-path (split-string path-from-shell path-separator))))
 
 (set-exec-path-from-shell-PATH)
+
+;;; to open file associated application
+(my-load "~/.emacs.d/my-app-open-file.el")
 
 ;;; window setting
 (load "~/.emacs.d/window-setting.el")
@@ -122,3 +124,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (load "~/.emacs.d/.company.el")
+
+;;;
+(load "~/.emacs.d/.windmove.el")
