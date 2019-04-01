@@ -4,7 +4,7 @@
 ;;; if points in side <.*>, it can return correctly
 ;;; if points on '<', it can not return correctly, return c:/msys64/
 
-(defun xmy-app-open-file-get-file ()
+(defun xmy-app-open-file-get-file-name ()
   "for checking"
   (interactive)
   (message "%s" (helm-find-files-initial-input)))
