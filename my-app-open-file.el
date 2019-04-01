@@ -1,4 +1,13 @@
 ;;; to open UNC represent file with associated application
+;;; helm-find-files-initial-input can not return the UNC path correctly
+;;; e.g. <\\jps00004944\share_data\SQA1-HA\10_Test_Project_FY17\NewAudio\02_検証計画書\Schedule-NewAudio-Evaluation.pptx>
+;;; if points in side <.*>, it can return correctly
+;;; if points on '<', it can not return correctly, return c:/msys64/
+
+(defun xmy-app-open-file-get-file ()
+  "for checking"
+  (interactive)
+  (message "%s" (helm-find-files-initial-input)))
 
 ;;;
 (defun my-app-open-file-get-file-name ()
