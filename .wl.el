@@ -260,8 +260,9 @@
 
 ;;; redefine wl-message-buffer-display to check args-out-of-range "" 0 4
 ;;; copy wl-message-buffer-display from ~/.emacs.d/elpa/wanderlust-20190203.1326/
+;;; important to add ''' before defun.
 (eval-after-load "wl-message"
-  (defun wl-message-buffer-display (folder number display-type
+  '(defun wl-message-buffer-display (folder number display-type
 					   &optional force-reload unread)
     (let* ((msg-id (ignore-errors
 		     (elmo-message-field folder number 'message-id)))
