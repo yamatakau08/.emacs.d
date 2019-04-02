@@ -1,3 +1,9 @@
+;;; add require
+;;; because when magit is not loaded,(wrong-type-argument stringp nil) happen
+;;; when execute "magit-status" ~/.emacs.d
+;;; after opening /plink:yama@aa.bb.cc.dd:/home/yama/org/skips.org file on msys2 Emacs environment
+(require 'magit)
+
 ;;; https://emacs.stackexchange.com/questions/6021/change-a-branchs-upstream-with-magit#6023
 ;;; Before v2.4 it was also possible to set the remote branch that you are pushing to as the upstream branch using p-ueREMOTE/BRANCHRET. But now the --set-upstream switch is no longer available in the push popup by default. You can get it back by setting
 (setq magit-push-current-set-remote-if-missing nil)
@@ -28,7 +34,7 @@
 ;;; Please supply the message using either -m or -F option.
 ;(add-hook 'git-commit-mode-hook
 ;	  (setq auto-fill-mode nil))
-; git-commit-mode-hook は、 define-minor-mode git-commit-mode により自動で作られる
+; git-commit-mode-hook is defined automatically when define-minor-mode git-commit-mode executed
 
 (eval-after-load "magit"
   '(delq 'git-commit-turn-on-auto-fill git-commit-setup-hook))
