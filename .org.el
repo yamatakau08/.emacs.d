@@ -1,3 +1,8 @@
+;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+;;; to use org Ver. 9.2.X
+(use-package org-plus-contrib
+  :ensure t)
+
 ;;; org-version changed to Ver. 9.2.1,、"<e TAB" template doesn't work
 ;;; supported by emacs-jp slack
 ;;; need to (require 'org-temp)
