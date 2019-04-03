@@ -1,4 +1,6 @@
-;(add-to-list 'load-path "~/.emacs.d/elpa/howm-20180225.205")
+;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+(use-package howm
+  :ensure t)
 
 (require 'howm) ; to check if howm package is installed.
 

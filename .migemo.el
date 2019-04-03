@@ -1,3 +1,7 @@
+;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+(use-package migemo
+  :ensure t)
+
 ;(require 'migemo) ; package使用していている場合不要 
  
 (cond

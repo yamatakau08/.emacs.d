@@ -1,3 +1,7 @@
+;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+(use-package magit
+  :ensure t)
+
 ;;; add require
 ;;; because when magit is not loaded,(wrong-type-argument stringp nil) happen
 ;;; when execute "magit-status" ~/.emacs.d

@@ -1,3 +1,7 @@
+;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+(use-package google-translate
+  :ensure t)
+
 ;;; https://qiita.com/tadsan/items/6c658cc471be61cbc8f6
 ;;; "設定ファイルの書き方"より、packageを使用する場合
 ;;; load-path追加必要無し
