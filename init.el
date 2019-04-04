@@ -127,3 +127,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (load "~/.emacs.d/.windmove.el")
+
+;;;
+(load "~/.emacs.d/.visual-regexp.el")
+
