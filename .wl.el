@@ -149,64 +149,69 @@
 ;;; IMAP 日本語フォルダ文字化け対策
 (setq elmo-imap4-use-modified-utf7 t)
 
-;;; 添付ファイル ATT00001.txt のメールを参照すると、エラー対応、wanderlustメーリングリストでサポート
-;;; file-missing ("Opening input file" "No such file or directory" "c:/yama/ATT00001.txt")
-;(eval-after-load "wl-message"
-;  (defun wl-message-buffer-display (folder number display-type
-;					   &optional force-reload unread)
-;    (let* ((msg-id (ignore-errors
-;		     (elmo-message-field folder number 'message-id)))
-;	   (fname (elmo-folder-name-internal folder))
-;	   (hit (wl-message-buffer-cache-hit (list fname number msg-id)))
-;	   (redisplay nil)
-;	   entity)
-;      (when (and hit (not (buffer-live-p hit)))
-;	(wl-message-buffer-cache-delete (list fname number msg-id))
-;	(setq hit nil))
-;      (if hit
-;	  (progn
-;	    ;; move hit to the top.
-;	    (wl-message-buffer-cache-sort
-;	     (wl-message-buffer-cache-entry-make (list fname number msg-id) hit))
-;	    (with-current-buffer hit
-;	      ;; Rewind to the top page
-;	      (widen)
-;	      (goto-char (point-min))
-;	      (ignore-errors (wl-message-narrow-to-page))
-;	      (setq entity wl-message-buffer-mime-entity)
-;	      (unless (eq wl-message-buffer-cur-display-type display-type)
-;		(setq redisplay t))))
-;	;; delete tail and add new to the top.
-;	(setq hit (wl-message-buffer-cache-add (list fname number msg-id)))
-;	(setq redisplay t))
-;      (when (or force-reload redisplay)
-;	(with-current-buffer hit
-;	  (when (or force-reload
-;		    (null entity)
-;		    (not (elmo-mime-entity-display-p
-;			  entity
-;			  (if (wl-message-mime-analysis-p display-type)
-;			      'mime
-;			    'as-is)))
-;		    (if (wl-message-display-no-merge-p display-type)
-;			(elmo-mime-entity-reassembled-p entity)
-;		      (elmo-mime-entity-fragment-p entity)))
-;	    (setq entity (elmo-message-mime-entity
-;			  folder
-;			  number
-;			  (wl-message-get-original-buffer)
-;			  (and wl-message-auto-reassemble-message/partial
-;			       (not (wl-message-display-no-merge-p
-;				     display-type)))
-;			  force-reload
-;			  unread
-;			  (not (wl-message-mime-analysis-p display-type)))))
-;	  (unless entity
-;	    (error "Cannot display message %s/%s" fname number))
-;	  (wl-message-display-internal entity display-type))
-;	) ;; will not be used
-;      hit))))
-;
+;;; 1. When show the mail with attched file name is ATT00001.txt, error happened file-missing ("Opening input file" "No such file or directory" "c:/yama/ATT00001.txt")
+;;; 2. When show the mail, wl error (args-out-of-range "" 0 4)
+;;; redfine wl-message-buffer-display to get the backtrace
+(eval-after-load "wl-message"
+  '(defun wl-message-buffer-display (folder number display-type
+					    &optional force-reload unread)
+     (let* ((msg-id (ignore-errors
+		      (elmo-message-field folder number 'message-id)))
+	    (fname (elmo-folder-name-internal folder))
+	    (hit (wl-message-buffer-cache-hit (list fname number msg-id)))
+	    (redisplay nil)
+	    entity)
+       (when (and hit (not (buffer-live-p hit)))
+	 (wl-message-buffer-cache-delete (list fname number msg-id))
+	 (setq hit nil))
+       (if hit
+	   (progn
+	     ;; move hit to the top.
+	     (wl-message-buffer-cache-sort
+	      (wl-message-buffer-cache-entry-make (list fname number msg-id) hit))
+	     (with-current-buffer hit
+	       ;; Rewind to the top page
+	       (widen)
+	       (goto-char (point-min))
+	       (ignore-errors (wl-message-narrow-to-page))
+	       (setq entity wl-message-buffer-mime-entity)
+	       (unless (eq wl-message-buffer-cur-display-type display-type)
+		 (setq redisplay t))))
+	 ;; delete tail and add new to the top.
+	 (setq hit (wl-message-buffer-cache-add (list fname number msg-id)))
+	 (setq redisplay t))
+       (when (or force-reload redisplay)
+	 (with-current-buffer hit
+	   (when (or force-reload
+		     (null entity)
+		     (not (elmo-mime-entity-display-p
+			   entity
+			   (if (wl-message-mime-analysis-p display-type)
+			       'mime
+			     'as-is)))
+		     (if (wl-message-display-no-merge-p display-type)
+			 (elmo-mime-entity-reassembled-p entity)
+		       (elmo-mime-entity-fragment-p entity)))
+	     (setq entity (elmo-message-mime-entity
+			   folder
+			   number
+			   (wl-message-get-original-buffer)
+			   (and wl-message-auto-reassemble-message/partial
+				(not (wl-message-display-no-merge-p
+				      display-type)))
+			   force-reload
+			   unread
+			   (not (wl-message-mime-analysis-p display-type)))))
+	   (unless entity
+	     (error "Cannot display message %s/%s" fname number))
+	   (wl-message-display-internal entity display-type))
+	 ) ;; will not be used
+       hit))
+  )
+
+;;; 1. When show the mail with attched file name is ATT00001.txt, error happened file-missing ("Opening input file" "No such file or directory" "c:/yama/ATT00001.txt")
+;;; redfine the following functions to take the backtrace by support wl mailing list.
+;;; Since the this fixing applied the package, comment the following.
 ;(eval-after-load "mime-tnef"
 ;  '(progn
 ;     (defun mime-tnef-insert-file (file data)
@@ -261,69 +266,3 @@
 ;		  result)))
 ;	 (mime-edit-insert-file-parameters (nreverse result) file)))
 ;     ))
-
-;;; redefine wl-message-buffer-display to check args-out-of-range "" 0 4
-;;; copy wl-message-buffer-display from ~/.emacs.d/elpa/wanderlust-20190203.1326/
-;;; important to add ''' before defun.
-(eval-after-load "wl-message"
-  '(defun wl-message-buffer-display (folder number display-type
-					   &optional force-reload unread)
-    (let* ((msg-id (ignore-errors
-		     (elmo-message-field folder number 'message-id)))
-	   (fname (elmo-folder-name-internal folder))
-	   (hit (wl-message-buffer-cache-hit (list fname number msg-id)))
-	   (redisplay nil)
-	   entity)
-      (when (and hit (not (buffer-live-p hit)))
-	(wl-message-buffer-cache-delete (list fname number msg-id))
-	(setq hit nil))
-      (if hit
-	  (progn
-	    ;; move hit to the top.
-	    (wl-message-buffer-cache-sort
-	     (wl-message-buffer-cache-entry-make (list fname number msg-id) hit))
-	    (with-current-buffer hit
-	      ;; Rewind to the top page
-	      (widen)
-	      (goto-char (point-min))
-	      (ignore-errors (wl-message-narrow-to-page))
-	      (setq entity wl-message-buffer-mime-entity)
-	      (unless (eq wl-message-buffer-cur-display-type display-type)
-		(setq redisplay t))))
-	;; delete tail and add new to the top.
-	(setq hit (wl-message-buffer-cache-add (list fname number msg-id)))
-	(setq redisplay t))
-      (when (or force-reload redisplay)
-	(condition-case err
-	    (with-current-buffer hit
-	      (when (or force-reload
-			(null entity)
-			(not (elmo-mime-entity-display-p
-			      entity
-			      (if (wl-message-mime-analysis-p display-type)
-				  'mime
-				      'as-is)))
-			      (if (wl-message-display-no-merge-p display-type)
-				  (elmo-mime-entity-reassembled-p entity)
-				(elmo-mime-entity-fragment-p entity)))
-		      (setq entity (elmo-message-mime-entity
-				    folder
-				    number
-				    (wl-message-get-original-buffer)
-				    (and wl-message-auto-reassemble-message/partial
-					 (not (wl-message-display-no-merge-p
-					       display-type)))
-				    force-reload
-				    unread
-				    (not (wl-message-mime-analysis-p display-type)))))
-		    (unless entity
-		      (error "Cannot display message %s/%s" fname number))
-		    (wl-message-display-internal entity display-type))
-		(quit
-		 (wl-message-buffer-cache-delete)
-		 (error "Display message %s/%s is quitted" fname number))
-		(error
-		 (wl-message-buffer-cache-delete)
-		 (signal (car err) (cdr err))
-		 nil))) ;; will not be used
-      hit)))
