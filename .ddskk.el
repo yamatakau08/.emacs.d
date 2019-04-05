@@ -1,6 +1,6 @@
 ;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
-(use-package ddskk
-  :ensure t)
+(use-package skk
+  :ensure ddskk)
 
 ;;; require explicitly
 ;;; if skk is not installed, face "command-execute: Wrong type argument: commandp, skk-mode"

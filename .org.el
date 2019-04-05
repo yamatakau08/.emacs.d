@@ -1,7 +1,11 @@
-;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
-;;; to use org Ver. 9.2.X
-(use-package org-plus-contrib
-  :ensure t)
+;;; Since pre-installed org version is 9.1.9,
+;;; install org version 9.2.X by package to use some functions provied by its version.
+;;; :ensure t
+;;; https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+;;; Error (use-package): Cannnot load
+;;; https://github.com/jwiegley/use-package/issues/597#issuecomment-352898477
+(use-package org
+  :ensure org-plus-contrib)
 
 ;;; org-version changed to Ver. 9.2.1,、"<e TAB" template doesn't work
 ;;; supported by emacs-jp slack

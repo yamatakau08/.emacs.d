@@ -1,6 +1,6 @@
 ;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
-(use-package wanderlust
-  :ensure t)
+(use-package wl
+  :ensure wanderlust)
 
 ;;; set t in trouble
 (setq elmo-imap4-debug t)
