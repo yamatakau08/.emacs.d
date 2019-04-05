@@ -266,3 +266,49 @@
 ;		  result)))
 ;	 (mime-edit-insert-file-parameters (nreverse result) file)))
 ;     ))
+
+;;; 2. When show the mail, wl error (args-out-of-range "" 0 4)
+;;; redfine the following functions supported by wl mailing list Kazuhiro Ito
+(eval-after-load "mime-tnef"
+  '(defun mime-tnef-parse (string)
+     (catch :done
+       (unless (and (> (length string) 6)
+		    (equal (string-make-unibyte (substring string 0 4))
+			   (string-make-unibyte "\x78\x9f\x3e\x22")))
+	 (message "Input data does not seem to be MS-TNEF format")
+	 (throw :done nil))
+       (mime-tnef-debug "TNEF Key: %04x\n" (mime-tnef-2bytes string 4))
+       (let ((length (length string))
+	     (read 6)
+	     result object
+	     lvl-type name type
+	     sum
+	     start end data-length)
+	 (while (< read length)
+	   (setq lvl-type (mime-tnef-byte string read)
+		 name (mime-tnef-2bytes string (1+ read))
+		 type (mime-tnef-2bytes string (+ read 3))
+		 data-length (mime-tnef-4bytes string (+ read 5))
+		 start (+ read 9)
+		 end (+ start data-length)
+		 object `(
+			  (lvl-type . ,(or (cdr (assq lvl-type
+						      mime-tnef-lvl-types-table))
+					   lvl-type))
+			  (name . ,(or (cdr (assq name mime-tnef-names-table))
+				       name))
+			  (type . ,(or (cdr (assq type mime-tnef-types-table))
+				       type))
+			  (start . ,start)
+			  (end . ,end)
+			  ;; (length . ,(mime-tnef-4bytes string (+ read 5)))
+			  )
+		 read (+ read data-length 9 2)
+		 sum 0)
+	   (dotimes (i data-length)
+	     (setq sum (+ sum (mime-tnef-byte string (- read 3 i)))))
+	   (unless (eq (mime-tnef-2bytes string (- read 2)) (% sum 65536))
+	     (message "Checksum mismatch, TNEF may be corrupted"))
+	   (setq result (cons object result)))
+	 (cons (nreverse result) string))))
+  )
