@@ -133,3 +133,89 @@
 (let ((f "~/.emacs.d/ad_org-clock-report.el"))
   (if (file-exists-p f)
       (load f)))
+
+;;; redefine tempo-insert to suppress autoindent the following
+;;; * test
+;;; <eTAB
+;;;   #+begin_example
+;;;   #+end_example
+;;;
+;;; modify point of function tempo-insert
+;;; original: ((eq element '>) (indent-according-to-mode))
+;;; modified: ((eq element '>) (ignore))
+(with-eval-after-load "org-tempo"
+  (defun tempo-insert (element on-region)
+    "Insert a template element.
+Insert one element from a template. If ON-REGION is non-nil the `r'
+elements are replaced with the current region.
+
+See documentation for `tempo-define-template' for the kind of elements
+possible."
+    (cond ((stringp element) (tempo-process-and-insert-string element))
+	  ((and (consp element)
+		(eq (car element) 'p)) (tempo-insert-prompt-compat
+					(cdr element)))
+	  ((and (consp element)
+		(eq (car element) 'P)) (let ((tempo-interactive t))
+					 (tempo-insert-prompt-compat
+					  (cdr element))))
+;;;	((and (consp element)
+;;;	      (eq (car element) 'v)) (tempo-save-named
+;;;				      (nth 1 element)
+;;;				      nil
+;;;				      (nth 2 element)))
+	  ((and (consp element)
+		(eq (car element) 'r)) (if on-region
+					 (goto-char tempo-region-stop)
+					 (tempo-insert-prompt-compat
+					  (cdr element))))
+          ((and (consp element)
+		(eq (car element) 'r>)) (if on-region
+                                            (progn
+                                              (goto-char tempo-region-stop)
+                                              (indent-region (mark) (point) nil))
+                                          (tempo-insert-prompt-compat
+                                           (cdr element))))
+	  ((and (consp element)
+		(eq (car element) 's)) (tempo-insert-named (car (cdr element))))
+	  ((and (consp element)
+		(eq (car element) 'l)) (mapcar (function
+						(lambda (elt)
+						  (tempo-insert elt on-region)))
+					       (cdr element)))
+	  ((eq element 'p) (tempo-insert-mark (point-marker)))
+	  ((eq element 'r) (if on-region
+			       (goto-char tempo-region-stop)
+			     (tempo-insert-mark (point-marker))))
+	  ((eq element 'r>) (if on-region
+				(progn
+				  (goto-char tempo-region-stop)
+				  (indent-region (mark) (point) nil))
+			      (tempo-insert-mark (point-marker))))
+	  ((eq element '>) (ignore))
+	  ((eq element '&) (if (not (or (= (current-column) 0)
+					(save-excursion
+					  (re-search-backward
+					   "^\\s-*\\=" nil t))))
+			       (insert "\n")))
+	  ((eq element '%) (if (not (or (eolp)
+					(save-excursion
+					  (re-search-forward
+					   "\\=\\s-*$" nil t))))
+			       (insert "\n")))
+	  ((eq element 'n) (insert "\n"))
+	  ((eq element 'n>) (insert "\n") (indent-according-to-mode))
+	  ;; Bug: If the 'o is the first element in a template, strange
+	  ;; things can happen when the template is inserted at the
+	  ;; beginning of a line.
+	  ((eq element 'o) (if (not (or on-region
+					(eolp)
+					(save-excursion
+					  (re-search-forward
+					   "\\=\\s-*$" nil t))))
+			       (open-line 1)))
+	  ((null element))
+	  (t (tempo-insert (or (tempo-is-user-element element)
+			       (eval element))
+			   on-region)))))
+
