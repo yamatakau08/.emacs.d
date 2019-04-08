@@ -219,3 +219,31 @@ possible."
 			       (eval element))
 			   on-region)))))
 
+;;; smart expression on the above by @takaxp #org-mode emacs-jp slack
+;(with-eval-after-load "org-tempo"
+;  ;; (defun ad:org-tempo-before-complete-tag (&rest _)
+;  ;; (advice-add 'indent-according-to-mode :override #'ignore))
+;  (defun ad:org-tempo-before-complete-tag (&rest _)
+;    (save-excursion
+;      (beginning-of-line)
+;      (when (looking-at "<")
+;        (advice-add 'indent-according-to-mode :override #'ignore))))
+;  (defun ad:org-tempo-after-complete-tag (&rest _)
+;    (advice-remove 'indent-according-to-mode #'ignore))
+;  (advice-add 'org-tempo-complete-tag
+;              :before #'ad:org-tempo-before-complete-tag)
+;  (advice-add 'org-tempo-complete-tag
+;              :after #'ad:org-tempo-after-complete-tag))
+
+;;; smart expression on the above by @conao3 #org-mode emacs-jp slack
+;(with-eval-after-load "org-tempo"
+;    (defun ad:org-tempo-around (fn &rest args)
+;      (if (save-excursion (beginning-of-line) (looking-at "<"))
+;          (flet ((indent-according-to-mode () #'ignore))
+;            (funcall fn args))
+;        (funcall fn args))))
+;
+;(advice-add 'org-tempo-complete-tag :around #'ad:org-tempo-around)
+;;;(advice-remove 'org-tempo-complete-tag #'ad:org-tempo-around)
+
+
