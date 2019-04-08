@@ -70,13 +70,15 @@
 (defun my-google-translate-register-item-read-front ()
   (interactive)
   (goto-line 3)
-  (thing-at-point 'word))
+  ;; use 'sentence to get line content without \n
+  (thing-at-point 'sentence))
 
 ;;; move point for back in *Google Translate* buffer
 (defun my-google-translate-register-item-read-back ()
   (interactive)
   (goto-line 5)
-  (thing-at-point 'word))
+  ;; use 'sentence to get line content without \n
+  (thing-at-point 'sentence))
 
 ;;;
 (defun my-google-translate-register-item (deck)
