@@ -40,10 +40,9 @@
 ;;; need to use openssl in https://github.com/wanderlust/wanderlust/blob/master/utils/ssl.el
 ;;; Since package doesn't install ssl.el, install manualy.
 (let ((file (expand-file-name "~/.emacs.d/wanderlust/utils/ssl.el")))
-  (if (file-exists-p file)
-      (load file)
-    (my-wl-source-get)
-    (load file)))
+  (if (not (file-exists-p file))
+      (my-wl-source-get))
+  (require 'ssl file))
 
 ;;; for imap connection
 ;;; ssl-program-name default value is "openssl"
