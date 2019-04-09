@@ -83,11 +83,9 @@
 
 (setq my-skips-headlines-alist
         ;; description/heading     key
-       '(("プロマネ工程"         . "p")
-	 ("エンジニアリング工程" . "e")
-	 ("SQA業務改善"          . "i")
-	 ("学習・チャレンジ"     . "s")
-	 ("その他"               . "o")))
+       '(("プロジェクトマネージメント"   . "p")
+	 ("プロジェクトエンジニアリング" . "e")
+	 ("その他"                       . "o")))
 
 (defun my-org-capture-templates-set (alist)
   "set org-capture-templates with alist"
