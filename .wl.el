@@ -64,22 +64,16 @@
 	("!socks" socks socks socks-open-network-stream)
 	("!direct" direct nil open-network-stream)))
 
+;;; set ssl-program-arguments
+(setq ssl-program-arguments
+      '("s_client"
+	"-quiet"
+	"-connect"
+	(format "%s:%s" host service)))
+
 (if (company-network-p)
-    (setq ssl-program-arguments
-	  '("s_client"
-	    "-quiet"
-	    "-connect"
-	    (format "%s:%s" host service)
-	    "-proxy"
-	    (format "%s:%s" wl-proxy-server wl-proxy-port)
-	    ))
-  ;; for private network
-  (setq ssl-program-arguments
-	'("s_client"
-	  "-quiet"
-	  "-connect"
-	  (format "%s:%s" host service)
-	  )))
+    (nconc ssl-program-arguments
+	   '("-proxy" (format "%s:%s" wl-proxy-server wl-proxy-port))))
 
 ;;; In case of openssl ver 1.1 above my own compiled on cygwin environment, need to "-crlf"
 ;;; It's the best to user Windows openssl until openssl ver1.1 above on cygin is released
