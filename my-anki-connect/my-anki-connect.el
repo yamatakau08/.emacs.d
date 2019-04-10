@@ -66,6 +66,9 @@
 				    (:tags "")))))))
 
 ;;;
+;;; fail when back is "発表する" etc
+;;; fail (my-anki-connect-push-note ): \224\255\225\\\202\267\202\351\ (extra '\' between 225 and 202 with json-encode)
+;;; pass (my-anki-connect-push-notex): \224\255\225\\202\267\202\351\
 (defun my-anki-connect-push-note (deck front back)
   "Push note which has front and back in deck specified by json data argment with func use json-encode "
   (let ((cmd 
@@ -101,7 +104,7 @@ localhost:8765      \
 ;	  (shell-quote-argument front)
 ;	  (shell-quote-argument back)
 	  )))
-;    (message "%s" cmd)
+    (message "%s" cmd)
     (shell-command-to-string cmd)))
 
 ;;;

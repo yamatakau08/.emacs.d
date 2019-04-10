@@ -84,5 +84,5 @@
 (defun my-google-translate-register-item (deck)
   ;; register card in deck specified args
   (let ((front (read-string "Front: " (my-google-translate-register-item-read-front)))
-        (back  (read-string "Back : " (my-google-translate-register-item-read-back))))
-    (my-anki-connect-push-note deck front back)))
+        (back  (read-string "Back : " (my-google-translate-register-item-read-back ))))
+    (my-anki-connect-push-notex deck front back)))
