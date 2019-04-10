@@ -37,14 +37,14 @@
 
   ;; for private network
   ;; if package-initialize is not executed, the followin add-to-list make emacs fail
-  (add-to-list 'package-archives
-	       '("melpa" . "https://melpa.org/packages/")
-	       '("org"   . "https://orgmode.org/elpa/"))
+;  (add-to-list 'package-archives
+;	       '("melpa" . "https://melpa.org/packages/")
+;	       '("org"   . "https://orgmode.org/elpa/"))
   ;; add-to-list時、自宅でも Failed to download ‘(melpa . https://melpa.org/packages/)’ archive. になる場合があったので、setqにする
-;    (setq package-archives
-;	  '(("gnu" . "https://elpa.gnu.org/packages/")
-;	    ("org"   . "https://orgmode.org/elpa/")
-;	    ("melpa" . "https://melpa.org/packages/")))
+    (setq package-archives
+	  '(("gnu" . "https://elpa.gnu.org/packages/")
+	    ("org"   . "https://orgmode.org/elpa/")
+	    ("melpa" . "https://melpa.org/packages/")))
 )
 
 ;;; if use-package is not installed, install "use-package"
