@@ -81,35 +81,84 @@
 ;; %i C-c c を叩いたときに選択されていたリージョンの内容
 ;; %a C-c cを叩いたときに開いていたファイルへのリンク（本当はorg-store-linkで保存されたリンクだが）
 
+;;;
 (setq my-skips-headlines-alist
-        ;; description/heading     key
-       '(("プロジェクトマネージメント"   . "p")
-	 ("プロジェクトエンジニアリング" . "e")
-	 ("その他"                       . "o")))
+      ;; headline                    sub headline   key
+      '(("プロジェクトマネージメント" . (("BAR_SUS_SK" . "1")
+					 ("BAR_SB23" . "2")
+					 ("OTH_UMA" . "3")
+					 ("BAR_EB1" . "4")
+					 ("その他" . "5")))
+	("プロジェクトエンジニアリング" . (("その他" . "6")))
+	("評価プロジェクト以外" . (("SQA業務改善" . "7")
+				   ("学習・チャレンジ" . "8")
+				   ("一般会議" . "9")
+				   ("その他" . "10")))
+	))
 
-(defun my-org-capture-templates-set (alist)
-  "set org-capture-templates with alist"
+;;;
+(defun my-org-capture-set-entry (description key org-file headline subheadline)
+"
+(my-org-capture-set-entry \"プロジェクトマネージメント\" \"p\" org-default-notes-file \"プロジェクトマネージメント\" nil)
+(my-org-capture-set-entry \"BAR_SUS_SK\" \"a\" org-default-notes-file \"プロジェクトマネージメント\" \"BAR_SUS_SK\")
+in *Org Select* buffer, template
+[p]   プロジェクトマネージメント
+[a]   BAR_SUS_SK
+
+in ~/.notes set org-default-notes-file variable
+* プロジェクトマネージメント
+** test
+   :LOGBOOK:
+   CLOCK: [2019-04-11 木 18:54]
+   :END:
+
+BAR_SUS_SK should be put in  プロジェクトマネージメント headline before capture
+"
+(let ((target
+	 (if subheadline
+	     `(file+olp ,org-file ,headline ,subheadline)
+	   `(file+headline ,org-file ,headline))))
+    (message "%s" target)
+    (add-to-list 'org-capture-templates
+		 `(,key         ; key sequence to open template
+		   ,description ; description in *Org Select* buffer
+		   entry
+		   ,target
+		   "** %?"      ; template %? is position point here. in case nil, annotation will be insert
+		   :clock-in   1 ; when capture, execute clock-in
+		   :clock-keep 1 ; when :clock-keep set 1, C-c C-c org-clock-finalize doesn't execute clock-out
+		   )
+		 t) ; added in the end
+    ))
+
+;;;
+(defun my-org-capture-set-entries (headline alist) ; alist: description alist
   (interactive)
   (cond ((null alist) nil)
-	(t (let ((key      (cdr (car alist)))
-		 (headline (car (car alist))))
-	     (add-to-list 'org-capture-templates
-			  `(,key      ; keys
-			    ,headline ; description
-			    entry
-			    ;; both ',' w and w/o my-skips-org-file, need to ',' with headline
-			    (file+headline my-skips-org-file ,headline)
-			    ;(file+headline ,my-skips-org-file ,headline)
-			    "** %?"       ; template %? is position point here. in case nil, annotation will be insert
-			    :clock-in   1 ; when capture, execute clock-in
-			    :clock-keep 1 ; when :clock-keep set 1, C-c C-c org-clock-finalize doesn't execute clock-out
-			    ))
-	     (my-org-capture-templates-set (cdr alist))))))
+	 (t
+	  (let* ((entry (car alist))
+		 (description (car entry))
+		 (key         (cdr entry)))
+	    ;; (message "h:%s d:%s k:%s\n" headline description key))
+	    (my-org-capture-set-entry
+	     description key my-skips-org-file headline description))
+	  (my-org-capture-set-entries headline (cdr alist)))))
+
+;;;
+(defun my-org-capture-set-skips-entries (alist) ; alist: format is my-skips-headlines-alist
+  (interactive)
+  (cond ((null alist) nil)
+	 (t
+	  (let* ((entry (car alist))
+		 (headline  (car entry))
+		 (subhalist (cdr entry)))
+	    (my-org-capture-set-entries headline subhalist))
+	  (my-org-capture-set-skips-entries (cdr alist)))))
 
 ;;; org-capture-mode-hook doesn't effect, (with-eval-after-load 'org-capture) effects
 ;;; https://ox-hugo.scripter.co/doc/org-capture-setup/
 (with-eval-after-load 'org-capture
-  (my-org-capture-templates-set my-skips-headlines-alist))
+  (my-org-capture-set-skips-entries my-skips-headlines-alist))
 
 ;;; to suppress not to put the annotation whichi is link text in org capture buffer
 ;;; without this settings, org-capture-templates template propertie "** %?" behave the same.
