@@ -100,6 +100,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;; org-mode
 (load "~/.emacs.d/.org.el")
+(load "~/.emacs.d/my-skips.el")
 
 ;;; helm-google
 ;(load "~/.emacs.d/.helm-google.el")
@@ -130,4 +131,3 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (load "~/.emacs.d/.visual-regexp.el")
-
