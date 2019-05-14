@@ -12,8 +12,9 @@
 ;	  (w32-shell-execute "open" fname))
 	  (my-app-open-file (convert-standard-filename fname)))
 	 ((eq system-type 'darwin)
-	  (shell-command-to-string (format "open %s" fname))))
-	(message "open %s" fname))))
+;	  (shell-command-to-string (format "open %s" fname))))
+	  (start-process "open-with-default-app" nil "open" fname))
+	(message "open %s" fname)))))
 
 (add-hook 'dired-mode-hook
 	  (lambda ()
