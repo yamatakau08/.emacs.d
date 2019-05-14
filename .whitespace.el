@@ -8,7 +8,4 @@
 (dolist (val '(lines spaces space-mark newline-mark))
   (delq val whitespace-style))
 
-
-
-
-
+(global-whitespace-mode t)
