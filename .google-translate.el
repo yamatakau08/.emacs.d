@@ -6,8 +6,10 @@
 ;;; "設定ファイルの書き方"より、packageを使用する場合
 ;;; load-path追加必要無し
 ;;; (add-to-list 'load-path "~/.emacs.d/elpa/google-translate-20170713.119")
-;;; require する必要無し 
+;;; require する必要無し
 ;;; (require 'google-translate)
+
+(setq google-translate-translation-listening-debug t)
 
 ;;; for registering word in Anki
 (add-to-list 'load-path "~/.emacs.d/my-anki-connect")
@@ -84,5 +86,5 @@
 (defun my-google-translate-register-item (deck)
   ;; register card in deck specified args
   (let ((front (read-string "Front: " (my-google-translate-register-item-read-front)))
-        (back  (read-string "Back : " (my-google-translate-register-item-read-back ))))
+	(back  (read-string "Back : " (my-google-translate-register-item-read-back ))))
     (my-anki-connect-push-notex deck front back)))
