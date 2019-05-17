@@ -2,7 +2,7 @@
   :ensure t)
 
 ;;; https://github.com/jacktasia/dumb-jump/blob/master/README.md#debugging-a-jump
-;(setq dumb-jump-debug t) ; to put out debug message of dumb-jump
+;;(setq dumb-jump-debug t) ; to put out debug message of dumb-jump
 
 (setq dumb-jump-selector 'helm)
 
@@ -11,6 +11,11 @@
     ;;(setq dumb-jump-prefer-searcher 'ag)
     ;; since the above dumb-jump-prefer-searcher doesn't effect, use dumb-jump-force-searcher
     (setq dumb-jump-force-searcher  'ag))
+
+;;; dumb-jump-fallback-regex initial value is "\\bJJJ\\j"
+;;; Since without "\\b" can search on shell-mode, remove "\\b" from it.
+;;; works fine with dumb-jump-prefer-searcher nil case on mingw64
+;;(setq dumb-jump-fallback-regex "JJJ\\j")
 
 ;;; the following advice is experimentally to change args regexes dumb-jump-generate-git-grep-command
 ;;; but dumb-jump executes grep twice, so this advice doesn't effect.
