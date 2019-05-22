@@ -143,3 +143,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (load "~/.emacs.d/.instant-maximized-window.el")
+
+;;;
+(load "~/.emacs.d/.helm-ag.el")
