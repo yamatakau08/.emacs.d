@@ -14,7 +14,7 @@
   (let* ((repository-name "wanderlust")
 	 (default-directory (expand-file-name "~/.emacs.d"))
 	 (repository "https://github.com/wanderlust/wanderlust.git")
-	;; https://qiita.com/tadsan/items/17d32514b81f1e8f208a#%E3%81%AE%E5%B1%95%E9%96%8B
+	 ;; https://qiita.com/tadsan/items/17d32514b81f1e8f208a#%E3%81%AE%E5%B1%95%E9%96%8B
 	 (destdir    (expand-file-name (concat default-directory "/" repository-name))))
     (if (file-directory-p destdir)
 	;; https://qiita.com/tadsan/items/17d32514b81f1e8f208a#default-directory%E3%81%AB%E6%B0%97%E3%82%92%E9%85%8D%E3%82%8B
@@ -52,7 +52,7 @@
 (if (eq system-type 'windows-nt)
     ;; on cygwin
     ;; (setq ssl-program-name "/cygdrive/c/winbin/OpenSSL-Win64/bin/openssl.exe")
-    ;; on msys2 mingw64, 
+    ;; on msys2 mingw64,
     (setq ssl-program-name "openssl")
   (setq ssl-program-name "openssl"))
 
@@ -134,7 +134,7 @@
 
 ;;; http://www.ss.scphys.kyoto-u.ac.jp/person/yasui/emacs/mail.html
 ;;; より、サマリモードに入った直後は、wl-summary-prepared-hook にする事で、正常動作
-(add-hook  'wl-summary-prepared-hook 'my-wl-summary-mode-hook) 
+(add-hook  'wl-summary-prepared-hook 'my-wl-summary-mode-hook)
 ;(add-hook 'wl-summary-mode-hook     'my-wl-summary-mode-hook)
 
 ;;; http://www.kaisei.org/person/waasuke/2012/12/05/elmo_message_fetch_confirm/

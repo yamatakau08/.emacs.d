@@ -2,7 +2,7 @@
   :ensure t)
 
 ;;; https://github.com/jacktasia/dumb-jump/blob/master/README.md#debugging-a-jump
-;;(setq dumb-jump-debug t) ; to put out debug message of dumb-jump
+;(setq dumb-jump-debug t) ; to put out debug message of dumb-jump
 
 (setq dumb-jump-selector 'helm)
 
@@ -28,3 +28,10 @@
 ;  (dolist (arg args) (message "%s" arg))
 ;  (apply orig-func args))
 ;(advice-add 'dumb-jump-generate-git-grep-command :around 'my-dumb-jump-regexes-args)
+
+;;; .dumbjump
+;;; on msys, use path format drive letter likely c:
+;;; +c:/msys64/mingw64/lib/ruby/2.6.0
+
+;;; default 2s, over 2s, even if there are results, don't display anything.
+(setq dumb-jump-max-find-time 60)
