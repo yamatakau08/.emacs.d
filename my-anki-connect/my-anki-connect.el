@@ -10,7 +10,7 @@
 
 ;;; Code:
 
-;;; 
+;;;
 ;;; refer ank-connect supported actions
 ;;; https://foosoft.net/projects/anki-connect/index.html#supported-actions
 ;;;
@@ -71,7 +71,7 @@
 ;;; pass (my-anki-connect-push-notex): \224\255\225\\202\267\202\351\
 (defun my-anki-connect-push-note (deck front back)
   "Push note which has front and back in deck specified by json data argment with func use json-encode "
-  (let ((cmd 
+  (let ((cmd
 	 ;; need --noproxy localhost on Windows Environment to communicate AnkiConnect and other environmet is available --noproxy option
 	 (format "curl --noproxy localhost localhost:8765 --request POST --data \"%s\""
 		 ;; json data '"' を '\"' に変換
@@ -93,7 +93,7 @@
 --noproxy localhost \
 localhost:8765      \
 --request POST      \
---data \"{\\\"action\\\": \\\"addNote\\\", \\\"version\\\": 6, \\\"params\\\": {\\\"note\\\": {\\\"deckName\\\": \\\"%s\\\", \\\"modelName\\\": \\\"Basic\\\", \\\"fields\\\": {\\\"Front\\\": \\\"%s\\\", \\\"Back\\\": \\\"%s\\\"}, \\\"tags\\\": []}}}\"" 
+--data \"{\\\"action\\\": \\\"addNote\\\", \\\"version\\\": 6, \\\"params\\\": {\\\"note\\\": {\\\"deckName\\\": \\\"%s\\\", \\\"modelName\\\": \\\"Basic\\\", \\\"fields\\\": {\\\"Front\\\": \\\"%s\\\", \\\"Back\\\": \\\"%s\\\"}, \\\"tags\\\": []}}}\""
 	  (if (eq system-type 'windows-nt)
 	      (encode-coding-string deck  'sjis) deck)
 	  (if (eq system-type 'windows-nt)
