@@ -10,4 +10,3 @@
 ;(global-set-key (kbd "C-x o") 'helm-buffers-list) ; to tentative setting
 
 (helm-migemo-mode 1)
-
