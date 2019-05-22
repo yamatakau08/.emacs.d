@@ -6,11 +6,14 @@
 ;;; Shift+←→↑↓ でウィンドウ移動
 (windmove-default-keybindings) ; shift++←→↑↓ org-mode uses that, use modifier M
 ;;; refer http://d.hatena.ne.jp/tama_sh/20110206/1296976730
-;;(windmove-default-keybindings 'meta)
+;; (windmove-default-keybindings 'meta)
 ;;; following error
-;;(global-set-key (kbd "C-S-left")  'windmove-left)
-;;(global-set-key (kbd "C-S-right") 'windmove-right)
-;;(global-set-key (kbd "C-S-up")    'windmove-up)
-;;(global-set-key (kbd "C-S-down")  'windmove-down)
+;;; refer https://orgmode.org/manual/Conflicts.html
+;;; windmove
+;; Make windmove work in Org mode:
+(add-hook 'org-shiftup-final-hook 'windmove-up)
+(add-hook 'org-shiftleft-final-hook 'windmove-left)
+(add-hook 'org-shiftdown-final-hook 'windmove-down)
+(add-hook 'org-shiftright-final-hook 'windmove-right)
 
 (setq windmove-wrap-around t)
