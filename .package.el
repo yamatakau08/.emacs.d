@@ -6,7 +6,7 @@
 (if (< emacs-major-version 27)
     (package-initialize))
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
-;(unless package--initialized 
+;(unless package--initialized
 ;  (package-initialize t))
 
 ;;; to avoid the following error message in company network on Emacs 27.0
@@ -59,4 +59,3 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-
