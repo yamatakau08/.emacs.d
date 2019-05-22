@@ -4,5 +4,13 @@
 ;(set-face-foreground 'mode-line "gray95")
 
 ;;; Shift+←→↑↓ でウィンドウ移動
-(windmove-default-keybindings)
+(windmove-default-keybindings) ; shift++←→↑↓ org-mode uses that, use modifier M
+;;; refer http://d.hatena.ne.jp/tama_sh/20110206/1296976730
+;;(windmove-default-keybindings 'meta)
+;;; following error
+;;(global-set-key (kbd "C-S-left")  'windmove-left)
+;;(global-set-key (kbd "C-S-right") 'windmove-right)
+;;(global-set-key (kbd "C-S-up")    'windmove-up)
+;;(global-set-key (kbd "C-S-down")  'windmove-down)
+
 (setq windmove-wrap-around t)
