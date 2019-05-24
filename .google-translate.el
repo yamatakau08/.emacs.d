@@ -88,3 +88,17 @@
   (let ((front (read-string "Front: " (my-google-translate-register-item-read-front)))
 	(back  (read-string "Back : " (my-google-translate-register-item-read-back ))))
     (my-anki-connect-push-notex deck front back)))
+
+;;; for debugging
+;;; from that moment google-translate somehow url-retrieve never returns on mingw64 emacs self compiled that
+;;; before that can use google translate.
+;;; this is for arround advice url-retrieve-synchronously to debug, but url-retrieve never returns
+;;(defun advice:around (origi-func &rest args)
+;;  (message "    args:%s" args)
+;;  (setcdr args '(nil))
+;;  (message "new args:%s" args)
+;;  (apply origi-func args))
+;;(advice-add 'url-retrieve-synchronously :around 'advice:around)
+
+;;; to put out URL-DEBUG
+;;(setq url-debug t)
