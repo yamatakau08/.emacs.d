@@ -152,3 +152,15 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (load "~/.emacs.d/.info.el")
+
+;;; nxml
+(load "~/.emacs.d/.nxml-mode.el")
+
+;;;
+(load "~/.emacs.d/.sgml-mode.el")
+
+;;;
+(load "~/.emacs.d/.hideshow.el")
+
+;;;
+;;(load "~/.emacs.d/.origami.el")
