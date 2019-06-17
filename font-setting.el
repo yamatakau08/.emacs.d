@@ -26,11 +26,18 @@
 ;    (add-to-list 'default-frame-alist '(font . "Meiryo UI-12"))) ; 等幅フォントでないので使用をやめる
 
 ;;; Myrica https://myrica.estable.jp/
-(if (member "Myrica M" (font-family-list))
-    (cond
-     ((equal (system-name) "JPC20165182") ; to big font size on laptop environment
-      (add-to-list 'default-frame-alist '(font . "Myrica M-10")))
-     (t
-      (add-to-list 'default-frame-alist '(font . "Myrica M")))
-     ))
+;;; download Myrica.ttc or MyricaM.ttc zip,
+;;; unzip it, then dobule click Myrica.TTC to install
+;;; restart Emacs, evaluate (w32-select-font) in *scratch* buffer
+;;; check if "Myrica M" or "MyricaM" is selected
+(defun my-add-font-in-default-frame-alist (font)
+  (add-to-list 'default-frame-alist `(font . ,font)))
 
+(dolist (font '("Myrica M" "MyricaM M"))
+  (catch 'aaa
+    (if (member font (font-family-list))
+	(progn
+	  (if (equal (system-name) "JPC20165182")
+	      (my-add-font-in-default-frame-alist (concat font "-10"))
+	    (my-add-font-in-default-frame-alist font)))
+      (throw 'aaa font))))
