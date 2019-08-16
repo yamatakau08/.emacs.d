@@ -6,3 +6,5 @@
 ;; and emacs.info is in /msys64/mingw64/share/info
 ;; so set /mingw64/share/info.
 (add-to-list 'Info-directory-list "/mingw64/share/info/")
+;; both "c:/winbin/emacs-26.2-x86_64/share/info" or "/c/winbin/emacs-26.2-x86_64/share/info" are OK
+(add-to-list 'Info-directory-list "c:/winbin/emacs-26.2-x86_64/share/info")
