@@ -16,6 +16,7 @@
 ;; C-x C-f 時に、ivy buffer で、ディレクトリ候補が1つに絞られたら、そのディレクトリ名を編集できる様になる
 (setq enable-recursive-minibuffers t)
 
+
 ;;; for counsel-ag
 ;; C-M-n (key sequence Esc then Ctrl-n) displays the search pattern with the source in another buffer
 ;; but key stroke is not coveninent, change key assign to C-n
