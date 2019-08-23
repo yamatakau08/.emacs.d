@@ -1,5 +1,4 @@
-(require 'counsel)
-
+;(require 'counsel)
 ;; assign "C-x f" likely helm-find-files
 (global-set-key (kbd "C-x f") 'counsel-find-file)
 
@@ -13,6 +12,7 @@
 (setq read-file-name-function #'my-disable-counsel-find-file)
 (define-key counsel-mode-map [remap find-file] nil)
 
+;; for reference to make counsel-ag-this-file function
 ;(defun helm-ag-this-file ()
 ;  (interactive)
 ;  (helm-ag--init-state)
@@ -26,8 +26,10 @@
 ;    (helm :sources '(helm-ag-source) :buffer "*helm-ag*" :keymap helm-ag-map
 ;          :history 'helm-ag--helm-history)))
 
-;; counsel-grep で代用可能
-;; counsel-grep-or-swiper ファイルでないbufferも対象に
+;; counsel-grep でも代用可能
+;; counsel-grep-or-swiper を使えばファイルでないbufferも対象に
+(defalias 'counse-ag-this-file 'counsel-grep-or-swiper)
+
 ;(cl-defun counsel-ag-this-file (&optional initial-input initial-directory extra-ag-args ag-prompt
 ;                      &key caller)
 ;  "Grep for a string in the current directory using ag.
@@ -67,3 +69,19 @@
 ;                        (counsel-delete-process)
 ;                        (swiper--cleanup))
 ;              :caller (or caller 'counsel-ag))))
+
+;; To edit the search results of grep counsel-ag
+;; https://sam217pa.github.io/2016/09/11/nuclear-power-editing-via-ivy-and-ag/
+;; need to pacakge wgrep wgrep-ag
+(defun my-ivy-occur-edit ()
+  (ivy-occur)
+;  (ivy-wgrep-change-to-wgrep-mode)
+  )
+
+;; counsel-ag-map
+;; ivy buffer ag のpromptが出ている時に有効なKey map
+;; https://tomoya.hatenadiary.org/entry/20090415/1239809615
+(define-key ivy-minibuffer-map (kbd "C-c C-e") 'my-ivy-occur-edit)
+
+;; C-x f doesn't work in case of URL
+
