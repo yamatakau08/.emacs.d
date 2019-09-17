@@ -15,184 +15,87 @@
 
 ;;; to suppress "File XXX changed on disk. Read from disk?" dialog
 ;;; while helm-ag-this file XXX file is updating, likely log file
-
-
-;;; tentative
+;; for testing
 (defun org-find-file-noselect (filename &optional nowarn rawfile wildcards)
-  "Read file FILENAME into a buffer and return the buffer.
-If a buffer exists visiting FILENAME, return that one, but
-verify that the file has not changed since visited or saved.
-The buffer is not selected, just returned to the caller.
-Optional second arg NOWARN non-nil means suppress any warning messages.
-Optional third arg RAWFILE non-nil means the file is read literally.
-Optional fourth arg WILDCARDS non-nil means do wildcard processing
-and visit all the matching files.  When wildcards are actually
-used and expanded, return a list of buffers that are visiting
-the various files."
-  (setq filename
-	(abbreviate-file-name
-	 (expand-file-name filename)))
-  (setq nowarn t)
-  (if (file-directory-p filename)
-      (or (and find-file-run-dired
-	       (run-hook-with-args-until-success
-		'find-directory-functions
-		(if find-file-visit-truename
-		    (abbreviate-file-name (file-truename filename))
-		  filename)))
-	  (error "%s is a directory" filename))
-    (if (and wildcards
-	     find-file-wildcards
-	     (not (file-name-quoted-p filename))
-	     (string-match "[[*?]" filename))
-	(let ((files (condition-case nil
-			 (file-expand-wildcards filename t)
-		       (error (list filename))))
-	      (find-file-wildcards nil))
-	  (if (null files)
-	      (find-file-noselect filename)
-	    (mapcar #'find-file-noselect files)))
-      (let* ((buf (get-file-buffer filename))
-	     (truename (abbreviate-file-name (file-truename filename)))
-	     (attributes (file-attributes truename))
-	     (number (nthcdr 10 attributes))
-	     ;; Find any buffer for a file which has same truename.
-	     (other (and (not buf) (find-buffer-visiting filename))))
-	;; Let user know if there is a buffer with the same truename.
-	(if other
-	    (progn
-	      (or nowarn
-		  find-file-suppress-same-file-warnings
-		  (string-equal filename (buffer-file-name other))
-		  (files--message "%s and %s are the same file"
-                                  filename (buffer-file-name other)))
-	      ;; Optionally also find that buffer.
-	      (if (or find-file-existing-other-name find-file-visit-truename)
-		  (setq buf other))))
-	;; Check to see if the file looks uncommonly large.
-	(when (not (or buf nowarn))
-	  (abort-if-file-too-large (nth 7 attributes) "open" filename)
-	  (warn-maybe-out-of-memory (nth 7 attributes)))
-	(if buf
-	    ;; We are using an existing buffer.
-	    (let (nonexistent)
-	      (or nowarn
-		  (verify-visited-file-modtime buf)
-		  (cond ((not (file-exists-p filename))
-			 (setq nonexistent t)
-			 (message "File %s no longer exists!" filename))
-			;; Certain files should be reverted automatically
-			;; if they have changed on disk and not in the buffer.
-			((and (not (buffer-modified-p buf))
-			      (let ((tail revert-without-query)
-				    (found nil))
-				(while tail
-				  (if (string-match (car tail) filename)
-				      (setq found t))
-				  (setq tail (cdr tail)))
-				found))
-			 (with-current-buffer buf
-			   (message "Reverting file %s..." filename)
-			   (revert-buffer t t)
-			   (message "Reverting file %s...done" filename)))
-			((yes-or-no-p
-			  (if (string= (file-name-nondirectory filename)
-				       (buffer-name buf))
-			      (format
-			       (if (buffer-modified-p buf)
-				   "File %s changed on disk.  Discard your edits? "
-				 "File %s changed on disk.  Reread from disk? ")
-			       (file-name-nondirectory filename))
-			    (format
-			     (if (buffer-modified-p buf)
-				 "File %s changed on disk.  Discard your edits in %s? "
-			       "File %s changed on disk.  Reread from disk into %s? ")
-			     (file-name-nondirectory filename)
-			     (buffer-name buf))))
-			 (with-current-buffer buf
-			   (revert-buffer t t)))))
-	      (with-current-buffer buf
+  (message "filename:%s, nowarn:%s, rawfile:%s, wildcards:%s" filename nowarn rawfile wildcards))
+(defun my-find-file-noselect (filename &optional nowarn rawfile wildcards)
+  (message "filename:%s, nowarn:%s, rawfile:%s, wildcards:%s" filename nowarn rawfile wildcards))
 
-		;; Check if a formerly read-only file has become
-		;; writable and vice versa, but if the buffer agrees
-		;; with the new state of the file, that is ok too.
-		(let ((read-only (not (file-writable-p buffer-file-name))))
-		  (unless (or nonexistent
-			      (eq read-only buffer-file-read-only)
-			      (eq read-only buffer-read-only))
-		    (when (or nowarn
-			      (let* ((new-status
-				      (if read-only "read-only" "writable"))
-				     (question
-				      (format "File %s is %s on disk.  Make buffer %s, too? "
-					      buffer-file-name
-					      new-status new-status)))
-				(y-or-n-p question)))
-		      (setq buffer-read-only read-only)))
-		  (setq buffer-file-read-only read-only))
+;; "&rest" keyword of args is unnecessary
+;; (defun my-find-file-noselect-filter-args (&rest args) first definition
+;; when "&rest" is append, arg content is ((args))
+(defun my-find-file-noselect-filter-args (args)
+  ;; args=(filename &optional nowarn rawfile wildcards)
+  ;; always nowarn=t
+  (with-output-to-temp-buffer "*My Backtrace*" (backtrace)) ; to check where the function is called
+  (if (<= 2 (length args)) ; multiple argment
+      (progn
+	(setcar (nthcdr 1 args) t)
+	args)
+    ;; only filename argument
+    (append args '(t))))
 
-		(unless (or (eq (null rawfile) (null find-file-literally))
-			    nonexistent
-			    ;; It is confusing to ask whether to visit
-			    ;; non-literally if they have the file in
-			    ;; hexl-mode or image-mode.
-			    (memq major-mode '(hexl-mode image-mode)))
-		  (if (buffer-modified-p)
-		      (if (y-or-n-p
-			   (format
-			    (if rawfile
-				"The file %s is already visited normally,
-and you have edited the buffer.  Now you have asked to visit it literally,
-meaning no coding system handling, format conversion, or local variables.
-Emacs can only visit a file in one way at a time.
+;(advice-add 'find-file-noselect :filter-args #'my-find-file-noselect-filter-args)
 
-Do you want to save the file, and visit it literally instead? "
-				"The file %s is already visited literally,
-meaning no coding system handling, format conversion, or local variables.
-You have edited the buffer.  Now you have asked to visit the file normally,
-but Emacs can only visit a file in one way at a time.
+;;; emacs-jp @kosh's sample code
+;;; https://emacs-jp.slack.com/archives/C6T2T9H4G/p1568479222029200
+;(defun find-file-noselect--filter-args (args)
+;  ;; args=(filename &optional nowarn rawfile wildcards)
+;  (with-output-to-temp-buffer "*My Backtrace*" (backtrace))
+;  (if (<= 2 (length args))
+;      (setf (nth 1 args) t)) ;; always nowarn=t
+;  args)
+;(advice-add 'find-file-noselect :filter-args
+;            #'find-file-noselect--filter-args)
 
-Do you want to save the file, and visit it normally instead? ")
-			    (file-name-nondirectory filename)))
-			  (progn
-			    (save-buffer)
-			    (find-file-noselect-1 buf filename nowarn
-						  rawfile truename number))
-			(if (y-or-n-p
-			     (format
-			      (if rawfile
-				  "\
-Do you want to discard your changes, and visit the file literally now? "
-				"\
-Do you want to discard your changes, and visit the file normally now? ")))
-			    (find-file-noselect-1 buf filename nowarn
-						  rawfile truename number)
-			  (error (if rawfile "File already visited non-literally"
-				   "File already visited literally"))))
-		    (if (y-or-n-p
-			 (format
-			  (if rawfile
-			      "The file %s is already visited normally.
-You have asked to visit it literally,
-meaning no coding system decoding, format conversion, or local variables.
-But Emacs can only visit a file in one way at a time.
+;;; replace function of "find-file" for helm-ag--find-file-action
+;;; when calling helm-ag-this-file and result buffer with search string
+;;; during target-file is always updating
+(defun helm-ag--find-file-action-find-file (filename &optional wildcards)
+  "Edit file FILENAME.
+Switch to a buffer visiting file FILENAME,
+creating one if none already exists.
+Interactively, the default if you just type RET is the current directory,
+but the visited file name is available through the minibuffer history:
+type \\[next-history-element] to pull it into the minibuffer.
 
-Do you want to revisit the file literally now? "
-			    "The file %s is already visited literally,
-meaning no coding system decoding, format conversion, or local variables.
-You have asked to visit it normally,
-but Emacs can only visit a file in one way at a time.
+The first time \\[next-history-element] is used after Emacs prompts for
+the file name, the result is affected by `file-name-at-point-functions',
+which by default try to guess the file name by looking at point in the
+current buffer.  Customize the value of `file-name-at-point-functions'
+or set it to nil, if you want only the visited file name and the
+current directory to be available on first \\[next-history-element]
+request.
 
-Do you want to revisit the file normally now? ")
-			  (file-name-nondirectory filename)))
-			(find-file-noselect-1 buf filename nowarn
-					      rawfile truename number)
-		      (error (if rawfile "File already visited non-literally"
-			       "File already visited literally"))))))
-	      ;; Return the buffer we are using.
-	      buf)
-	  ;; Create a new buffer.
-	  (setq buf (create-file-buffer filename))
-	  ;; find-file-noselect-1 may use a different buffer.
-	  (find-file-noselect-1 buf filename nowarn
-				rawfile truename number))))))
+You can visit files on remote machines by specifying something
+like /ssh:SOME_REMOTE_MACHINE:FILE for the file name.  You can
+also visit local files as a different user by specifying
+/sudo::FILE for the file name.
+See the Info node `(tramp)File name Syntax' in the Tramp Info
+manual, for more about this.
+
+Interactively, or if WILDCARDS is non-nil in a call from Lisp,
+expand wildcards (if any) and visit multiple files.  You can
+suppress wildcard expansion by setting `find-file-wildcards' to nil.
+
+To visit a file without any kind of conversion and without
+automatically choosing a major mode, use \\[find-file-literally]."
+  (interactive
+   (find-file-read-args "Find file: "
+                        (confirm-nonexistent-file-or-buffer)))
+  (let ((value (find-file-noselect filename t nil wildcards))) ; force set to 2'nd arg t of find-file-noselect
+    (if (listp value)
+	(mapcar 'pop-to-buffer-same-window (nreverse value))
+      (pop-to-buffer-same-window value))))
+
+(defun helm-ag--find-file-action--filter-args (args)
+  ;(print args) ; for debug
+  (if (eq (nth 1 args) 'find-file)
+      (setf (nth 1 args) (lambda (filename) (switch-to-buffer (find-file-noselect filename t))))
+      ;(setf (nth 1 args) 'helm-ag--find-file-action-find-file)
+    )
+  ;(print args) ; for debug
+  args)
+
+(advice-add 'helm-ag--find-file-action :filter-args
+	    #'helm-ag--find-file-action--filter-args)

@@ -166,7 +166,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;(load "~/.emacs.d/.origami.el")
 
 ;;;
-(load "~/.emacs.d/.ivy.el")
+;(load "~/.emacs.d/.ivy.el")
 
 ;;;
-(load "~/.emacs.d/.counsel.el")
+;(load "~/.emacs.d/.counsel.el")
