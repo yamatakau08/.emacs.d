@@ -76,6 +76,41 @@
 ;;; To edit the search results of counsel-grep
 ;;; need to pacakge wgrep wgrep-ag
 ;;; refer https://sam217pa.github.io/2016/09/11/nuclear-power-editing-via-ivy-and-ag/
+(defun my-ivy-occur ()
+  "Stop completion and put the current candidates into a new buffer.
+
+The new buffer remembers current action(s).
+
+While in the *ivy-occur* buffer, selecting a candidate with RET or
+a mouse click will call the appropriate action for that candidate.
+
+There is no limit on the number of *ivy-occur* buffers."
+  (interactive)
+  (if (not (window-minibuffer-p))
+      (user-error "No completion session is active")
+    (let* ((caller (ivy-state-caller ivy-last))
+           (occur-fn (plist-get ivy--occurs-list caller))
+           (buffer
+            (generate-new-buffer
+             (format "*ivy-occur%s \"%s\"*"
+                     (if caller
+                         (concat " " (prin1-to-string caller))
+                       "")
+                     ivy-text))))
+      (with-current-buffer buffer
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (if occur-fn
+              (funcall occur-fn)
+            (ivy-occur-mode)
+            (insert (format "%d candidates:\n" (length ivy--old-cands)))
+            (read-only-mode)
+            (ivy--occur-insert-lines
+             ivy--old-cands)))
+        (setf (ivy-state-text ivy-last) ivy-text)
+        (setq ivy-occur-last ivy-last))
+      (ivy-exit-with-action (lambda (_) (funcall ivy-wgrep-change-to-wgrep-mode))))))
+
 (defun my-ivy-occur-edit ()
   (interactive) ; need to interactive, to avoid the following error
   ;; (wrong-type-argument commandp my-ivy-occur-edit)
