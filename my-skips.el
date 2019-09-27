@@ -29,7 +29,7 @@
 ;;; org file for skips
 ;;; to open the org file for
 ;;; http://www.mhatta.org/wp/category/org-mode/#%E3%83%A1%E3%83%A2%E3%82%92%E5%8F%96%E3%82%8B
-(if (company-network-p)
+(if (eq (my-get-network-type) 'company)
     (setq my-skips-org-file (concat "/plink:yama@" elmo-imap4-default-server ":~/org/skips.org"))
   ;; (setq org-default-notes-file (concat org-directory "/notes.org")) ; need to consider the org file
   (setq my-skips-org-file (concat org-directory "/notes.org")))

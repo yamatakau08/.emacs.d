@@ -71,7 +71,7 @@
 	"-connect"
 	(format "%s:%s" host service)))
 
-(if (company-network-p)
+(if (eq (my-get-network-type) 'company)
     (nconc ssl-program-arguments
 	   '("-proxy" (format "%s:%s" wl-proxy-server wl-proxy-port))))
 
