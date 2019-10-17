@@ -10,7 +10,7 @@
 ;(require 'w3m-load)
 ;(require 'mime-w3m)
 
-;; proxy 
+;; proxy
 ;(setq w3m-command-arguments
 ;      (nconc w3m-command-arguments
 ;             '("-o" "http_proxy=http://proxy.hogege.com:8000/")))
@@ -20,7 +20,7 @@
 
 (setq w3m-command-arguments '("-o" (getenv "http_proxy")))
 
-;; 
+;;
 (setq w3m-home-page "http://hereri.blog105.fc2.com/")
 
 (setq w3m-default-display-inline-images t)

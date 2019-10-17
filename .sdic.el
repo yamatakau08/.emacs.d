@@ -1,6 +1,6 @@
 ;;; sdic-mode 用の設定
 ;;; for Windows Emacs
-(setq sdic-default-coding-system  'utf-8) 
+(setq sdic-default-coding-system  'utf-8)
 (setq sdicf-default-coding-system 'utf-8)
 
 (add-to-list 'load-path "~/.emacs.d/sdic/lisp")

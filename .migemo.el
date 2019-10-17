@@ -2,8 +2,8 @@
 (use-package migemo
   :ensure t)
 
-;(require 'migemo) ; package使用していている場合不要 
- 
+;(require 'migemo) ; package使用していている場合不要
+
 (cond
  ((eq system-type 'windows-nt)
   ;; https://nagayasu-shinya.com/emacs-cmigemo-windows/

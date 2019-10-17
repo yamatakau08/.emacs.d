@@ -5,7 +5,7 @@
   ;; other customizations can go here
   (setq c-basic-offset 4)
 ; case の labelの先頭をswitchにそろえる
-; c-set-style が "ellemtel" の時には有効にする。 
+; c-set-style が "ellemtel" の時には有効にする。
 ;  (setq c-offsets-alist (append (list '(case-label . 0))
 ;				c-offsets-alist))
   (gtags-mode 1)

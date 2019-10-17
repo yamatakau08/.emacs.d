@@ -14,15 +14,15 @@
 ;(global-set-key "\C-c\C-zv" 'browse-url-of-file)
 (add-hook 'dired-mode-hook
 	  (lambda ()
-             (local-set-key "\C-c\C-zf" 'browse-url-of-dired-file)))
- 
+	    (local-set-key "\C-c\C-zf" 'browse-url-of-dired-file)))
+
 (cond
  ((eq window-system 'x)
   (setq browse-url-browser-function 'browse-url-generic)
   (if (executable-find "chromium-browser")
       (setq browse-url-generic-program "chromium-browser")
     (setq browse-url-generic-program "firefox"))))
- 
+
 (defalias 'browse-url-at-point 'mybrowse-urlunc-at-point)
 ;(defun mybrowse-url-at-point (&optional arg)
 ;  "URL表記の後ろ全角スペースを削除してbrowse-urlを起動する。"
@@ -39,7 +39,7 @@
 
 (defun mybrowse-urlunc-at-point ()
   (interactive)
-  (let ((url (thing-at-point 'filename))) ; It's important to set filename as a argument, not url!	
+  (let ((url (thing-at-point 'filename))) ; It's important to set filename as a argument, not url!
     (setq url (replace-regexp-in-string "aa.bb.119.24" "aa.cc.126.1" url))
     (cond
      ((string-match "\\(http\\|ftp\\)" url)

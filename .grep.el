@@ -30,4 +30,3 @@
 
 ;; for grep-find
 (setq grep-find-command "find ../.. -type f -name '*.[ch]' -print0 | xargs -0 -e grep -ns ")
-

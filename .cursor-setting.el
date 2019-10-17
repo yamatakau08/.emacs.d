@@ -2,5 +2,5 @@
 ;(setq cursor-type t)
 
 ;;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Cursor-Display.html
-;;; On a text terminal, the cursor's appearance is controlled by the terminal, largely out of the control of Emacs. 
+;;; On a text terminal, the cursor's appearance is controlled by the terminal, largely out of the control of Emacs.
 ;(set-cursor-color 'red) ; doesn't work on Mac/Ubuntu terminal, set the curosor property on each terminal
