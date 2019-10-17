@@ -184,3 +184,14 @@ possible."
 (add-hook 'org-shiftleft-hook  'windmove-left )
 (add-hook 'org-shiftdown-hook  'windmove-down )
 (add-hook 'org-shiftright-hook 'windmove-right)
+
+;;; org day of the week format Japanese to English
+;;; https://w.atwiki.jp/opentfc/pages/116.html "日付を挿入"
+;(add-hook 'org-mode-hook
+;          (lambda ()
+;            (set (make-local-variable 'system-time-locale) "C")))
+;; https://qiita.com/tadsan/items/9d287a57c26711387043#make-local-variable
+;; recomment to use setq-local instead of make-local-variable is compatibility under Emacs 24.3
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq-local system-time-locale "C")))
