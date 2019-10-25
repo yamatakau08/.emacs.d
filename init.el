@@ -170,3 +170,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 ;(load "~/.emacs.d/.counsel.el")
+
+;;;
+(my-load "~/.emacs.d/.ruby-mode.el")
