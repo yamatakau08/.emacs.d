@@ -31,7 +31,9 @@
 	    (setq file-w32 (replace-regexp-in-string
 			    (car find-repl) (cdr find-repl)
 			    file-w32 nil nil)))
-	  (message "%s" file-w32)))))
+	  ;;(message "%s" file-w32)
+	  file-w32
+	  ))))
 
 ;;; supported by slack emacs-jp
 (defun my-app-open-file-w32-shell-execute (file-w32)
