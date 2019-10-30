@@ -35,7 +35,8 @@
 ;			  browse-url-new-window-flag))
 ;      (error "No URL found"))))
 
-(setq thing-at-point-file-name-chars "-~/[:alnum:]_.${}#%,:\\") ; add "\\" in thing-at-point-file-name-chars
+;; move .thingatpt.el
+;(setq thing-at-point-file-name-chars "-~/[:alnum:]_.${}#%,:\\") ; add "\\" in thing-at-point-file-name-chars
 
 (defun mybrowse-urlunc-at-point ()
   (interactive)
