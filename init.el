@@ -86,6 +86,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;; dired
 (load "~/.emacs.d/.dired.el")
 
+;;;
+(my-load "~/.emacs.d/.thingatpt.el")
+
 ;;; helm
 (load "~/.emacs.d/.helm.el")
 
@@ -173,3 +176,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (my-load "~/.emacs.d/.ruby-mode.el")
+
+;;;
+(my-load "~/.emacs.d/.openwith.el")
