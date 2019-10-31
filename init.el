@@ -87,7 +87,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (load "~/.emacs.d/.dired.el")
 
 ;;;
-(my-load "~/.emacs.d/.thingatpt.el")
+;(my-load "~/.emacs.d/.thingatpt.el")
+(my-load "~/.emacs.d/.ffap.el")
 
 ;;; helm
 (load "~/.emacs.d/.helm.el")
