@@ -48,46 +48,6 @@
 ;(advice-add 'find-file-noselect :filter-args
 ;            #'find-file-noselect--filter-args)
 
-;;; replace function of "find-file" for helm-ag--find-file-action
-;;; when calling helm-ag-this-file and result buffer with search string
-;;; during target-file is always updating
-;(defun helm-ag--find-file-action-find-file (filename &optional wildcards)
-;  "Edit file FILENAME.
-;Switch to a buffer visiting file FILENAME,
-;creating one if none already exists.
-;Interactively, the default if you just type RET is the current directory,
-;but the visited file name is available through the minibuffer history:
-;type \\[next-history-element] to pull it into the minibuffer.
-;
-;The first time \\[next-history-element] is used after Emacs prompts for
-;the file name, the result is affected by `file-name-at-point-functions',
-;which by default try to guess the file name by looking at point in the
-;current buffer.  Customize the value of `file-name-at-point-functions'
-;or set it to nil, if you want only the visited file name and the
-;current directory to be available on first \\[next-history-element]
-;request.
-;
-;You can visit files on remote machines by specifying something
-;like /ssh:SOME_REMOTE_MACHINE:FILE for the file name.  You can
-;also visit local files as a different user by specifying
-;/sudo::FILE for the file name.
-;See the Info node `(tramp)File name Syntax' in the Tramp Info
-;manual, for more about this.
-;
-;Interactively, or if WILDCARDS is non-nil in a call from Lisp,
-;expand wildcards (if any) and visit multiple files.  You can
-;suppress wildcard expansion by setting `find-file-wildcards' to nil.
-;
-;To visit a file without any kind of conversion and without
-;automatically choosing a major mode, use \\[find-file-literally]."
-;  (interactive
-;   (find-file-read-args "Find file: "
-;                        (confirm-nonexistent-file-or-buffer)))
-;  (let ((value (find-file-noselect filename t nil wildcards))) ; force set to 2'nd arg t of find-file-noselect
-;    (if (listp value)
-;	(mapcar 'pop-to-buffer-same-window (nreverse value))
-;      (pop-to-buffer-same-window value))))
-
 (defun helm-ag--find-file-action--filter-args (args)
   ;;(print args) ; for debug
   (if (eq (nth 1 args) 'find-file)
@@ -97,57 +57,83 @@
   ;;(print args) ; for debug
   args)
 
-(advice-add 'helm-ag--find-file-action :filter-args
+(advice-add #'helm-ag--find-file-action :filter-args
 	    #'helm-ag--find-file-action--filter-args)
 
-;;;
-;(custom-set-variables '(helm-ag-command-option "--depth 0"))
-(defun my-helm-do-ag (&optional basedir targets)
-  (interactive)
-  (require 'helm-mode)
-  (helm-ag--init-state)
-  (let* ((helm-ag-command-option "--depth 0") ; for test
-	 (helm-ag--default-directory (or basedir default-directory))
-         (helm-ag--default-target (cond (targets targets)
-                                        ((and (helm-ag--windows-p) basedir) (list basedir))
-                                        (t
-                                         (when (and (not basedir) (not helm-ag--buffer-search))
-                                           (helm-read-file-name
-                                            "Search in file(s): "
-                                            :default default-directory
-                                            :marked-candidates t :must-match t)))))
-         (helm-do-ag--extensions (when helm-ag--default-target
-                                   (helm-ag--do-ag-searched-extensions)))
-         (one-directory-p (helm-do-ag--target-one-directory-p
-                           helm-ag--default-target)))
-    (helm-ag--set-do-ag-option)
-    (helm-ag--set-command-features)
-    (helm-ag--save-current-context)
-    (helm-attrset 'search-this-file
-                  (and (= (length helm-ag--default-target) 1)
-                       (not (file-directory-p (car helm-ag--default-target)))
-                       (car helm-ag--default-target))
-                  helm-source-do-ag)
-    (if (or (helm-ag--windows-p) (not one-directory-p)) ;; Path argument must be specified on Windows
-        (helm-do-ag--helm)
-      (let* ((helm-ag--default-directory
-              (file-name-as-directory (car helm-ag--default-target)))
-             (helm-ag--default-target nil))
-        (helm-do-ag--helm)))))
+;; To pass ag option, such as: --elisp --depth 0 in helm-ag
+;; refer https://github.com/syohex/emacs-helm-ag/blob/master/README.md#use-long-option
+;; --ignore=pattern is oK, --ignore pattern is not oK
+;; in minibuffer helm-ag prompt, input rg option following
+;; Pattern: --elisp --depth=0 pattern
+;; --elisp, you can find file types ag --list-file-types
+;; > ag --list-file-types
+;; ...
+;;  --batch
+;;     .bat  .cmd
+;;  --elisp
+;;      .el
+;;  --log
+;;      .log
+;;  --org
+;;      .org
+;;  --ruby
+;;      .rb  .rhtml  .rjs  .rxml  .erb  .rake  .spec
+;;  --shell
+;;      .sh  .bash  .csh  .tcsh  .ksh  .zsh  .fish
 
-;;; > ag --list-file-types
-;;; The following file types I offten use are supported:
-;;;  --batch
-;;;     .bat  .cmd
-;;;  --elisp
-;;;      .el
-;;;  --log
-;;;      .log
-;;;  --org
-;;;      .org
-;;;  --python
-;;;      .py
-;;;  --ruby
-;;;      .rb  .rhtml  .rjs  .rxml  .erb  .rake  .spec
-;;;  --shell
-;;;      .sh  .bash  .csh  .tcsh  .ksh  .zsh  .fish
+;; ag additional option
+;(custom-set-variables '(helm-ag-command-option "--depth 0"))
+
+;; i tried to pass ag option (helm-ag-command-option "--depth 0") until I don't know how to pass ag option to helm-ag
+;(defun my-helm-do-ag (&optional basedir targets)
+;  (interactive)
+;  (require 'helm-mode)
+;  (helm-ag--init-state)
+;  (let* ((helm-ag-command-option "--depth 0") ; for test
+;	 (helm-ag--default-directory (or basedir default-directory))
+;         (helm-ag--default-target (cond (targets targets)
+;                                        ((and (helm-ag--windows-p) basedir) (list basedir))
+;                                        (t
+;                                         (when (and (not basedir) (not helm-ag--buffer-search))
+;                                           (helm-read-file-name
+;                                            "Search in file(s): "
+;                                            :default default-directory
+;                                            :marked-candidates t :must-match t)))))
+;         (helm-do-ag--extensions (when helm-ag--default-target
+;                                   (helm-ag--do-ag-searched-extensions)))
+;         (one-directory-p (helm-do-ag--target-one-directory-p
+;                           helm-ag--default-target)))
+;    (helm-ag--set-do-ag-option)
+;    (helm-ag--set-command-features)
+;    (helm-ag--save-current-context)
+;    (helm-attrset 'search-this-file
+;                  (and (= (length helm-ag--default-target) 1)
+;                       (not (file-directory-p (car helm-ag--default-target)))
+;                       (car helm-ag--default-target))
+;                  helm-source-do-ag)
+;    (if (or (helm-ag--windows-p) (not one-directory-p)) ;; Path argument must be specified on Windows
+;        (helm-do-ag--helm)
+;      (let* ((helm-ag--default-directory
+;              (file-name-as-directory (car helm-ag--default-target)))
+;             (helm-ag--default-target nil))
+;        (helm-do-ag--helm)))))
+
+;; replace C-s/C-r to helm-ag-this-file
+;; Since helm-occur can search string but it use grep is slow and can not edit search result,
+;; use helm-ag-this-file, but helm-ag-this-file can't search buffers e.g. *GNU Emacs*
+;; and helm-ag-buffers can't search pattern in only one buffer,
+;; don't use this settings
+;(when (featurep 'helm-ag)
+;  (define-key global-map (kbd "C-s") 'helm-ag-this-file)
+;  (define-key global-map (kbd "C-r") 'helm-ag-this-file)
+;  )
+
+;; if rg exist, set rg as helm-ag-base-command
+(setq rg-command nil) ; if rg command doesn't exist, set "".
+;(setq rg-command "/mingw64/bin/rg.exe") ; need .exe on windows environment
+;; When use rg, can't follow the pattern while move the cursor line in search result buffer.
+;; I don't use rg
+(when rg-command
+  (when (file-exists-p rg-command)
+    (custom-set-variables
+     '(helm-ag-base-command "rg --no-heading"))))
