@@ -16,13 +16,14 @@
 (my-load "~/.emacs.d/private.el")
 
 ;;; check if ip-address is company's network
-(load "~/.emacs.d/company-network-p.el")
+(my-load "~/.emacs.d/company-network-p.el")
 
 ;; package
-(load "~/.emacs.d/.package.el")
+(my-load "~/.emacs.d/.package.el")
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zoneが日本になっていないので、実時間と mode-line 時間表示が異なるので設定
+
 ;;; no backup files
 (setq make-backup-files nil)
 (setq auto-save-default nil)
@@ -53,130 +54,135 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;; to open file associated application
 (my-load "~/.emacs.d/my-app-open-file.el")
 
-;;; window setting
-(load "~/.emacs.d/window-setting.el")
+;;;
+(my-load "~/.emacs.d/window-setting.el")
 
-;;; font setting
-(load "~/.emacs.d/font-setting.el")
+;;;
+(my-load "~/.emacs.d/font-setting.el")
 
-;;; mode-line setting
-(load "~/.emacs.d/.mode-line.el")
+;;;
+(my-load "~/.emacs.d/.mode-line.el")
 
-;;; cursr setting
-(load "~/.emacs.d/.cursor-setting.el")
+;;;
+(my-load "~/.emacs.d/.cursor-setting.el")
 
 ;;; ddskk
-(load "~/.emacs.d/.ddskk.el")
-
-;;; howm
-(load "~/.emacs.d/.howm.el")
-
-;;; google-translate
-(load "~/.emacs.d/.google-translate.el")
-
-;;; migemo
-(load "~/.emacs.d/.migemo.el")
-
-;;; search-web
-;(load "~/.emacs.d/.search-web.el")
-
-;;; for google
-(load "~/.emacs.d/google")
-
-;;; dired
-(load "~/.emacs.d/.dired.el")
+(my-load "~/.emacs.d/.ddskk.el")
 
 ;;;
-;(my-load "~/.emacs.d/.thingatpt.el")
+(my-load "~/.emacs.d/.howm.el")
+
+;;;
+(my-load "~/.emacs.d/.google-translate.el")
+
+;;;
+(my-load "~/.emacs.d/.migemo.el")
+
+;;;
+;(my-load "~/.emacs.d/.search-web.el")
+
+;;;
+(my-load "~/.emacs.d/google.el")
+
+;;;
+(my-load "~/.emacs.d/.dired.el")
+
+;;;
+(my-load "~/.emacs.d/.thingatpt.el")
 (my-load "~/.emacs.d/.ffap.el")
 
-;;; helm
-(load "~/.emacs.d/.helm.el")
+;;;
+(my-load "~/.emacs.d/.helm.el")
 
-;;; magit
-(load "~/.emacs.d/.magit.el")
+;;;
+(my-load "~/.emacs.d/.magit.el")
 
-;;; wl
-(load "~/.emacs.d/.wl.el")
+;;;
+(my-load "~/.emacs.d/.wl.el")
 
-;;; cygwin-mount
-(load "~/.emacs.d/.cygwin-mount.el")
+;;;
+(my-load "~/.emacs.d/.cygwin-mount.el")
 
 ;;; org-mode
-(load "~/.emacs.d/.org.el")
-(load "~/.emacs.d/my-skips.el")
+(my-load "~/.emacs.d/.org.el")
+(my-load "~/.emacs.d/my-skips.el")
 
 ;;; helm-google
-;(load "~/.emacs.d/.helm-google.el")
-
-;;; sdic
-(load "~/.emacs.d/.sdic.el")
-
-;;; org-drill
-;(load "~/.emacs.d/.org-drill.el")
-
-;;; anki-editor
-;(load "~/.emacs.d/.anki-editor.el")
+;(my-load "~/.emacs.d/.helm-google.el")
 
 ;;;
-(load "~/.emacs.d/anki.el")
+(my-load "~/.emacs.d/.sdic.el")
 
 ;;;
-(load "~/.emacs.d/.tramp.el")
+;(my-load "~/.emacs.d/.org-drill.el")
 
 ;;;
-;(load "~/.emacs.d/.ox-confluence.el")
+;(my-load "~/.emacs.d/.anki-editor.el")
 
 ;;;
-(load "~/.emacs.d/.company.el")
+(my-load "~/.emacs.d/anki.el")
 
 ;;;
-(load "~/.emacs.d/.windmove.el")
+(my-load "~/.emacs.d/.tramp.el")
 
 ;;;
-(load "~/.emacs.d/.visual-regexp.el")
+;(my-load "~/.emacs.d/.ox-confluence.el")
 
 ;;;
-(load "~/.emacs.d/.ansi-color.el")
+(my-load "~/.emacs.d/.company.el")
 
 ;;;
-(load "~/.emacs.d/.whitespace.el")
+(my-load "~/.emacs.d/.windmove.el")
 
 ;;;
-(load "~/.emacs.d/.dumb-jump.el")
+(my-load "~/.emacs.d/.visual-regexp.el")
 
 ;;;
-(load "~/.emacs.d/.instant-maximized-window.el")
+(my-load "~/.emacs.d/.ansi-color.el")
 
 ;;;
-(load "~/.emacs.d/.helm-swoop.el")
+(my-load "~/.emacs.d/.whitespace.el")
 
 ;;;
-(load "~/.emacs.d/.helm-ag.el")
+(my-load "~/.emacs.d/.dumb-jump.el")
 
 ;;;
-(load "~/.emacs.d/.info.el")
+(my-load "~/.emacs.d/.instant-maximized-window.el")
+
+;;;
+(my-load "~/.emacs.d/.helm-swoop.el")
+
+;;;
+(my-load "~/.emacs.d/.helm-ag.el")
+
+;;;
+(my-load "~/.emacs.d/.info.el")
 
 ;;; nxml
-(load "~/.emacs.d/.nxml-mode.el")
+(my-load "~/.emacs.d/.nxml-mode.el")
 
 ;;;
-(load "~/.emacs.d/.sgml-mode.el")
+(my-load "~/.emacs.d/.sgml-mode.el")
 
 ;;;
-(load "~/.emacs.d/.hideshow.el")
+(my-load "~/.emacs.d/.hideshow.el")
 
 ;;;
-;;(load "~/.emacs.d/.origami.el")
+;;(my-load "~/.emacs.d/.origami.el")
 
 ;;;
-;(load "~/.emacs.d/.ivy.el")
+;(my-load "~/.emacs.d/.ivy.el")
 
 ;;;
-;(load "~/.emacs.d/.counsel.el")
+;(my-load "~/.emacs.d/.counsel.el")
 
 ;;;
 (my-load "~/.emacs.d/.ruby-mode.el")
 
 ;;;
 (my-load "~/.emacs.d/.openwith.el")
+
+;;
+;; http://extra-vision.blogspot.com/2016/09/helm-emacs.html
+;; helm-migemo is not needed, is include helm itself
+;;(my-load "~/.emacs.d/.helm-migemo.el")
