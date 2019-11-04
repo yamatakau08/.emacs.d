@@ -118,12 +118,13 @@
 ;             (helm-ag--default-target nil))
 ;        (helm-do-ag--helm)))))
 
-;; replace C-s/C-r to helm-ag-this-file
-;; Since helm-occur can search string but it use grep is slow and can not edit search result,
-;; use helm-ag-this-file, but helm-ag-this-file can't search buffers e.g. *GNU Emacs*
-;; and helm-ag-buffers can't search pattern in only one buffer,
+
 ;; don't use this settings
 ;(when (featurep 'helm-ag)
+;  ;; replace C-s/C-r to helm-ag-this-file
+;  ;; firstly I replace C-s/C-r with helm-ag-this-file.
+;  ;; but it can't be used in buffers e.g. *GNU Emacs* is not file buffers
+;  ;; helm-ag-this-file: Wrong type argument: stringp, nil
 ;  (define-key global-map (kbd "C-s") 'helm-ag-this-file)
 ;  (define-key global-map (kbd "C-r") 'helm-ag-this-file)
 ;  )

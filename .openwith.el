@@ -41,5 +41,6 @@
   (list (my-app-open-file-path2explore (car arg)))
   )
 
-(advice-add #'openwith-open-windows :filter-args
+(advice-add #'openwith-open-windows
+	    :filter-args
 	    #'openwith-open-windows-filter-args)
