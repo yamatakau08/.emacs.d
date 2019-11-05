@@ -91,8 +91,14 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.thingatpt.el")
 (my-load "~/.emacs.d/.ffap.el")
 
-;;;
+;; helm
 (my-load "~/.emacs.d/.helm.el")
+;; http://extra-vision.blogspot.com/2016/09/helm-emacs.html
+;; helm-migemo is not needed, is include helm itself
+;(my-load "~/.emacs.d/.helm-migemo.el")
+;(my-load "~/.emacs.d/.helm-google.el")
+(my-load "~/.emacs.d/.helm-swoop.el")
+(my-load "~/.emacs.d/.helm-ag.el")
 
 ;;;
 (my-load "~/.emacs.d/.magit.el")
@@ -106,9 +112,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;; org-mode
 (my-load "~/.emacs.d/.org.el")
 (my-load "~/.emacs.d/my-skips.el")
-
-;;; helm-google
-;(my-load "~/.emacs.d/.helm-google.el")
 
 ;;;
 (my-load "~/.emacs.d/.sdic.el")
@@ -150,12 +153,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.instant-maximized-window.el")
 
 ;;;
-(my-load "~/.emacs.d/.helm-swoop.el")
-
-;;;
-(my-load "~/.emacs.d/.helm-ag.el")
-
-;;;
 (my-load "~/.emacs.d/.info.el")
 
 ;;; nxml
@@ -181,8 +178,3 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (my-load "~/.emacs.d/.openwith.el")
-
-;;
-;; http://extra-vision.blogspot.com/2016/09/helm-emacs.html
-;; helm-migemo is not needed, is include helm itself
-;;(my-load "~/.emacs.d/.helm-migemo.el")
