@@ -130,11 +130,12 @@
 ;  )
 
 ;; if rg exist, set rg as helm-ag-base-command
-(setq rg-command nil) ; if rg command doesn't exist, set "".
-;(setq rg-command "/mingw64/bin/rg.exe") ; need .exe on windows environment
-;; When use rg, can't follow the pattern while move the cursor line in search result buffer.
-;; I don't use rg
-(when rg-command
-  (when (file-exists-p rg-command)
-    (custom-set-variables
-     '(helm-ag-base-command "rg --no-heading"))))
+;(setq rg-command nil) ; if rg command doesn't exist, set "".
+(setq rg-command "/mingw64/bin/rg.exe") ; need .exe on windows environment
+(if rg-command
+    (when (file-exists-p rg-command)
+      (custom-set-variables
+       ;; http://emacs.rubikitch.com/helm-ag/ <2016-10-05 Wed>ripgrep対応
+       ;;'(helm-ag-base-command "rg --no-heading")
+       '(helm-ag-base-command "rg --vimgrep --no-heading") ; to follow the search pattern in other window, need "--vimgrep"
+       )))
