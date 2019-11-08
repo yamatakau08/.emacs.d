@@ -84,8 +84,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;;
 (my-load "~/.emacs.d/google.el")
 
-;;;
-(my-load "~/.emacs.d/.dired.el")
+;;; replace .openwith.el in dired-mode
+;;(my-load "~/.emacs.d/.dired.el")
 
 ;;;
 (my-load "~/.emacs.d/.thingatpt.el")

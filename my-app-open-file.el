@@ -1,3 +1,4 @@
+
 ;;; to open UNC represent file with associated application
 ;;; helm-find-files-initial-input can not return the UNC path correctly
 ;;; e.g. <\\jps00004944\share_data\SQA1-HA\10_Test_Project_FY17\NewAudio\02_検証計画書\Schedule-NewAudio-Evaluation.pptx>
