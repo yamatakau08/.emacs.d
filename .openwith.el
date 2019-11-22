@@ -34,10 +34,12 @@
 
 ;; filter-args
 (defun openwith-open-windows-filter-args (arg)
-  ;; this filter advice function
+  (message "openwith-open-windows arg: %s" arg) ; for debug
+
   ;; arg is list ("//jps00004944/share_data/SQA1-HA/10_Test_Project_FY17/NewAudio/02_検証計画書/Schedule-NewAudio-Evaluation.pptx")
-  ;; replace file path converted with my-app-open-file-path2explore in car of arg list
-  ;;; "\\\\jps00004944\\share_data\\SQA1-HA\\10_Test_Project_FY17\\NewAudio\\02_検証計画書\\Schedule-NewAudio-Evaluation.pptx"
+  ;; The file path in car of arg SHOULD be converted '/' to '\' with my-app-open-file-path2explore
+  ;; expected result is the following
+  ;; "\\\\jps00004944\\share_data\\SQA1-HA\\10_Test_Project_FY17\\NewAudio\\02_検証計画書\\Schedule-NewAudio-Evaluation.pptx"
   (list (my-app-open-file-path2explore (car arg)))
   )
 
@@ -60,7 +62,45 @@
 	  ;; (shell-command-to-string (format "open %s" fname))))
 	  (start-process "open-with-default-app" nil "open" fname))))))
 
-;; 
+;;
 (add-hook 'dired-mode-hook
 	  (lambda ()
 	    (define-key dired-mode-map "z" 'my-openwith-oepn-windows-dired-winstart)))
+
+;; to suppress the error sound when opened associated files
+(defun openwith-file-handler (operation &rest args)
+  "Open file with external program, if an association is configured."
+  (catch 'assocs-found
+    (when (and openwith-mode (not (buffer-modified-p)) (zerop (buffer-size)))
+      (let ((assocs openwith-associations)
+	    (file (car args))
+	    oa)
+	;; do not use `dolist' here, since some packages (like cl)
+	;; temporarily unbind it
+	(while assocs
+	  (setq oa (car assocs)
+		assocs (cdr assocs))
+	  (when (save-match-data (string-match (car oa) file))
+	    (let ((params (mapcar (lambda (x) (if (eq x 'file) file x))
+				  (nth 2 oa))))
+	      (when (or (not openwith-confirm-invocation)
+			(y-or-n-p (format "%s %s? " (cadr oa)
+					  (mapconcat #'identity params " "))))
+		(if (eq system-type 'windows-nt)
+		    (openwith-open-windows file)
+		  (openwith-open-unix (cadr oa) params))
+		(kill-buffer nil)
+		(when (featurep 'recentf)
+		  (recentf-add-file file))
+		;; inhibit further actions
+		(message "Opened %s in external program"
+			 (file-name-nondirectory file))
+		(throw 'assocs-found t)
+		))))))
+    ;; when no association was found, relay the operation to other handlers
+    (let ((inhibit-file-name-handlers
+	   (cons 'openwith-file-handler
+		 (and (eq inhibit-file-name-operation operation)
+		      inhibit-file-name-handlers)))
+	  (inhibit-file-name-operation operation))
+      (apply operation args))))
