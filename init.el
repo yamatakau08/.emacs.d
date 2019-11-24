@@ -52,7 +52,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (set-exec-path-from-shell-PATH)
 
 ;;; to open file associated application
-(my-load "~/.emacs.d/my-app-open-file.el")
+;(my-load "~/.emacs.d/my-app-open-file.el")
 
 ;;;
 (my-load "~/.emacs.d/window-setting.el")
@@ -85,7 +85,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/google.el")
 
 ;;; replace .openwith.el in dired-mode
-;;(my-load "~/.emacs.d/.dired.el")
+;(my-load "~/.emacs.d/.dired.el")
 
 ;;;
 (my-load "~/.emacs.d/.thingatpt.el")
@@ -94,7 +94,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;; helm
 (my-load "~/.emacs.d/.helm.el")
 ;; http://extra-vision.blogspot.com/2016/09/helm-emacs.html
-;; helm-migemo is not needed, is include helm itself
+;; helm-migemo is not needed, is included helm itself
 ;(my-load "~/.emacs.d/.helm-migemo.el")
 ;(my-load "~/.emacs.d/.helm-google.el")
 (my-load "~/.emacs.d/.helm-swoop.el")
@@ -165,7 +165,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.hideshow.el")
 
 ;;;
-;;(my-load "~/.emacs.d/.origami.el")
+;(my-load "~/.emacs.d/.origami.el")
 
 ;;;
 ;(my-load "~/.emacs.d/.ivy.el")
@@ -177,4 +177,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.ruby-mode.el")
 
 ;;;
-(my-load "~/.emacs.d/.openwith.el")
+;(my-load "~/.emacs.d/.openwith.el")
+
+;;;
+(my-load "~/.emacs.d/.run-assoc.el")

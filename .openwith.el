@@ -23,7 +23,7 @@
 		 '(file))))
     )
    ((eq system-type 'darwin)
-    ;; need to study alert sound is heared when open file
+    ;; need to study beep sound is heared when open file
     (setq openwith-associations
 	  (list
 	   '("\\.pdf"     "open" (file))
@@ -67,8 +67,9 @@
 	  (lambda ()
 	    (define-key dired-mode-map "z" 'my-openwith-oepn-windows-dired-winstart)))
 
-
 ;; redefine
+;; original opewith-file-handler has beep sound
+;; I give up to use openwith
 (defun openwith-file-handler (operation &rest args)
   "Open file with external program, if an association is configured."
   (catch 'assocs-found
@@ -94,8 +95,10 @@
 		  (recentf-add-file file))
 		;; inhibit further actions
 		(message "Opened %s in external program"
+			 ;; original error, since beep sound occur,changed to message.
+			 ;; but beep still persists, somehow file-truename(nil) error has occcured
 			 (file-name-nondirectory file))
-		(kill-buffer nil)
+		(kill-buffer nil) ; takaxp advice, but no effects
 		(throw 'assocs-found t)
 		))))))
     ;; when no association was found, relay the operation to other handlers
