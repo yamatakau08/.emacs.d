@@ -67,7 +67,8 @@
 	  (lambda ()
 	    (define-key dired-mode-map "z" 'my-openwith-oepn-windows-dired-winstart)))
 
-;; to suppress the error sound when opened associated files
+
+;; redefine
 (defun openwith-file-handler (operation &rest args)
   "Open file with external program, if an association is configured."
   (catch 'assocs-found
@@ -89,12 +90,12 @@
 		(if (eq system-type 'windows-nt)
 		    (openwith-open-windows file)
 		  (openwith-open-unix (cadr oa) params))
-		(kill-buffer nil)
 		(when (featurep 'recentf)
 		  (recentf-add-file file))
 		;; inhibit further actions
 		(message "Opened %s in external program"
 			 (file-name-nondirectory file))
+		(kill-buffer nil)
 		(throw 'assocs-found t)
 		))))))
     ;; when no association was found, relay the operation to other handlers
