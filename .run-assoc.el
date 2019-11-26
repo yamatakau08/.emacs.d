@@ -54,10 +54,12 @@
 (defun helm-find-files-maybe-run-assoc (orig-fun &rest args)
   (let ((sel (helm-get-selection)))
     ;; NB, we only want to do this action if we're looking at the *helm find files* buffer
-    (if (and (or (string= helm-buffer "*helm find files*")
-		 (string= helm-buffer "*helm mini*"))
+    (if (and
+	 ;;(string= helm-buffer "*helm find files*")
+	 (or (string= helm-buffer "*helm find files*") (string= helm-buffer "*helm mini*")) ; modified to enable this advice func in *helm mini* buffer
 	     (string-match (mapconcat (lambda (x) (second x)) associated-program-alist "\\|")
-			   (helm-get-selection)))
+			   (helm-get-selection nil t) ; add args nil and t to be able to switch *scratch* and other buffers is not file
+			   ))
 	(run-associated-program sel)
       (apply orig-fun args))))
 
@@ -96,4 +98,9 @@
 		 (setq result t))))
       (setq items (cdr items)))
     ;; fail to run
-    (unless result (find-file file-name-arg)))) ;; modified to use file-name-arg, original is file is not defined
+    (unless result
+      (find-file file-name-arg) ; modified to use file-name-arg, original is file is not defined
+      )))
+
+;; replace return is dired-find-file in dired-run-associated-program
+(define-key dired-mode-map [return] 'dired-run-associated-program)
