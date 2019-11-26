@@ -2,49 +2,98 @@
 (add-to-list 'load-path "~/.emacs.d/my-git-source-get")
 (require 'my-git-source-get)
 
-;; check if ~/.emacs.d/run-assoc/run-assoc.el"
+;; check if ~/.emacs.d/run-assoc/run-assoc.el exists
 ;; if it does not exist, git clone
 (let ((file (expand-file-name "~/.emacs.d/run-assoc/run-assoc.el")))
   (if (not (file-exists-p file))
       (my-git-source-get "https://github.com/emacsmirror/run-assoc.git")))
 
-;; set for instant-maximized-window
+;; set load-path
 (add-to-list 'load-path "~/.emacs.d/run-assoc")
 
 ;;
 (require 'run-assoc)
 
-(setq associated-program-alist
-      '(
-	("open" "\\.pdf$") ; open windows/mac
-	;;("xdg-open" "\\.pdf$") ; xdg-open linux
-	("gnochm" "\\.chm$")
-	("mplayer" "\\.mp3$")
-	((lambda (file)
-	   (let ((newfile (concat (file-name-sans-extension (file-name-nondirectory file)) ".txt")))
-	     (cond
-	      ((get-buffer newfile)
-	       (switch-to-buffer newfile)
-	       (message "Buffer with name %s exists, switching to it" newfile))
-	      ((file-exists-p newfile)
-	       (find-file newfile)
-	       (message "File %s exists, opening" newfile))
-	      (t (find-file newfile)
-		 (= 0 (call-process "antiword" file
-				    newfile t "-")))))) "\\.doc$")
-	("evince" "\\.ps$")
-	("fontforge" "\\.\\(sfd\\(ir\\)?\\|ttf\\|otf\\)$")
-	((lambda (file)
-	   (browse-url (concat "file:///" (expand-file-name file)))) "\\.html?$")))
+(cond
+ ((eq system-type 'windows-nt)
+  (setq associated-program-alist
+	'(((lambda (file)
+	     ;; note: sinc if html is in file suffix regexp, helm-find-file can't open url which has html,
+	     ;; I don't include htlm in file suffix regexp
+	     (w32-shell-execute "open" file)) "\\.\\(pdf\\|png\\|JPG\\|msg\\|pptx\\|xlsx\\|xlsm\\|docx\\|avi\\|mp4\\)$")))
+  )
+ ((eq system-type 'darwin)
+  (setq associated-program-alist
+	'(("open" "\\.pdf$")))
+      )
+ ((eq system-type 'gnu/linux)
+  ;; refer https://github.com/emacsmirror/run-assoc.git
+  (setq associated-program-alist
+	'(("gnochm" "\\.chm$")
+	  ("evince" "\\.pdf$")
+	  ("mplayer" "\\.mp3$")
+	  ((lambda (file)
+	     (let ((newfile (concat (file-name-sans-extension (file-name-nondirectory file)) ".txt")))
+	       (cond
+		((get-buffer newfile)
+		 (switch-to-buffer newfile)
+		 (message "Buffer with name %s exists, switching to it" newfile))
+		((file-exists-p newfile)
+		 (find-file newfile)
+		 (message "File %s exists, opening" newfile))
+		(t (find-file newfile)
+		   (= 0 (call-process "antiword" file
+				      newfile t "-")))))) "\\.doc$")
+	  ("evince" "\\.ps$")
+	  ("fontforge" "\\.\\(sfd\\(ir\\)?\\|ttf\\|otf\\)$")
+	  ((lambda (file)
+	     (browse-url (concat "file:///" (expand-file-name file)))) "\\.html?$")))
+  ))
 
-;; refer https://www.emacswiki.org/emacs/RunAssoc
+;; following setting refer https://www.emacswiki.org/emacs/RunAssoc
 (defun helm-find-files-maybe-run-assoc (orig-fun &rest args)
   (let ((sel (helm-get-selection)))
     ;; NB, we only want to do this action if we're looking at the *helm find files* buffer
-    (if (and (string= helm-buffer "*helm find files*")
+    (if (and (or (string= helm-buffer "*helm find files*")
+		 (string= helm-buffer "*helm mini*"))
 	     (string-match (mapconcat (lambda (x) (second x)) associated-program-alist "\\|")
 			   (helm-get-selection)))
 	(run-associated-program sel)
       (apply orig-fun args))))
 
 (advice-add 'helm-execute-selection-action :around #'helm-find-files-maybe-run-assoc)
+
+;; assign key C-x C-f to run-associated-program instead of find-file to open file seamlessly
+(global-set-key "\C-x\C-f" 'run-associated-program)
+
+;; redefine original function
+;; since ";; fail to run" block orignal function uses (find-file file), but file is not defined and set when execute this block.
+;; I assume file should be file-name-arg
+;; and change propmpt string from "file:" to "Find file: " is same as find-file function
+(defun run-associated-program (file-name-arg)
+  "Run program or function associated with file-name-arg.
+      If no application is associated with file, then `find-file'."
+  (interactive "fFind file: ") ;; modified to be same prompt find-file function
+  (let ((items associated-program-alist)
+	item
+	program
+	regexp
+	file-name
+	result)
+    (setq file-name (expand-file-name file-name-arg))
+    (while (and (not result) items)
+      (setq item (car items))
+      (setq program (nth 0 item))
+      (setq regexp (nth 1 item))
+      (if (string-match regexp file-name)
+	  (cond ((stringp program)
+		 (setq result (start-process program nil program file-name)))
+		((functionp program)
+		 (funcall program (replace-regexp-in-string "/" "\\\\" file-name)) ;; modified for changing windows path to internal
+		 ;; This implementation assumes everything went well,
+		 ;; or that the called function handled an error by
+		 ;; itself:
+		 (setq result t))))
+      (setq items (cdr items)))
+    ;; fail to run
+    (unless result (find-file file-name-arg)))) ;; modified to use file-name-arg, original is file is not defined
