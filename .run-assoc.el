@@ -6,7 +6,10 @@
 ;; if it does not exist, git clone
 (let ((file (expand-file-name "~/.emacs.d/run-assoc/run-assoc.el")))
   (if (not (file-exists-p file))
-      (my-git-source-get "https://github.com/emacsmirror/run-assoc.git")))
+      (my-git-source-get
+       ;; "https://github.com/emacsmirror/run-assoc.git" ; original site
+       "https://github.com/yamatakau08/run-assoc.git"    ; my fork
+       )))
 
 ;; set load-path
 (add-to-list 'load-path "~/.emacs.d/run-assoc")
@@ -20,7 +23,7 @@
 	'(((lambda (file)
 	     ;; note: sinc if html is in file suffix regexp, helm-find-file can't open url which has html,
 	     ;; I don't include htlm in file suffix regexp
-	     (w32-shell-execute "open" file)) "\\.\\(pdf\\|png\\|JPG\\|msg\\|pptx\\|xlsx\\|xlsm\\|docx\\|avi\\|mp4\\)$")))
+	     (w32-shell-execute "open" file)) "\\.\\(pdf\\|png\\|JPG\\|msg\\|pptx\\|xls\\|xlsx\\|xlsm\\|docx\\|avi\\|mp4\\)$")))
   )
  ((eq system-type 'darwin)
   (setq associated-program-alist
@@ -67,40 +70,6 @@
 
 ;; assign key C-x C-f to run-associated-program instead of find-file to open file seamlessly
 (global-set-key "\C-x\C-f" 'run-associated-program)
-
-;; redefine original function
-;; since ";; fail to run" block orignal function uses (find-file file), but file is not defined and set when execute this block.
-;; I assume file should be file-name-arg
-;; and change propmpt string from "file:" to "Find file: " is same as find-file function
-(defun run-associated-program (file-name-arg)
-  "Run program or function associated with file-name-arg.
-      If no application is associated with file, then `find-file'."
-  (interactive "fFind file: ") ;; modified to be same prompt find-file function
-  (let ((items associated-program-alist)
-	item
-	program
-	regexp
-	file-name
-	result)
-    (setq file-name (expand-file-name file-name-arg))
-    (while (and (not result) items)
-      (setq item (car items))
-      (setq program (nth 0 item))
-      (setq regexp (nth 1 item))
-      (if (string-match regexp file-name)
-	  (cond ((stringp program)
-		 (setq result (start-process program nil program file-name)))
-		((functionp program)
-		 (funcall program (replace-regexp-in-string "/" "\\\\" file-name)) ;; modified for changing windows path to internal
-		 ;; This implementation assumes everything went well,
-		 ;; or that the called function handled an error by
-		 ;; itself:
-		 (setq result t))))
-      (setq items (cdr items)))
-    ;; fail to run
-    (unless result
-      (find-file file-name-arg) ; modified to use file-name-arg, original is file is not defined
-      )))
 
 ;; replace return is dired-find-file in dired-run-associated-program
 (define-key dired-mode-map [return] 'dired-run-associated-program)
