@@ -17,8 +17,8 @@
   ;; but it can't be used in buffers e.g. *GNU Emacs* is not file buffers
   ;; helm-ag-this-file: Wrong type argument: stringp, nil
   ;; it's better to use helm-occur in this case.
-  (define-key global-map (kbd "C-s") 'helm-occur)
-  (define-key global-map (kbd "C-r") 'helm-occur)
+  ;(define-key global-map (kbd "C-s") 'helm-occur)
+  ;(define-key global-map (kbd "C-r") 'helm-occur)
 ;  )
   )
 
