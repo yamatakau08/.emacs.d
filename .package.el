@@ -1,14 +1,6 @@
 ;;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:package:start
 ;(require 'package)
 
-;;; Unnecessary call on Emacs 27
-;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-380470596
-(if (< emacs-major-version 27)
-    (package-initialize))
-;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
-;(unless package--initialized
-;  (package-initialize t))
-
 ;;; to avoid the following error message in company network on Emacs 27.0
 ;;; in case, M-x pakage-refresh-contents
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547097797720600
@@ -20,6 +12,23 @@
 	    `(("http"  . ,proxy-server-port)
 	      ("https" . ,proxy-server-port)))))
 
+;; need to set package-archives before executing "package-initialize"
+;; when include ("gnu"   . "https://elpa.gnu.org/packages/") and use setq for pacakge-archives in company network,
+;; since failed to get the list from "gnu", delete from package-archives.
+;; setq is no effect, use custom-set-variables
+(custom-set-variables
+ '(package-archives
+   '(("org"   . "https://orgmode.org/elpa/"     )
+     ("melpa" . "https://melpa.org/packages/"   ))))
+
+;;; Unnecessary call on Emacs 27
+;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-380470596
+(if (< emacs-major-version 27)
+    (package-initialize))
+;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
+;(unless package--initialized
+;  (package-initialize t))
+
 ;;; in case, M-x list-packages with the above settings
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547100014738900
 ;;; Error while verifying signature archive-contents.sig:
@@ -27,25 +36,6 @@
 ;;; Command output:
 ;;; gpg: no valid OpenPGP data found.
 (setq package-check-signature nil)
-
-;(if (company-network-p)
-  ;; Since suddenly cannot connect to ("gnu" . "https://elpa.gnu.org/packages/")
-  ;; use setq, not add-to-list
-;  (setq package-archives
-;	'(("org"   . "https://orgmode.org/elpa/")
-;	  ("melpa" . "https://melpa.org/packages/")))
-
-  ;; for private network
-  ;; if package-initialize is not executed, the followin add-to-list make emacs fail
-;  (add-to-list 'package-archives
-;	       '("melpa" . "https://melpa.org/packages/")
-;	       '("org"   . "https://orgmode.org/elpa/"))
-  ;; add-to-list時、自宅でも Failed to download ‘(melpa . https://melpa.org/packages/)’ archive. になる場合があったので、setqにする
-    (setq package-archives
-	  '(("gnu"   . "https://elpa.gnu.org/packages/")
-	    ("org"   . "https://orgmode.org/elpa/"     )
-	    ("melpa" . "https://melpa.org/packages/"   )))
-;)
 
 ;;; if use-package is not installed, install "use-package"
 ;;; https://emacs.stackexchange.com/questions/39250/error-package-use-package-is-unavailable
