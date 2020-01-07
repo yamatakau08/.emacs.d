@@ -17,6 +17,7 @@
 
 ;;; check if ip-address is company's network
 (my-load "~/.emacs.d/company-network-p.el")
+(my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be after company-network-p and before .package.el
 
 ;; package
 (my-load "~/.emacs.d/.package.el")
