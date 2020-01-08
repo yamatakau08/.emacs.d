@@ -15,8 +15,9 @@
 (if (< emacs-major-version 27)
     (package-initialize))
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
-(unless package--initialized
-  (package-initialize t))
+(with-eval-after-load 'package
+  (unless package--initialized
+    (package-initialize t)))
 
 ;;; in case, M-x list-packages with the above settings
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547100014738900
