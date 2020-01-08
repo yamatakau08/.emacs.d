@@ -1,5 +1,5 @@
 ;;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:package:start
-;(require 'package)
+(require 'package)
 
 ;; need to set package-archives before executing "package-initialize"
 ;; when include ("gnu"   . "https://elpa.gnu.org/packages/") and use setq for pacakge-archives in company network,
@@ -15,9 +15,11 @@
 (if (< emacs-major-version 27)
     (package-initialize))
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-385437906
-(with-eval-after-load 'package
-  (unless package--initialized
-    (package-initialize t)))
+;(with-eval-after-load 'package
+;  (unless package--initialized
+;    (package-initialize t)))
+(unless package--initialized
+    (package-initialize t))
 
 ;;; in case, M-x list-packages with the above settings
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547100014738900
