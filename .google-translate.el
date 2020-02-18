@@ -23,8 +23,8 @@
 
 ;(global-set-key "\C-ct" 'google-translate-at-point)
 ;(global-set-key "\C-cT" 'google-translate-query-translate)
-(global-set-key "\C-ct" 'my-google-translate-at-point)
-(global-set-key "\C-cT" 'my-google-query-translate)
+(global-set-key (kbd "C-c t") 'my-google-translate-at-point)
+(global-set-key (kbd "C-c T") 'my-google-query-translate)
 
 ;;; see google-translate-default-ui.el
 (global-set-key (kbd "C-c r") 'google-translate-at-point-reverse)
@@ -39,15 +39,12 @@
       (%google-translate-at-point nil t)
     (%google-translate-at-point nil nil)))
 
-;;;
-;;;
-;;;
-(defun my-google-query-translate ()
-  (interactive)
-  (let ((from (read-string "From: ")))
-	(if (string-match "\\cj" from)
-	    (google-translate-translate "ja" "en" from nil)
-	  (google-translate-translate "en" "ja" from nil))))
+;;
+(defun my-google-query-translate (from)
+  (interactive "sFrom: ")
+  (if (string-match "\\cj" from)
+      (google-translate-translate "ja" "en" from nil)
+    (google-translate-translate "en" "ja" from nil)))
 
 ;;; window (buffer with translation) gets focus in google-translate-core-ui.el
 (setq google-translate-pop-up-buffer-set-focus t)
