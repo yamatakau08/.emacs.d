@@ -8,3 +8,8 @@ run-assoc/
 transient/
 wanderlust/
 url/
+eshell
+history
+server
+tramp
+viper

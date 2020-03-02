@@ -15,4 +15,4 @@
 (require 'instant-maximized-window)
 
 ;; M-x describe-bindings shows the global key mapping
-;;(define-key global-map (kbd "C-i") 'window-temp-maximize)
+;(define-key global-map (kbd "C-i") 'window-temp-maximize) ; Since C-i is assigned TAB, comment this line.
