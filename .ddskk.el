@@ -19,3 +19,9 @@
 
 ;;; https://www.arat.xyz/wordpress/?p=129
 (setq skk-jisyo-code 'utf-8) ; refer skk-vars.el
+
+;;
+(setq skk-jisyo "~/.emacs.d/skk-jisyo/.skk-jisyo")
+
+;;
+(custom-set-variables '(skk-henkan-strict-okuri-precedence t))
