@@ -35,10 +35,3 @@
     (package-refresh-contents)) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
-
-;; no effect! need to study
-;; avoid to write custom-set-variables setting automatically in init.el
-;; https://ymotongpoo.hatenablog.com/entry/2017/11/07/000921
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
