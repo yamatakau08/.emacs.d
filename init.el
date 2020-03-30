@@ -191,3 +191,11 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;
 (my-load "~/.emacs.d/say.el")
+
+;; custom-set-variables,faces is automatically added in the end of init.el
+;; when that function uses variables are executed.
+;; To avoid to that, use the following settings
+;; https://ymotongpoo.hatenablog.com/entry/2017/11/07/000921
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
