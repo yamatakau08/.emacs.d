@@ -182,3 +182,12 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;;
 (my-load "~/.emacs.d/.run-assoc.el")
+
+;; english conversation expression dictionary
+(my-load "~/.emacs.d/.eced.el")
+
+;;
+(my-load "~/.emacs.d/.eshell.el")
+
+;;
+(my-load "~/.emacs.d/say.el")
