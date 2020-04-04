@@ -1,3 +1,14 @@
+;; the following message appears when execute C-x C-f or dired to open directory on Mac
+;; ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
+
+;; dired-listing-switches
+;; original value "-al"
+;; (setq dired-listing-switches "-al")
+;; switch to "-Alhv --group-directories-first"
+;; have an error on Mac
+;; insert-directory: Listing directory failed but ‘access-file’ worked
+;(setq dired-listing-switches "-Alhv --group-directories-first")
+
 ;;; dired にて、windows に関連付けられたファイルを起動する。
 ;;; http://uenox.ld.infoseek.co.jp/elisp/index.html (site disappear)
 (defun uenox-dired-winstart ()

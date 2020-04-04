@@ -1,3 +1,4 @@
+;; on Mac
 ;; say -v '?' | grep en_US
 ;; Alex                en_US    # Most people recognize me by my voice.
 ;; Fred                en_US    # I sure like being inside this fancy computer
@@ -22,5 +23,5 @@
   (interactive)
   (let* ((line (thing-at-point 'line))
 	 ;; split-string ":" is to get the english phrase of "Eced result"
-	 (cmd (format "say -v \"%s\" -r %s \"%s\"" say-voice say-rate (car (cdr (split-string line ":"))))))
+	 (cmd (format "say -v \"%s\" -r %s \"%s\"" say-voice say-rate (cadr (split-string line ":")))))
     (shell-command-to-string cmd)))
