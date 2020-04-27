@@ -8,6 +8,11 @@
 ;; have an error on Mac
 ;; insert-directory: Listing directory failed but ‘access-file’ worked
 ;(setq dired-listing-switches "-Alhv --group-directories-first")
+;; on Windows
+;  c:/yama/.emacs.d:
+;  total used in directory 160 available 134740560
+;    51509920738105335     4k drwxrwxrwx  1 0000910700 Domain Users     4k 12-23 17:10 .git
+;     1125899907103619     2k -rw-rw-rw-  1 0000910700 Domain Users   1.6k 12-23 17:10 window-setting.el
 
 ;;; dired にて、windows に関連付けられたファイルを起動する。
 ;;; http://uenox.ld.infoseek.co.jp/elisp/index.html (site disappear)
