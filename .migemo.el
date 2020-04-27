@@ -1,4 +1,7 @@
-;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+;; migemo
+;; reference
+;; http://0xcc.net/migemo/
+
 (use-package migemo
   :ensure t)
 
@@ -13,12 +16,12 @@
   ;; の"正しい設定" より、Windows環境の外部コマンドを使うような場合には、絶対パスで記述する方がよいようだ。
   ;; が、相対パスでも動作する
 
-  ;; file suffix .exeを指定しなくても動作するが、.exe を付けておくと、
-  ;; file-exist-p 等での存在確認時には、.exe がないと nil になってしまう
+  ;; file suffix .exeを指定しなくても動作するが、.exe を付けておく。
+  ;; file-exist-p 等のファイル存在確認時に、.exe がないと nil になってしまう
 ;  (setq migemo-command "c:/yama/bin/cmigemo-default-win64/cmigemo.exe")
   ;; 相対パスでも動作する
-  (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo.exe")
 ; (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo")
+  (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo.exe")
 
   (setq migemo-options '("-q" "--emacs" "-i" "\a"))
 
@@ -38,6 +41,7 @@
   ;; 'cygwin時も'windows-nt で代用可能かと試したが動作せず
   (setq migemo-command "~/bin/cmigemo-cygwin/build/cmigemo")
 
+  ;; cmigemo --help doesn't show -i \a
   (setq migemo-options '("-q" "--emacs" "-i" "\a")) ; work
 ; (setq migemo-options '("-q" "--emacs" "-i"))      ; work
 ; (setq migemo-options '("-q" "--emacs"))           ; work
