@@ -195,3 +195,20 @@ possible."
 (add-hook 'org-mode-hook
           (lambda ()
             (setq-local system-time-locale "C")))
+
+;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
+;; function jk-org-kwd gets the propertie specifed by args.
+;; your original propertiy is also available.
+;; I added my original #+CONTENT-ID: 123456 property in org file for Confluence content
+; suggested by Nicolas Goaziou
+(defun jk-org-kwds ()
+  "parse the buffer and return a cons list of (property . value)
+from lines like:
+#+PROPERTY: value"
+  (org-element-map (org-element-parse-buffer 'element) 'keyword
+                   (lambda (keyword) (cons (org-element-property :key   keyword)
+                                           (org-element-property :value keyword)))))
+
+(defun jk-org-kwd (KEYWORD)
+  "get the value of a KEYWORD in the form of #+KEYWORD: value"
+  (cdr (assoc KEYWORD (jk-org-kwds))))

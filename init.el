@@ -112,6 +112,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;; org-mode
 (my-load "~/.emacs.d/.org.el")
+(my-load "~/.emacs.d/.ox-confluence.el")
 (my-load "~/.emacs.d/my-skips.el")
 
 ;;;
@@ -191,6 +192,16 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;
 (my-load "~/.emacs.d/say.el")
+
+;; jira
+;(my-load "~/.emacs.d/.jiralib2.el")
+;(my-load "~/.emacs.d/.helm-jira.el")
+
+;; confluence
+(my-load "~/.emacs.d/.my-confluence.el")
+
+;; test
+;(my-load "~/.emacs.d/restclient_test.el")
 
 ;; custom-set-variables,faces is automatically added in the end of init.el
 ;; when that function uses variables are executed.
