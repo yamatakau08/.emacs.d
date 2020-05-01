@@ -199,8 +199,11 @@ possible."
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
 ;; function jk-org-kwd gets the propertie specifed by args.
 ;; your original propertiy is also available.
-;; I added my original #+CONTENT-ID: 123456 property in org file for Confluence content
-; suggested by Nicolas Goaziou
+;; To utilize my original #+PAGEID: 123456 property in org file for Confluence page update
+;; property should be BIG CHARATER
+;; the following function is available in org BUFFER, means it's not available in with-temp-buffer with org-mode.
+
+;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
 (defun jk-org-kwds ()
   "parse the buffer and return a cons list of (property . value)
 from lines like:

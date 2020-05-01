@@ -1,3 +1,8 @@
+(require 'ox-confluence)
+
+;; without (require 'ox-confluence) , only with-eval-after-load
+;; redfined org-confluence-link doesn't effect.
+;; need (require 'ox-confluence)
 (with-eval-after-load
     (defun org-confluence-link (link desc info)
       " redfined the original function to export image link !url! not [url]!"
