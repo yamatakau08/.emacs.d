@@ -1,0 +1,185 @@
+# -*- restclient -*-
+#
+# refer https://github.com/pashky/restclient.el#usage
+# M-x restclient-mode
+# Then  http entry, C-c C-c, you can get the followoing result
+
+GET http://weather.livedoor.com/forecast/webservice/json/v1?city=140010
+
+#{
+#  "pinpointLocations": [
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1410000",
+#      "name": "横浜市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1410011",
+#      "name": "横浜市北部"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1410012",
+#      "name": "横浜市南部"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1413000",
+#      "name": "川崎市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1420100",
+#      "name": "横須賀市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1420300",
+#      "name": "平塚市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1420400",
+#      "name": "鎌倉市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1420500",
+#      "name": "藤沢市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1420700",
+#      "name": "茅ヶ崎市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1420800",
+#      "name": "逗子市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1421000",
+#      "name": "三浦市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1421300",
+#      "name": "大和市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1421500",
+#      "name": "海老名市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1421600",
+#      "name": "座間市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1421800",
+#      "name": "綾瀬市"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1430100",
+#      "name": "葉山町"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1432100",
+#      "name": "寒川町"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1434100",
+#      "name": "大磯町"
+#    },
+#    {
+#      "link": "http://weather.livedoor.com/area/forecast/1434200",
+#      "name": "二宮町"
+#    }
+#  ],
+#  "link": "http://weather.livedoor.com/area/forecast/140010",
+#  "forecasts": [
+#    {
+#      "dateLabel": "今日",
+#      "telop": "曇時々雨",
+#      "date": "2020-05-06",
+#      "temperature": {
+#        "min": null,
+#        "max": {
+#          "celsius": "22",
+#          "fahrenheit": "71.6"
+#        }
+#      },
+#      "image": {
+#        "width": 50,
+#        "url": "http://weather.livedoor.com/img/icon/10.gif",
+#        "title": "曇時々雨",
+#        "height": 31
+#      }
+#    },
+#    {
+#      "dateLabel": "明日",
+#      "telop": "晴れ",
+#      "date": "2020-05-07",
+#      "temperature": {
+#        "min": {
+#          "celsius": "13",
+#          "fahrenheit": "55.4"
+#        },
+#        "max": {
+#          "celsius": "21",
+#          "fahrenheit": "69.8"
+#        }
+#      },
+#      "image": {
+#        "width": 50,
+#        "url": "http://weather.livedoor.com/img/icon/1.gif",
+#        "title": "晴れ",
+#        "height": 31
+#      }
+#    },
+#    {
+#      "dateLabel": "明後日",
+#      "telop": "晴れ",
+#      "date": "2020-05-08",
+#      "temperature": {
+#        "min": null,
+#        "max": null
+#      },
+#      "image": {
+#        "width": 50,
+#        "url": "http://weather.livedoor.com/img/icon/1.gif",
+#        "title": "晴れ",
+#        "height": 31
+#      }
+#    }
+#  ],
+#  "location": {
+#    "city": "横浜",
+#    "area": "関東",
+#    "prefecture": "神奈川県"
+#  },
+#  "publicTime": "2020-05-06T11:00:00+0900",
+#  "copyright": {
+#    "provider": [
+#      {
+#        "link": "http://tenki.jp/",
+#        "name": "日本気象協会"
+#      }
+#    ],
+#    "link": "http://weather.livedoor.com/",
+#    "title": "(C) LINE Corporation",
+#    "image": {
+#      "width": 118,
+#      "link": "http://weather.livedoor.com/",
+#      "url": "http://weather.livedoor.com/img/cmn/livedoor.gif",
+#      "title": "livedoor 天気情報",
+#      "height": 26
+#    }
+#  },
+#  "title": "神奈川県 横浜 の天気",
+#  "description": {
+#    "text": " 伊豆諸島付近に前線があって、関東甲信地方は気圧の谷となっています。\n\n 神奈川県は、曇りや雨となっており、雷を伴っている所があります。\n\n 6日は、気圧の谷が夜にかけて関東甲信地方を通過するため、曇り時々雨で、雷を伴う所があるでしょう。\n\n 7日は、高気圧に覆われて晴れる見込みです。\n\n 神奈川県の海上では、6日から7日にかけて多少波があるでしょう。",
+#    "publicTime": "2020-05-06T10:49:00+0900"
+#  }
+#}
+#// GET http://weather.livedoor.com/forecast/webservice/json/v1?city=140010
+#// HTTP/1.1 200 OK
+#// Server: nginx
+#// Date: Wed, 06 May 2020 05:36:53 GMT
+#// Content-Type: application/json; charset=utf-8
+#// Transfer-Encoding: chunked
+#// Connection: keep-alive
+#// Keep-Alive: timeout=3
+#// X-Content-Type-Options: nosniff
+#// X-Frame-Options: DENY
+#// Set-Cookie: ldsuid=CoJIjF6yTPUNFgQQy22IAg==; expires=Tue, 04-Aug-20 05:36:53 GMT; path=/
+#// Request duration: 0.089424s
