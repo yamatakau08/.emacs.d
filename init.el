@@ -112,6 +112,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;; org-mode
 (my-load "~/.emacs.d/.org.el")
+(my-load "~/.emacs.d/.ox-html.el")
 (my-load "~/.emacs.d/.ox-confluence.el")
 (my-load "~/.emacs.d/my-skips.el")
 

@@ -1,4 +1,4 @@
-(require 'my-confluence "~/.emacs.d/my-confluence.el" t)
+(require 'my-confluence "~/.emacs.d/my-confluence/my-confluence.el" t)
 
 ;; company-jira-auth-url,company-confluece-url variable set in .private.el
 (custom-set-variables '(my-confluence-auth-url company-jira-auth-url))
