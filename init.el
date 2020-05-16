@@ -194,11 +194,10 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;
 (my-load "~/.emacs.d/say.el")
 
-;; jira
+;; jira/confluence
+(my-load "~/.emacs.d/.request.el")
 ;(my-load "~/.emacs.d/.jiralib2.el")
 ;(my-load "~/.emacs.d/.helm-jira.el")
-
-;; confluence
 (my-load "~/.emacs.d/.my-confluence.el")
 
 ;; test
