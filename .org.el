@@ -215,3 +215,17 @@ from lines like:
 (defun jk-org-kwd (KEYWORD)
   "get the value of a KEYWORD in the form of #+KEYWORD: value"
   (cdr (assoc KEYWORD (jk-org-kwds))))
+
+;; to open html file in share folder which is exported by org with browser on windows environment
+(defun advice:w32-shell-execute-filter-args (args)
+  ;; (message "filter-args before: %s" args) ; for debug
+  ;;(message "%s" (cadr args))
+  (setcar (cdr args) (replace-regexp-in-string "/" "\\\\" (cadr args))) ; pass ("opne" "path is replaced with '/'")
+  ;;(setf (cdr args) (replace-regexp-in-string "/" "\\\\" (cadr args))) ; fail ("opne" . "path is replaced with '/'")
+  ;; (message "filter-args after: %s" args) ; for debug
+  args ; return args processed for w32-shell-execute function to execute
+)
+
+(advice-add 'w32-shell-execute
+	    :filter-args
+            'advice:w32-shell-execute-filter-args)
