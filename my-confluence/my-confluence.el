@@ -117,17 +117,18 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 		  (message "[my-confluence] get-cookie cookie: %s" my-confluence--session)
 		  (setq ret t) ; set return code as t
 		  ))
+      ;; &allow-other-keys : fail
+      ;; &allow-other-keys&rest : fail
+      ;; &key data *error-thrown &rest _ fail
       :status-code '((401 . (lambda (&key data &rest _)
-			      (message "[my-confluence] get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown)))))
-      ;;:status-code (cl-function ;; this doesn't work
-      ;;	       (lambda (&key data &allow-other-keys&rest _)
-      ;;		 (message "tako data _: %s" data)
-      ;;		 (message "tako rest _: %s" _)))
+			      ;;(message "[my-confluence] 401 data : %s" data)
+			      ;;(message "[my-confluence] 401  _   : %s" _) ; all data
+			      (message "[my-confluence] get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown))
+			      )))
       :error (cl-function
 	      (lambda (&key error-thrown &allow-other-keys&rest _)
 		(message "[my-confluence] get-cookie error: %s" error-thrown))))
-    ret
-    ))
+    ret))
 
 (defun my-confluence-get-content-by-id-body-storage (pageId)
   "Get Confluence content specified pageId"
@@ -181,7 +182,7 @@ if pageId is not written in org file, prompt pageId."
       (let* ((cfw (format "%s.cfw" (file-name-sans-extension org-buffer-file-name))) ; cfw: ConFluence Wiki
 	     pageId content-info
 	     status version title type body
-	     retry)
+	     (cookie-enable t))
 
 	;; function jk-org-kwd is defined in ~/.emacs.d/.org.el
 	;; read keyword #+PAGEID: value in org file
@@ -194,22 +195,22 @@ if pageId is not written in org file, prompt pageId."
 
 	(unless my-confluence--session
 	  (message "[my-confluence] update-content no cookie to update, getting cookie...")
-	  (my-confluence-get-cookie))
+	  (setq cookie-enable (my-confluence-get-cookie)))
 
-	(setq content-info (my-confluence-private-get-content-by-id-info pageId))
-
-	(if content-info
+	(if cookie-enable
 	    (progn
-	      (setq status  (let-alist content-info .status)
-		    version (let-alist content-info .version)
-		    title   (let-alist content-info .title)
-		    type    (let-alist content-info .type)
-		    body    (my-confluence-convert-content-body cfw))
-	      (message "[my-confluence] update-content updating pageId(%s)" pageId)
-	      (my-confluence-private-update-content content-info body))
-	  (message "[my-confluence] update-content can't get content-ifno")))
-
-      (message "[my-confluence] Not in org buffer")))
+	      (setq content-info (my-confluence-private-get-content-by-id-info pageId))
+	      (if content-info
+		  (progn
+		    (setq status  (let-alist content-info .status)
+			  version (let-alist content-info .version)
+			  title   (let-alist content-info .title)
+			  type    (let-alist content-info .type)
+			  body    (my-confluence-convert-content-body cfw))
+		    (message "[my-confluence] update-content updating pageId(%s)" pageId)
+		    (my-confluence-private-update-content content-info body))
+		(message "[my-confluence] update-content can't get content-ifno")))))
+    (message "[my-confluence] Not in org buffer")))
 
 (defun my-confluence-convert-content-body (wiki-file)
   "Convert confluence-wiki file format to html format is inside body"
