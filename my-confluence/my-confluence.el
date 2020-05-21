@@ -93,32 +93,41 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 		       my-confluence-user-login-name
 		       (read-string "Confluence Username: ")))
 	(xpassword (or password
-		       (read-passwd "Confluence Password: "))))
-       (request
-	 my-confluence-auth-url
-	 :sync t
-	 :type "POST"
-	 :headers '(("Content-Type" . "application/json"))
-	 :data (json-encode
-		`(("username" . ,xusername)
-		  ("password" . ,xpassword)))
-	 :parser 'json-read ; parse-error occurs without "application/json" in headers
-	 :success (cl-function
-		   (lambda (&key data &allow-other-keys)
-		     (setq my-confluence--session
-			   ;;(format "username=id:%s=%s" ; jirlib2.el pattern
-
-			   ;; it's ok without "username=id:" above.
-			   ;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/
-			   ;; in the above page e.g. cookie: JSESSIONID=6E3487971234567896704A9EB4AE501F
-			   (format "%s=%s"
-				   (cdr (assoc 'name  (car data)))
-				   (cdr (assoc 'value (car data)))))
-		     (message "[my-confluence] get-cookie cookie: %s" my-confluence--session)))
-	 :error (cl-function
-		 (lambda (&key error-thrown &allow-other-keys&rest _)
-		   (message "[my-confluence] get-cookie error: %s" error-thrown))))
-	 ))
+		       (read-passwd "Confluence Password: ")))
+	ret)
+    (request
+      my-confluence-auth-url
+      :sync t
+      :type "POST"
+      :headers '(("Content-Type" . "application/json"))
+      :data (json-encode
+	     `(("username" . ,xusername)
+	       ("password" . ,xpassword)))
+      :parser 'json-read ; parse-error occurs without "application/json" in headers
+      :success (cl-function
+		(lambda (&key data &allow-other-keys)
+		  (setq my-confluence--session
+			;;(format "username=id:%s=%s" ; jirlib2.el pattern
+			;; it's ok without "username=id:" above.
+			;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/
+			;; in the above page e.g. cookie: JSESSIONID=6E3487971234567896704A9EB4AE501F
+			(format "%s=%s"
+				(cdr (assoc 'name  (car data)))
+				(cdr (assoc 'value (car data)))))
+		  (message "[my-confluence] get-cookie cookie: %s" my-confluence--session)
+		  (setq ret t) ; set return code as t
+		  ))
+      :status-code '((401 . (lambda (&key data &rest _)
+			      (message "[my-confluence] get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown)))))
+      ;;:status-code (cl-function ;; this doesn't work
+      ;;	       (lambda (&key data &allow-other-keys&rest _)
+      ;;		 (message "tako data _: %s" data)
+      ;;		 (message "tako rest _: %s" _)))
+      :error (cl-function
+	      (lambda (&key error-thrown &allow-other-keys&rest _)
+		(message "[my-confluence] get-cookie error: %s" error-thrown))))
+    ret
+    ))
 
 (defun my-confluence-get-content-by-id-body-storage (pageId)
   "Get Confluence content specified pageId"
