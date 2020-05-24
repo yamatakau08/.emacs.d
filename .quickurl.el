@@ -27,13 +27,16 @@ buffer, this default action can be modified via
     (let ((url (quickurl-find-url lookup)))
       (if (null url)
           (error "No URL associated with \"%s\"" lookup)
-	(if (looking-at "\\w") ; return t when point is on string.
-	    (quickurl-insert url)
-	  (word-search-backward (car url) nil t 1)
-	  (message "%s" url)
-  	  (message "%s" (thing-at-point 'word))
-	  (quickurl-insert url))))))
+	(let ((pos (string-match (car url) (thing-at-point 'line))))
+	  (if pos
+	      (progn
+		(move-to-column pos)
+		(quickurl-insert url))))))))
 
-(defun my-tako ()
-  (interactive)
-  (message "%s" (thing-at-point 'line)))
+(defun my-move-point-to-begining-of-string-in-line (string)
+  (interactive "sSearch String: ")
+  (let ((pos (string-match string (thing-at-point 'line))))
+    (if pos
+	(move-to-column pos))))
+  
+  
