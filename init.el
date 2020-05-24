@@ -211,9 +211,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;(my-load "~/.emacs.d/.yahoo-weather-mode.el")
 ;(my-load "~/.emacs.d/.weatherline-mode.el")
 
-(my-load "~/.emacs.d/.quickurl.el")
+(my-load "~/.emacs.d/.autoinsert.el")
 
-(my-load "~/.emacs.d/.auto-insert.el")
+(my-load "~/.emacs.d/.quickurl.el")
 
 ;; custom-set-variables,faces is automatically added in the end of init.el
 ;; when that function uses variables are executed.
