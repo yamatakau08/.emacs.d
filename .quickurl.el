@@ -1,0 +1,39 @@
+;; Todo
+;; M-x quickurl results link_files https://raw.githubusercontent.com/yamatakau08/link_files/master/
+(require 'quickurl)
+
+(setq quickurl-urls
+      '(("FSF" "https://www.fsf.org/" "The Free Software Foundation")
+	("emacs"  . "http://www.emacs.org/")
+	;; when point is somewhere at "link_" in "link_files", M-x quickurl results link <URL:https://raw.githubusercontent.com/yamatakau08/link_files/master/>_files
+	;; it's not expected
+	("link_files" . "https://raw.githubusercontent.com/yamatakau08/link_files/master/")
+	("hagbard" "http://www.hagbard.demon.co.uk" "Hagbard's World")))
+
+;; redefine
+(defun quickurl-format-url (url)
+  "replace with only URL, default is \"<URL:%s>\""
+  (format "%s" (quickurl-url-url url)))
+
+(defun my-quickurl (&optional lookup)
+  "Insert a URL based on LOOKUP.
+If not supplied LOOKUP is taken to be the word at point in the current
+buffer, this default action can be modified via
+`quickurl-grab-lookup-function'."
+  (interactive)
+  (when (or lookup
+            (setq lookup (funcall quickurl-grab-lookup-function)))
+    (quickurl-load-urls)
+    (let ((url (quickurl-find-url lookup)))
+      (if (null url)
+          (error "No URL associated with \"%s\"" lookup)
+	(if (looking-at "\\w") ; return t when point is on string.
+	    (quickurl-insert url)
+	  (word-search-backward (car url) nil t 1)
+	  (message "%s" url)
+  	  (message "%s" (thing-at-point 'word))
+	  (quickurl-insert url))))))
+
+(defun my-tako ()
+  (interactive)
+  (message "%s" (thing-at-point 'line)))

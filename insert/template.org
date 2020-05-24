@@ -1,0 +1,7 @@
+#+PAGEID: nil # confluence pageid
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+#+OPTIONS: ^:{}
+#+OPTIONS: \n:t
+#+link: link_files https://raw.githubusercontent.com/yamatakau08/link_files/master/
+

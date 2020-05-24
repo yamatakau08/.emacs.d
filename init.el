@@ -1,5 +1,5 @@
 ;;; for emergency debug
-(setq debug-on-error  t) ; enable enter debugger if an error is signaled
+(setq debug-on-error  nil) ; enable enter debugger if an error is signaled
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
 (setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
 
@@ -210,6 +210,10 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;
 ;(my-load "~/.emacs.d/.yahoo-weather-mode.el")
 ;(my-load "~/.emacs.d/.weatherline-mode.el")
+
+(my-load "~/.emacs.d/.quickurl.el")
+
+(my-load "~/.emacs.d/.auto-insert.el")
 
 ;; custom-set-variables,faces is automatically added in the end of init.el
 ;; when that function uses variables are executed.
