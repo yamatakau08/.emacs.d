@@ -87,14 +87,14 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 
   (interactive)
 
-  (message "[my-confluence] get-cookie getting cookie ...")
+  (message "[my-confluence] -get-cookie getting cookie ...")
 
   (let ((xusername (or username
 		       my-confluence-user-login-name
 		       (read-string "Confluence Username: ")))
 	(xpassword (or password
-		       (read-passwd "Confluence Password: ")))
-	ret)
+		       (read-passwd "Confluence Password: "))))
+    (setq my-confluence--session nil) ; clear the last cookie
     (request
       my-confluence-auth-url
       :sync t
@@ -103,53 +103,59 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
       :data (json-encode
 	     `(("username" . ,xusername)
 	       ("password" . ,xpassword)))
-      :parser 'json-read ; parse-error occurs without "application/json" in headers
+      :parser 'json-read ; parse-error occurs without json-encode at ":data" part
       :success (cl-function
 		(lambda (&key data &allow-other-keys)
 		  (setq my-confluence--session
 			;;(format "username=id:%s=%s" ; jirlib2.el pattern
 			;; it's ok without "username=id:" above.
 			;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/
-			;; in the above page e.g. cookie: JSESSIONID=6E3487971234567896704A9EB4AE501F
+			;; shows cookie like JSESSIONID=6E3487971234567896704A9EB4AE501F
 			(format "%s=%s"
 				(cdr (assoc 'name  (car data)))
 				(cdr (assoc 'value (car data)))))
-		  (message "[my-confluence] get-cookie cookie: %s" my-confluence--session)
-		  (setq ret t) ; set return code as t
-		  ))
+		  (message "[my-confluence] -get-cookie cookie: %s" my-confluence--session)))
       ;; &allow-other-keys : fail
-      ;; &allow-other-keys&rest : fail
+      ;; &allow-other-keys&rest : fail document error
       ;; &key data *error-thrown &rest _ fail
-      :status-code '((401 . (lambda (&key data &rest _)
-			      ;;(message "[my-confluence] 401 data : %s" data)
-			      ;;(message "[my-confluence] 401  _   : %s" _) ; all data
-			      (message "[my-confluence] get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown))
-			      )))
+      :status-code '((401 . (lambda (&key data &allow-other-keys &rest _)
+			      (message "[my-confluence] -get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown)))))
       :error (cl-function
-	      (lambda (&key error-thrown &allow-other-keys&rest _)
-		(message "[my-confluence] get-cookie error: %s" error-thrown))))
-    ret))
+	      ;; https://tkf.github.io/emacs-request/ regacy document
+	      ;; "&allow-other-keys&rest _" is document error
+	      ;;(lambda (&key error-thrown &allow-other-keys&rest _)
+	      ;; correct one is
+	      ;; https://github.com/tkf/emacs-request/blob/master/README.rst#examples
+	      (lambda (&rest args &key error-thrown &allow-other-keys)
+		(message "[my-confluence] -get-cookie error: %s" error-thrown))))
+    my-confluence--session))
 
-(defun my-confluence-get-content-by-id-body-storage (pageId)
+(defun my-confluence-get-content-body-storage-by-id (pageId)
   "Get Confluence content specified pageId"
   (interactive "spageId: ")
   (unless my-confluence--session
     (my-confluence-get-cookie))
-  (my-confluence-private-get-content-by-id-body-storage pageId))
+  (my-confluence--get-content-body-storage-by-id pageId))
 
-(defun my-confluence-delete-contente (pageId)
+(defun my-confluence-delete-content (pageId)
   "Delete Confluence page specified pageId"
   (interactive "spageId: ")
   (unless my-confluence--session
     (my-confluence-get-cookie))
-  (my-confluence-private-delete-content pageId))
+  (my-confluence--delete-content pageId))
 
-(defun my-confluence-get-content-by-id-info (pageId)
+(defun my-confluence-get-content-info-by-id (pageId)
   "Get Confluence content info specified content-id"
   (interactive "spageId: ")
   (unless my-confluence--session
     (my-confluence-get-cookie))
-  (message "[my-confluence] %s" (my-confluence-private-get-content-by-id-info pageId)))
+  (let ((content-info (my-confluence--get-content-info-by-id pageId)))
+    (unless content-info ; retry due to cookie is expired or pageId doesn't exist
+      (message "[my-confluence] -get-content-info-by-id retry due to pageId(%s) not found or session expired..." pageId)
+      (my-confluence-get-cookie)
+      (setq content-info (my-confluence--get-content-info-by-id pageId)))
+    (message "[my-confluence] -get-content-info-by-id: %s" content-info)
+    content-info))
 
 (defun my-confluence-update-content-with-org-buffer ()
   "Update Confluence content with org buffer."
@@ -165,24 +171,23 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
       (progn
 	(with-temp-buffer
 	  (insert-file-contents org-file-name)
-	  (org-mode) ; important to enable org-mode, jk-org-kwds in the following function works in org-mode
+	  (org-mode) ; important to enable org-mode, jk-org-kwds function the following works in ONLY org-mode
 	  (my-confluence-update-content org-file-name) ; in this buffer, should execute, because jk-org-kwds works in org-mode buffer
 	  ))
 ;      (progn
 ;	;(find-file-noselect org-file-name)
 ;	(find-file org-file-name)
 ;	(my-confluence-update-content org-file-name))
-    (message "[my-confluence] Not org file")))
+    (message "[my-confluence] -update-content-with-org-file: Not org file")))
 
 (defun my-confluence-update-content (org-buffer-file-name)
   "Update Confluence page specified by pageId in org file.
-if pageId is not written in org file, prompt pageId."
+if pageId is not specified in org file, prompt to ask pageId."
 
   (if (string= "org" (file-name-extension org-buffer-file-name))
       (let* ((cfw (format "%s.cfw" (file-name-sans-extension org-buffer-file-name))) ; cfw: ConFluence Wiki
 	     pageId content-info
-	     status version title type body
-	     (cookie-enable t))
+	     status version title type body)
 
 	;; function jk-org-kwd is defined in ~/.emacs.d/.org.el
 	;; read keyword #+PAGEID: value in org file
@@ -194,12 +199,11 @@ if pageId is not written in org file, prompt pageId."
 	(org-export-to-file 'confluence cfw nil nil nil t nil) ; export org to confluence format file
 
 	(unless my-confluence--session
-	  (message "[my-confluence] update-content no cookie to update, getting cookie...")
-	  (setq cookie-enable (my-confluence-get-cookie)))
+	  (my-confluence-get-cookie))
 
-	(if cookie-enable
+	(if my-confluence--session
 	    (progn
-	      (setq content-info (my-confluence-private-get-content-by-id-info pageId))
+	      (setq content-info (my-confluence-get-content-info-by-id pageId))
 	      (if content-info
 		  (progn
 		    (setq status  (let-alist content-info .status)
@@ -207,10 +211,11 @@ if pageId is not written in org file, prompt pageId."
 			  title   (let-alist content-info .title)
 			  type    (let-alist content-info .type)
 			  body    (my-confluence-convert-content-body cfw))
-		    (message "[my-confluence] update-content updating pageId(%s)" pageId)
-		    (my-confluence-private-update-content content-info body))
-		(message "[my-confluence] update-content can't get content-ifno")))))
-    (message "[my-confluence] Not in org buffer")))
+		    (message "[my-confluence] -update-content updating pageId(%s)" pageId)
+		    (my-confluence--update-content content-info body))
+		(message "[my-confluence] -update-content not found pageId(%s) or session expired!" pageId))))
+	)
+    (message "[my-confluence] -update-content not in org buffer or file")))
 
 (defun my-confluence-convert-content-body (wiki-file)
   "Convert confluence-wiki file format to html format is inside body"
@@ -218,13 +223,13 @@ if pageId is not written in org file, prompt pageId."
   (interactive "fconfluence wiki format file: ")
 
   (unless my-confluence--session
-    (message "[my-confluence] update-conte no cookie to update, getting cookie...")
     (my-confluence-get-cookie))
 
   (let ((body (with-temp-buffer
 		(insert-file-contents wiki-file)
 		(buffer-substring-no-properties (point-min) (point-max)))))
-    (my-confluence-private-convert-content-body body)))
+    (message "[my-confluence] -convert-content-body converting %s" wiki-file)
+    (my-confluence--convert-content-body body)))
 
 (defun my-confluence-markdownxhtmlconverter (markdown-file)
   "Convert markdown file to xhtml and return the string converted
@@ -237,10 +242,10 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
   (let ((body (with-temp-buffer
 		(insert-file-contents markdown-file)
 		(buffer-substring-no-properties (point-min) (point-max)))))
-    (my-confluence-private-markdownxhtmlconverter body))
+    (my-confluence--markdownxhtmlconverter body))
 
-;  (let ((body (my-confluence-private-markdownxhtmlconverter " * one\n * two")))
-;    (message "[my-confluence] markdownxhtmlconvert converted: %s" (format "%s" body)))
+;  (let ((body (my-confluence--markdownxhtmlconverter " * one\n * two")))
+;    (message "[my-confluence] -markdownxhtmlconvert converted: %s" (format "%s" body)))
   )
 
 ;; private
@@ -251,45 +256,44 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
   (erase-buffer)
   (insert (format "%s" data)))
 
-(defun my-confluence-private-get-content-by-id-info (content-id)
+(defun my-confluence--get-content-info-by-id (content-id)
   "The backend of getting Confluence content info specified content-id
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
 
-  (message "[my-confluence] getting content info id(%s) ..." content-id)
+  (message "[my-confluence] --get-content-info-by-id getting content info id(%s) ..." content-id)
 
-  (let ((content-info)
-	 (reply-data))
-    (setq reply-data
-	  (request
-	    (format "%s/rest/api/content/%s" my-confluence-url content-id)
-	    :sync t
-	    :type "GET"
-	    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
-	    :parser 'json-read
-	    :success (cl-function
-		      (lambda (&key data &allow-other-keys)
-			(setq content-info
-			      (list (assoc 'id data)
-				    (assoc 'status data)
-				    `(version . ,(let-alist data .version.number)) ; for content update
-				    (assoc 'title data)
-				    (assoc 'type data)))))
-	    ;; Even in there is content specified contet-id, somehow respond 404
-	    ;; On the other hand, there is no content specified content-id, respond 404
-	    ;; It's hard to distinguish whether there is contet or not!
-	    :status-code '((404 . (lambda (&rest _)
-				    (message "[my-confluence] rest api \"content/%s\" status code: 404" content-id))))
-	    ))
-    (message "[my-confluence] content-info: %s" content-info)
-    ;;(message "[my-confluence] reply-data  : %s" reply-data) ; debug
-    content-info))
+  (let (content-info)
+    (request
+      (format "%s/rest/api/content/%s" my-confluence-url content-id)
+      :sync t
+      :type "GET"
+      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
+      :parser 'json-read
+      :success (cl-function
+		(lambda (&key data &allow-other-keys) ; pass &key argument name should be data
+		  ;;(lambda (&key data &rest _ &allow-other-keys) ; fail
+		  ;;(lambda (&key data) ; fail without &allow-other-keys
+		  (setq content-info
+			(list (assoc 'id data)
+			      (assoc 'status data)
+			      `(version . ,(let-alist data .version.number)) ; for content update
+			      (assoc 'title data)
+			      (assoc 'type data)))
+		  ))
+      ;; Even if content specified contet-id exists, somehow respond 404
+      ;; On the other hand, there is no content specified content-id, respond 404
+      ;; It's hard to distinguish whether the contet exists or not!
+      :status-code '((404 . (lambda (&rest _)
+			      (message "[my-confluence] --get-content-info-by-id status-code: 404")))))
+    content-info
+  ))
 
-(defun my-confluence-private-get-content-by-id-body-storage (pageId)
+(defun my-confluence--get-content-body-storage-by-id (pageId)
   "The backend of getting Confluence page
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-get
 https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#manipulating-content"
 
-  (message "[my-confluence] retriving pageId(%s) ..." pageId)
+  (message "[my-confluence] --get-content-body-storage-by-id retriving pageId(%s) ..." pageId)
 
   (request
     ;; to get content, url is specified ?expand=body.storage
@@ -304,23 +308,21 @@ https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#
     :parser 'json-read
     :success (cl-function
 	      (lambda (&key data &allow-other-keys)
-		(let ((bufname (format "Confluence page: %s" pageId)))
+		(let ((bufname (format "Confluence pageId: %s" pageId)))
 		  (switch-to-buffer bufname)
 		  (erase-buffer)
 		  (insert (let-alist data .body.storage.value))
 
 		  ;; render html
 		  (shr-render-buffer bufname) ; make *html* buffer with rendering
-		  (setq buffer-read-only t))   ; set read-only *html* buffer http://emacs.rubikitch.com/inhibit-read-only/
-		(message "[my-confluence] retriving pageId(%s) done" pageId)))
+		  (setq buffer-read-only t))  ; set read-only *html* buffer http://emacs.rubikitch.com/inhibit-read-only/
+		))
     :status-code '((404 . (lambda (&rest _)
-			    (message "[my-confluence] get-content status-code: 404")
-			    (my-confluence-get-cookie)
-			    (message "[my-confluence] try again!")
+			    (message "[my-confluence] --get-content-body-storage-by-id: 404")
 			    )))
     ))
 
-(defun my-confluence-private-update-content (content-info body)
+(defun my-confluence--update-content (content-info body)
   "The backend of updating Confluence page
 https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/ \"Update a page\"
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
@@ -332,16 +334,16 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
     ;; increment version
     (setcdr (assoc 'version uci)  `((number . ,(+ (let-alist uci .version) 1))))
     ;; add body
-    (add-to-list 'uci `(body (storage (value . ,body) (representation . "storage"))) t) ; (*) should set "storage", availale view,storage
+    (add-to-list 'uci `(body (storage (value . ,body) (representation . "storage"))) t) ; (*) representaiion should set "storage" to update content
 
-    ;; "representation" "wiki" also availale
+    ;; "representation" "storage","view","wiki" ...
     ;; https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#converting-content
-    ;; "Convert wiki markup to storage format", "representation":"wiki"
+    ;; See "Convert wiki markup to storage format", "representation":"wiki"
 
     ;; (*) when set "view" in "representation", faced error!
     ;; {"statusCode":500,"data":{"authorized":false,"valid":true,"errors":[],"successful":false},"message":"com.atlassian.confluence.api.service.exceptions.ServiceException: java.lang.UnsupportedOperationException: Cannot convert from view to storage"}
 
-    (message "[my-confulence] update-contennt: %s" uci) ; for debug
+    (message "[my-confulence] --update-contennt uci: %s" uci) ; for debug
 
     (request
       (format "%s/rest/api/content/%s" my-confluence-url pageId)
@@ -352,14 +354,12 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
       :parser  'json-read
       :success (cl-function
 		(lambda (&key data &allow-other-keys)
-		  (message "[my-confluence] private-update-content success")
-		  ;;(switch-to-buffer "*request-result*")
-		  ;;(erase-buffer)
-		  ;;(insert (format "%s" data))
-		  )))
-    ))
+		  (message "[my-confluence] --update-content success pageId(%s)" pageId)))
+      :error   (cl-function
+		(lambda (&rest args &key error-thrown &allow-other-keys)
+		  (message "[my-confluence] --update-content error: %S" error-thrown))))))
 
-(defun my-confluence-private-get-content-list (spaceKey)
+(defun my-confluence--get-content-list (spaceKey)
   "The backend of getting Confluence page by pageId
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-get"
 
@@ -378,7 +378,7 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-get"
 		))
     ))
 
-(defun my-confluence-private-get-space-list ()
+(defun my-confluence--get-space-list ()
   "The backend of getting Confluence page by pageId
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
 
@@ -392,18 +392,18 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
 	      (lambda (&key data &allow-other-keys)
 		(switch-to-buffer "*request-result*")
 		(erase-buffer)
-		(my-confluence-private-parse-spaces data)
+		(my-confluence--parse-spaces data)
 		))
     ))
 
-(defun my-confluence-private-parse-spaces (data)
+(defun my-confluence--parse-spaces (data)
   "parse spaces list"
   (let ((v (cdr (assq 'results data))))
     (dotimes (i (length v))
       (let ((result (aref v i)))
 	(insert (format "key:%s name:%s\n" (let-alist result .key) (let-alist result .name)))))))
 
-(defun my-confluence-private-delete-content (pageId)
+(defun my-confluence--delete-content (pageId)
   "The backend of deleting Confluence page
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-delete"
 
@@ -419,17 +419,13 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-delete
 		(erase-buffer)
 		(insert (format "%s" data))))))
 
-(defun my-confluence-private-convert-content-body (wiki-content)
+(defun my-confluence--convert-content-body (wiki-content)
   "Convert arg is wiki-content to storage format
-This api WORK but I don't understand how to use response data
+This api WORKS but I don't understand how to use response data
 https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#converting-content
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-contentbody-convert-to-post"
 
-;; curl -u admin:admin -X POST -H 'Content-Type: application/json' -d'{"value":"{cheese}",
-;; "representation":"wiki"}' "http://localhost:8080/confluence/rest/api/contentbody/convert/storage"
-;; | python -mjson.tool
-
-  (let ((converted))
+  (let (converted)
     (request
       (format "%s/rest/api/contentbody/convert/storage" my-confluence-url)
       :sync t
@@ -445,11 +441,10 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-contentbody-conve
 ;		(insert (format "%s" data))))
       :success (cl-function
 		(lambda (&key data &allow-other-keys)
-		  (setq converted (let-alist data .value))))
-    )
+		  (setq converted (let-alist data .value)))))
     converted))
 
-(defun my-confluence-private-markdownxhtmlconverter (markdown-content)
+(defun my-confluence--markdownxhtmlconverter (markdown-content)
   "Convert markdown to xhtml
 This is not documented.
 I found this api in the ATTASSIAN Communitythe follwoing.
