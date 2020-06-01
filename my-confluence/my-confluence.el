@@ -56,7 +56,8 @@
 (setq request-curl
       (if (eq system-type 'windows-nt)
 	  (progn
-	    (let ((msys-curl-command "/c/Temp/archive/curl-7.69.1_1-win64-mingw/curl-7.69.1-win64-mingw/bin/curl.exe"))
+	    (let (;(msys-curl-command "/c/Temp/archive/curl-7.69.1_1-win64-mingw/curl-7.69.1-win64-mingw/bin/curl.exe")
+		  (msys-curl-command "/c/winbin/curl-7.69.1-win64-mingw/bin/curl.exe"))
 	      (if (executable-find msys-curl-command) msys-curl-command "curl")))
 	"curl"))
 
@@ -65,8 +66,9 @@
   :group 'my-confluence
   :type  'string)
 
-(defcustom my-confluence-auth-url "https://www.tool.company.biz/jira3/rest/auth/1/session"
+(defcustom my-confluence-auth-url nil
   "set confluence authentication rest api url,
+e.g. \"https://www.tool.company.biz/jira3/rest/auth/1/session\"
 If Confluence work with JIRA, probaly use JIRA authentication url for rest api.
 Probably you can get the auth url after login JIRA, and replace base url \"www.tool.company.biz/jira3\" to your site url"
   :group 'my-confluence
@@ -236,7 +238,6 @@ if pageId is not specified in org file, prompt to ask pageId."
 markdown: normal markdown or confluence markdown ? need to study
 Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/confluence-wiki-markup-938044804.html
 "
-
   (interactive "fmarkdown-file: ")
 
   (let ((body (with-temp-buffer
@@ -247,6 +248,15 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
 ;  (let ((body (my-confluence--markdownxhtmlconverter " * one\n * two")))
 ;    (message "[my-confluence] -markdownxhtmlconvert converted: %s" (format "%s" body)))
   )
+
+(defun my-confluence-browse ()
+  "browse confluence page"
+  (interactive)
+  (let ((pageId (or (jk-org-kwd "PAGEID")
+		    (read-string "pageId: "))))
+    (cond
+     ((eq system-type 'windows-nt)
+      (w32-shell-execute "open" (format "%s/pages/viewpage.action?pageId=%s" company-confluence-url pageId))))))
 
 ;; private
 
