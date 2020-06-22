@@ -71,6 +71,7 @@
   (helm :sources
 	`((name . "Anki Browser")
 	  (candidates . ,(helm-anki-browse-candidates deck))
+	  (candidate-number-limit . 9999)
 	  (action . (lambda (candidate)
 		      (message "%s" candidate))))))
 
