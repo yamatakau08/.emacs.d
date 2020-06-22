@@ -49,6 +49,7 @@
 	noteId
 	Frontvalue
 	Backvalue
+	FrontBackValue
 	cards
 	card)
     (setq cards (my-anki-browse-deck-cards deck))
@@ -57,7 +58,9 @@
       (setq noteId (let-alist card .noteId))
       (setq Frontvalue (let-alist card .fields.Front.value))
       (setq Backvalue  (let-alist card .fields.Back.value))
-      (add-to-list 'candidates `(,Frontvalue . ,Backvalue) t))
+      (setq FrontBackvalue  (format "%s %s" Frontvalue Backvalue))
+      ;;(add-to-list 'candidates `(,Frontvalue . ,Backvalue) t))
+      (add-to-list 'candidates `(,FrontBackvalue . nil) t))
     candidates))
 
 (setq some-helm-source
