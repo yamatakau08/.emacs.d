@@ -58,7 +58,7 @@
       (setq noteId (let-alist card .noteId))
       (setq Frontvalue (let-alist card .fields.Front.value))
       (setq Backvalue  (let-alist card .fields.Back.value))
-      (setq FrontBackvalue  (format "%s %s" Frontvalue Backvalue))
+      (setq FrontBackvalue  (format "%-30s: %s" Frontvalue Backvalue))
       ;;(add-to-list 'candidates `(,Frontvalue . ,Backvalue) t))
       (add-to-list 'candidates `(,FrontBackvalue . nil) t))
     candidates))
