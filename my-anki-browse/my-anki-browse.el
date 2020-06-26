@@ -21,9 +21,10 @@
 ;;; Commentary:
 
 ;; Todo
-;;
+;; suppress debug message with using function
+;; chage my-anki-browse-version to use my-anki-browse-request, not to use request directly
 
-;; meme
+;; memo
 ;; (my-anki-browse-deckNamesAndIds)
 ;; => ((result (英語 . 1550242731310) (国語 . 1550372251942) (カスタム学習セッション . 1550243694498) (その他 . 1554811643083) (Default . 1)) (error))
 ;;
@@ -40,29 +41,48 @@
 (require 'request)
 
 ;; for debug
-(setq request-log-level     'debug)
-(setq request-message-level 'debug)
+;(setq request-log-level     'debug)
+;(setq request-message-level 'debug)
+
+(defgroup my-ank-browse nil
+  "My anki browse through anki connect"
+  :group 'tools)
+
+(defcustom my-anki-browse-anki-main-deck-name nil
+  "anki deck name which you mainly use"
+  :group 'my-anki-browse
+  :type  'string)
 
 ;;
 (defvar my-anki-browse-anki-connect-url "localhost:8765")
 (defvar my-anki-browse-anki-connect-version nil)
 (defvar my-anki-browse-anki-deck-names nil)
+(defvar my-anki-browse-current-deck nil)
 
 ;;
 (defun my-anki-browse-deck-cards (deck)
+  ;; completing-read
   ;; https://stackoverflow.com/questions/2382524/adding-completion-to-interactive/2382677#2382677
   ;; to list up the completion with interactive
   (interactive
    (list
-    (completing-read "Deck: " (my-anki-browse-deckNames))))
+    (let ((completion-cycle-threshold t))
+      (if (member my-anki-browse-anki-main-deck-name (my-anki-browse-deckNames))
+	  (completing-read "Deck: " (my-anki-browse-deckNames) nil t my-anki-browse-anki-main-deck-name)
+	(completing-read "Deck: " (my-anki-browse-deckNames))))))
   (let (noteids)
+    (setq my-anki-browse-current-deck deck)
     (setq noteids (my-anki-browse-findNotes deck))
     (my-anki-browse-notesInfo noteids)))
+
+(defun my-anki-browse-current-deck ()
+  my-anki-browse-current-deck)
 
 (defun my-anki-browse-notesInfo (noteids)
   "Returns a list of objects containing for each note ID the note fields, tags, note type and the cards belonging to the note.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md
-noteids: array [1,2]"
+e.g. noteids: array [1,2]
+1,2 noteid"
   (interactive "nnoteIDs: ")
   (my-anki-browse-request
    :data (json-encode
@@ -105,6 +125,33 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-action
    :data (json-encode
 	  `(("action"  . "deckNamesAndIds")
    	    ("version" . ,my-anki-browse-anki-connect-version)))))
+
+(defun my-anki-browse-addNote (deckname front back)
+  "Creates a note using the given deck and model, with the provided field values and tags.
+Returns the identifier of the created note created on success, and null on failure.
+https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
+  (interactive)
+  (let ((modelname "Basic")) ;; modelname fixed "Basic"
+    (my-anki-browse-request
+     :type "POST"
+     :data (json-encode
+	    `(("action"  . "addNote")
+	      ("version" . 6)
+	      (:params (:note . (:deckName ,deckname :modelName ,modelname :fields (:Front ,front :Back ,back)))))))))
+
+(defun my-anki-browse-updateNoteFields (noteid front back)
+  "Modify the fields of an exist note.
+You can also include audio files which will be added to the note with an optional audio property.
+Please see the documentation for addNote for an explanation of objects in the audio array.
+Gets the complete list of deck names and their respective IDs for the current user.
+https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
+  (interactive)
+  (my-anki-browse-request
+   :type "POST"
+   :data (json-encode
+	  `(("action"  . "updateNoteFields")
+	    ("version" . 6)
+	    (:params (:note . (:id  ,noteid :fields (:Front ,front :Back ,back))))))))
 
 (defun my-anki-browse-version ()
   "Gets the version of the API exposed by this plugin. Currently versions 1 through 6 are defined.
