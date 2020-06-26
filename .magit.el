@@ -40,5 +40,7 @@
 ;	  (setq auto-fill-mode nil))
 ; git-commit-mode-hook is defined automatically when define-minor-mode git-commit-mode executed
 
-(eval-after-load "magit"
-  '(delq 'git-commit-turn-on-auto-fill git-commit-setup-hook))
+(with-eval-after-load "magit"
+  (delq 'git-commit-turn-on-auto-fill git-commit-setup-hook)
+  (setq magit-refresh-verbose t) ; put the process time in Message buffer.
+  )
