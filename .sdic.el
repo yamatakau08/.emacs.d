@@ -32,15 +32,22 @@
 )
 
 ;;;
-(add-to-list 'load-path "~/.emacs.d/my-anki-connect")
-(require 'my-anki-connect)
+;;(add-to-list 'load-path "~/.emacs.d/my-anki-connect")
+;;(require 'my-anki-connect)
 
-(setq sdic-anki-connect-push-deck "英語")
+(add-to-list 'load-path "~/.emacs.d/my-anki-browse")
+(require 'my-anki-browse)
 
 (defun my-sdic-register-item ()
   "push note into Anki through AnkiConnect"
   (interactive)
-  (my-anki-connect-register-card sdic-anki-connect-push-deck))
+  (let ((deck "英語") ; fixed
+	(front (read-string "Front: "
+			    (if (region-active-p)
+				(buffer-substring (region-beginning) (region-end))
+			      (thing-at-point 'word))))
+	(back  (read-string "Back : " )))
+    (my-anki-connect-push-note "英語" front back)))
 
 ;;; register my function
 (setq sdic-mode-hook

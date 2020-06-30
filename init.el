@@ -126,7 +126,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;(my-load "~/.emacs.d/.anki-editor.el")
 
 ;;;
-(my-load "~/.emacs.d/.my-anki-connect.el")
+;;(my-load "~/.emacs.d/.my-anki-connect.el")
 
 ;;;
 (my-load "~/.emacs.d/.tramp.el")

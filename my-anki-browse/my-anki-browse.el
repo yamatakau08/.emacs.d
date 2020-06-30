@@ -130,7 +130,15 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-action
   "Creates a note using the given deck and model, with the provided field values and tags.
 Returns the identifier of the created note created on success, and null on failure.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
-  (interactive)
+  (interactive
+   (list
+    (let ((completion-cycle-threshold t))
+      (if (member my-anki-browse-anki-main-deck-name (my-anki-browse-deckNames))
+	  (completing-read "Deck: " (my-anki-browse-deckNames) nil t my-anki-browse-anki-main-deck-name)
+	(completing-read "Deck: " (my-anki-browse-deckNames))))
+    (read-string "front: ")
+    (read-string "back : ")))
+
   (let ((modelname "Basic")) ;; modelname fixed "Basic"
     (my-anki-browse-request
      :type "POST"

@@ -31,6 +31,7 @@
 ;; in helm buffer, C-c C-e helm-anki-browse--edit-card error
 ;; after executing helm-anki-browse--edit-card-commit, return helm-anki-browse buffer then update the list
 ;; edit card buffer, "Front" and "Back" field edit is prohibited after erasing the field content
+;; When anki-is not launched, helm-ank-browser error handling
 
 ;; memo
 ;;(let-alist (car (coerce (my-anki-browse-deck-cards "その他") `list)) .noteId)
@@ -70,16 +71,17 @@
 
 (defun helm-anki-browse (&optional deck)
   (interactive)
-  (helm :sources
-	`((name . "Anki Browser")
-	  (candidates . ,(helm-anki-browse--candidates deck))
-	  (candidate-number-limit . 9999)
-	  ;;(keymap . ,helm-anki-browse-keymap)
-	  ;;(action . (lambda (candidate) (message "%s" candidate))))))
-	  (action . (lambda (candidate)
-		      (helm-anki-browse--edit-card candidate))))
-	:buffer helm-anki-browse-buffer-name
-	:keymap helm-anki-browse-keymap))
+  (let ((candidates (helm-anki-browse--candidates deck)))
+    (if candidates
+	(helm :sources (helm-build-sync-source "Anki cards"
+			 :candidates candidates
+			 :action (lambda (candidate)
+				   (helm-anki-browse--edit-card candidate))
+			 :candidate-number-limit 9999
+			 :keymap helm-anki-browse-keymap
+			 :migemo t)
+	      :buffer helm-anki-browse-buffer-name)
+      (message "[helm-anki-browse] no candidate"))))
 
 ;; private
 (defun helm-anki-browse--candidates (deck)

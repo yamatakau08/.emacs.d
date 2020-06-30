@@ -12,8 +12,11 @@
 (setq google-translate-translation-listening-debug t)
 
 ;;; for registering word in Anki
-(add-to-list 'load-path "~/.emacs.d/my-anki-connect")
-(require 'my-anki-connect)
+;;(add-to-list 'load-path "~/.emacs.d/my-anki-connect")
+;;(require 'my-anki-connect)
+
+(add-to-list 'load-path "~/.emacs.d/my-anki-browse")
+(require 'my-anki-browse)
 
 (require 'google-translate-default-ui) ; need for my-google-translate-at-point
 
@@ -49,14 +52,17 @@
 ;;; window (buffer with translation) gets focus in google-translate-core-ui.el
 (setq google-translate-pop-up-buffer-set-focus t)
 
-;;;
-(setq gt-anki-connect-push-deck "英語") ; gt: google-translate
+;;
 (defun my-google-translate-register-item-in-anki ()
   "push note which have from and to word Basic note-type in Anki deck \
    specified gt-anki-push-deck variable through AnkiConnect"
   (interactive)
   (if (string= "*Google Translate*" (buffer-name))
-      (my-google-translate-register-item gt-anki-connect-push-deck)))
+      (let ((deck "英語") ; fixed
+	    (front (read-string "Front: " (my-google-translate-register-item-read-front)))
+	    (back  (read-string "Back : " (my-google-translate-register-item-read-back ))))
+	;;(my-anki-connect-push-notex deck front back)
+	(my-anki-browse-addNote deck front back))))
 
 ;;; advice to enable "r" key to register items in "*Google Translate*" buffer
 (defun google-translate-buffer-insert-translation-advice (&rest args)
@@ -78,13 +84,6 @@
   (goto-line 5)
   ;; use 'sentence to get line content without \n
   (thing-at-point 'sentence))
-
-;;;
-(defun my-google-translate-register-item (deck)
-  ;; register card in deck specified args
-  (let ((front (read-string "Front: " (my-google-translate-register-item-read-front)))
-	(back  (read-string "Back : " (my-google-translate-register-item-read-back ))))
-    (my-anki-connect-push-notex deck front back)))
 
 ;;; for debugging
 ;;; from that moment google-translate somehow url-retrieve never returns on mingw64 emacs self compiled that
