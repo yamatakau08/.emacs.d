@@ -48,6 +48,11 @@
   "My anki browse through anki connect"
   :group 'tools)
 
+(defcustom my-anki-browse-debug nil
+  "if t, put out the message of anki browse for debug"
+  :group 'my-anki-browse
+  :type  'bool)
+
 (defcustom my-anki-browse-anki-main-deck-name nil
   "anki deck name which you mainly use"
   :group 'my-anki-browse
@@ -187,7 +192,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
   (unless my-anki-browse-anki-connect-version
     (my-anki-browse-version))
 
-  (message "[my-anki-browse][debug] -request args: %s" args)
+  (my-anki-browse-message "[my-anki-browse][debug] -request args: %s" args)
 
   (if my-anki-browse-anki-connect-version
       (let (response
@@ -202,17 +207,21 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
 		     :parser  'json-read ;'json-read ; note that numerice has decimal point
 		     :success (cl-function
 			       (lambda (&key data &allow-other-keys)
-				 (message "[my-anki-browse][debug] -request: %s" data)))
+				 (my-anki-browse-message "[my-anki-browse][debug] -request: %s" data)))
 		     args)) ; args are ":type",":data" ... , and should be the last
 	(setq data (request-response-data response))
 	(setq result (let-alist data .result))
 	(setq error  (let-alist data .error))
 	(if error
 	    (message "[my-anki-browse] -request error: %s" error))
-	(message "[my-anki-browse] -request result: %s" result)
+	(my-anki-browse-message "[my-anki-browse] -request result: %s" result)
 	result) ; return the data
     (message "[my-anki-browse] get-version error!")
     (message "[my-anki-browse] anki doesn't seem to be launched!")))
+
+(defun my-anki-browse-message (format &rest args)
+  (if my-anki-browse-debug
+      (message format (car args))))
 
 (provide 'my-anki-browse)
 ;;; my-anki-browse.el ends here
