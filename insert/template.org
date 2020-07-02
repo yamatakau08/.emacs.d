@@ -1,7 +1,15 @@
-#+PAGEID: nil # confluence pageid
+#+PAGEID:  nil
 #+OPTIONS: toc:nil
 #+OPTIONS: num:nil
 #+OPTIONS: ^:{}
 #+OPTIONS: \n:t
 #+link: link_files https://raw.githubusercontent.com/yamatakau08/link_files/master/
 
+#+begin_comment
+Confluence, width and heigh for rectangle is golden ratio
+#+ATTR_HTML: :align left :width "650px" :height "400px" :title "hoge"
+url of image
+#+begin_export html
+ <br style="clear:both;" />
+#+end_export
+#+end_comment

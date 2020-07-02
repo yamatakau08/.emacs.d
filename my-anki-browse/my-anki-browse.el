@@ -22,7 +22,7 @@
 
 ;; Todo
 ;; suppress debug message with using function
-;; chage my-anki-browse-version to use my-anki-browse-request, not to use request directly
+;; chage my-anki-browse-version to use my-anki-browse--request, not to use request directly
 
 ;; memo
 ;; (my-anki-browse-deckNamesAndIds)
@@ -89,7 +89,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md
 e.g. noteids: array [1,2]
 1,2 noteid"
   (interactive "nnoteIDs: ")
-  (my-anki-browse-request
+  (my-anki-browse--request
    :data (json-encode
 	  `((:action  . "notesInfo")
 	    (:version . ,my-anki-browse-anki-connect-version)
@@ -99,7 +99,7 @@ e.g. noteids: array [1,2]
   "Returns an array of note IDs for a given query. Same query syntax as guiBrowse.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
   (interactive "sDeck: ")
-  (my-anki-browse-request
+  (my-anki-browse--request
    :data (json-encode
 	  `((:action  . "findNotes")
 	    (:version . ,my-anki-browse-anki-connect-version)
@@ -112,11 +112,11 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-action
   (interactive)
   (let (deck-names)
     (setq deck-names
-	  (my-anki-browse-request
+	  (my-anki-browse--request
 	   :type "POST"
 	   :data (json-encode
-		  `(("action"  . "deckNames")
-		    ("version" . ,my-anki-browse-anki-connect-version)))))
+		  `((:action  . "deckNames")
+		    (:version . ,my-anki-browse-anki-connect-version)))))
     ;; coerce http://dminor11th.blogspot.com/2012/06/coerce.html?m=1
     ;; to convert array to list to utilize the deck names
     (setq my-anki-browse-anki-deck-names (coerce deck-names 'list))))
@@ -125,11 +125,11 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-action
   "Gets the complete list of deck names and their respective IDs for the current user.
 https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-actions"
   (interactive)
-  (my-anki-browse-request
+  (my-anki-browse--request
    :type "POST"
    :data (json-encode
-	  `(("action"  . "deckNamesAndIds")
-   	    ("version" . ,my-anki-browse-anki-connect-version)))))
+	  `((:action  . "deckNamesAndIds")
+   	    (:version . ,my-anki-browse-anki-connect-version)))))
 
 (defun my-anki-browse-addNote (deckname front back)
   "Creates a note using the given deck and model, with the provided field values and tags.
@@ -145,11 +145,11 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
     (read-string "back : ")))
 
   (let ((modelname "Basic")) ;; modelname fixed "Basic"
-    (my-anki-browse-request
+    (my-anki-browse--request
      :type "POST"
      :data (json-encode
-	    `(("action"  . "addNote")
-	      ("version" . 6)
+	    `((:action  . "addNote")
+	      (:version . my-anki-browse-anki-connect-version)
 	      (:params (:note . (:deckName ,deckname :modelName ,modelname :fields (:Front ,front :Back ,back)))))))))
 
 (defun my-anki-browse-updateNoteFields (noteid front back)
@@ -159,11 +159,11 @@ Please see the documentation for addNote for an explanation of objects in the au
 Gets the complete list of deck names and their respective IDs for the current user.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
   (interactive)
-  (my-anki-browse-request
+  (my-anki-browse--request
    :type "POST"
    :data (json-encode
-	  `(("action"  . "updateNoteFields")
-	    ("version" . 6)
+	  `((:action  . "updateNoteFields")
+	    (:version . my-anki-browse-anki-connect-version)
 	    (:params (:note . (:id  ,noteid :fields (:Front ,front :Back ,back))))))))
 
 (defun my-anki-browse-version ()
@@ -185,10 +185,11 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
 		(message "[my-anki-browse] -version: %s" data)))
     :error (cl-function
 	    (lambda (&rest args &key error-thrown &allow-other-keys)
-	      (message "[my-anki-browse] -version error: %s" error-thrown)))))
+	      ;;(message "[my-anki-browse] -version error: %s" error-thrown)))))
+	      (error "[my-anki-browse] anki is not launched!")))))
 
 ;; private
-(defun my-anki-browse-request (&rest args)
+(defun my-anki-browse--request (&rest args)
   (unless my-anki-browse-anki-connect-version
     (my-anki-browse-version))
 
