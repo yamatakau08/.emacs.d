@@ -66,22 +66,39 @@
 (defvar helm-anki-browse-edit-card-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") 'helm-anki-browse--edit-card-commit)
+    (define-key map (kbd "C-c C-d") 'helm-anki-browse--edit-card-delete)
     (define-key map (kbd "C-c C-k") 'helm-anki-browse--edit-card-abort)
     map))
 
+;(defun helm-anki-browse (&optional deck)
+;  (interactive)
+;  (if (my-anki-browse-anki-alivep)
+;      (let ((candidates (helm-anki-browse--candidates deck)))
+;	(if candidates
+;	    (helm :sources `((name . "Anki cards")
+;			     (candidates . candidates)
+;			     (candidate-number-limit .  9999)
+;			     (migemo . t)
+;			     (keymap . helm-anki-browse-keymap)
+;			     (header-line . ,@(substitute-command-keys "[\\<helm-anki-browse-keymap>\\[helm-anki-browse--edit-card]] Edit mode")))
+;		  :buffer helm-anki-browse-buffer-name)
+;	  (message "[helm-anki-browse] no candidate")))))
+
 (defun helm-anki-browse (&optional deck)
   (interactive)
-  (let ((candidates (helm-anki-browse--candidates deck)))
-    (if candidates
-	(helm :sources (helm-build-sync-source "Anki cards"
-			 :candidates candidates
-			 :action (lambda (candidate)
-				   (helm-anki-browse--edit-card candidate))
-			 :candidate-number-limit 9999
-			 :keymap helm-anki-browse-keymap
-			 :migemo t)
-	      :buffer helm-anki-browse-buffer-name)
-      (message "[helm-anki-browse] no candidate"))))
+  (if (my-anki-browse-anki-alivep)
+      (let ((candidates (helm-anki-browse--candidates deck)))
+	(if candidates
+	    (helm :sources (helm-build-sync-source "Anki cards"
+			     :candidates candidates
+			     :action (lambda (candidate)
+				       (helm-anki-browse--edit-card candidate))
+			     :candidate-number-limit 9999
+			     ;; :header-line "Created" ; can't effect, should be alist, but in case of using alist, (migemo . t) is not effect!
+			     :keymap helm-anki-browse-keymap
+			     :migemo t)
+		  :buffer helm-anki-browse-buffer-name)
+	  (message "[helm-anki-browse] no candidate")))))
 
 ;; private
 (defun helm-anki-browse--candidates (deck)
@@ -113,11 +130,13 @@
 (defun helm-anki-browse--edit-card (candidate)
   (with-current-buffer (get-buffer-create helm-anki-browse-edit-card-buffer-name)
     (setq header-line-format
-	  (format "%s: Commit, %s: Abort"
-		  ;;(abbreviate-file-name helm-ag--default-directory)
+	  (format "%s: Commit, %s: Abort %s: Delete"
 		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-commit)
-		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-abort)))
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-abort)
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-delete)))
     ;; https://meech.hatenadiary.org/entry/20100414/1271197161
+    ;; refer "read-only と sticky"
+    ;; but the followin is incomplete.
     (let ((inhibit-read-only t))
       (erase-buffer)
       (insert (propertize (format "noteId: %s\n" (nth 0 candidate)) 'read-only t)
@@ -142,6 +161,12 @@
   (when (y-or-n-p "Discard changes ?")
     (message "Abort edit"))
   (helm-anki-browse--edit-card-exit))
+
+(defun helm-anki-browse--edit-card-delete ()
+  (interactive)
+  (let ((noteid (helm-anki-browse--edit-card-get-field "noteId")))
+    (my-anki-browse-deleteNotes `(,noteid))
+    (helm-anki-browse--edit-card-exit)))
 
 (defun helm-anki-browse--edit-card-get-field (field)
   (let (start end)

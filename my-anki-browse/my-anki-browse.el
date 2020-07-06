@@ -65,6 +65,8 @@
 (defvar my-anki-browse-current-deck nil)
 
 ;;
+(defalias #'my-anki-browse-anki-alivep #'my-anki-browse-version)
+
 (defun my-anki-browse-deck-cards (deck)
   ;; completing-read
   ;; https://stackoverflow.com/questions/2382524/adding-completion-to-interactive/2382677#2382677
@@ -166,6 +168,18 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
 	    (:version . my-anki-browse-anki-connect-version)
 	    (:params (:note . (:id  ,noteid :fields (:Front ,front :Back ,back))))))))
 
+(defun my-anki-browse-deleteNotes (noteids)
+  "Deletes notes with the given ids.
+If a note has several cards associated with it, all associated cards will be deleted.
+https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
+  (interactive)
+  (my-anki-browse--request
+   :type "POST"
+   :data (json-encode
+	  `((:action  . "deleteNotes")
+	    (:version . my-anki-browse-anki-connect-version)
+	    (:params  (:notes . ,noteids))))))
+
 (defun my-anki-browse-version ()
   "Gets the version of the API exposed by this plugin. Currently versions 1 through 6 are defined.
 https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
@@ -182,11 +196,12 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
     :success (cl-function
 	      (lambda (&key data &allow-other-keys)
 		(setq my-anki-browse-anki-connect-version data)
-		(message "[my-anki-browse] -version: %s" data)))
+		(my-anki-browse-message "[my-anki-browse] -version: %s" data)))
     :error (cl-function
 	    (lambda (&rest args &key error-thrown &allow-other-keys)
-	      ;;(message "[my-anki-browse] -version error: %s" error-thrown)))))
-	      (error "[my-anki-browse] anki is not launched!")))))
+	      (setq my-anki-browse-anki-connect-version nil)
+	      (error "[my-anki-browse] anki is not launched!"))))
+  my-anki-browse-anki-connect-version)
 
 ;; private
 (defun my-anki-browse--request (&rest args)
