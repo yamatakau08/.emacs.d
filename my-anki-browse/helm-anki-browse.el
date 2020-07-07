@@ -26,12 +26,13 @@
 ;; http://wikemacs.org/wiki/How_to_write_helm_extensions#A_list_of_candidates_and_an_action
 
 ;; Todo
+;; error message when execute "helm-resume" ad-Advice-helm-resume: Symbol’s value as variable is void: helm-marked-buffer-name
 ;; in helm-anki-browser buffer, how to sort candidates
 ;; => https://abicky.net/2014/01/04/170448/ helm-ff-sort-candidates
-;; in helm buffer, C-c C-e helm-anki-browse--edit-card error
-;; after executing helm-anki-browse--edit-card-commit, return helm-anki-browse buffer then update the list
+;; in helm buffer, C-c C-e helm-anki-browse--edit-note error
+;; after executing helm-anki-browse--edit-note-commit, return helm-anki-browse buffer then update the list
 ;; edit card buffer, "Front" and "Back" field edit is prohibited after erasing the field content
-;; When anki-is not launched, helm-ank-browser error handling
+;; When anki-is not launched, helm-ank-browse error handling
 
 ;; memo
 ;;(let-alist (car (coerce (my-anki-browse-deck-cards "その他") `list)) .noteId)
@@ -51,38 +52,25 @@
 ;;; Code:
 (require 'my-anki-browse)
 
-(defvar helm-anki-browse-buffer-name             "*helm-anki-browser*")
-(defvar helm-anki-browse-edit-card-buffer-name   "*helm-anki-browse-edit-card*")
-(defvar helm-anki-browse-create-card-buffer-name "*helm-anki-browse-create-card*")
+(defvar helm-anki-browse-buffer-name           "*helm-anki-browser*")
+(defvar helm-anki-browse-edit-card-buffer-name "*helm-anki-browse-edit-card*")
+(defvar helm-anki-browse--addNote-buffer-name  "*helm-anki-browse-create-card*")
 
 (defvar helm-anki-browse-keymap
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map helm-map)
-    (define-key map (kbd "C-c C-e") 'helm-anki-browse--edit-card)
+    (define-key map (kbd "C-c C-e") 'helm-anki-browse--edit-note)
     (define-key map (kbd "C-c C-c") 'helm-anki-browse--create-card)
     map)
   "Keymap for `helm-anki-browse'.")
 
 (defvar helm-anki-browse-edit-card-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-c") 'helm-anki-browse--edit-card-commit)
-    (define-key map (kbd "C-c C-d") 'helm-anki-browse--edit-card-delete)
-    (define-key map (kbd "C-c C-k") 'helm-anki-browse--edit-card-abort)
+    (define-key map (kbd "C-c C-c") 'helm-anki-browse--edit-note-commit)
+    (define-key map (kbd "C-c C-d") 'helm-anki-browse--edit-note-delete)
+    (define-key map (kbd "C-c C-a") 'helm-anki-browse--edit-note-add)
+    (define-key map (kbd "C-c C-k") 'helm-anki-browse--edit-note-abort)
     map))
-
-;(defun helm-anki-browse (&optional deck)
-;  (interactive)
-;  (if (my-anki-browse-anki-alivep)
-;      (let ((candidates (helm-anki-browse--candidates deck)))
-;	(if candidates
-;	    (helm :sources `((name . "Anki cards")
-;			     (candidates . candidates)
-;			     (candidate-number-limit .  9999)
-;			     (migemo . t)
-;			     (keymap . helm-anki-browse-keymap)
-;			     (header-line . ,@(substitute-command-keys "[\\<helm-anki-browse-keymap>\\[helm-anki-browse--edit-card]] Edit mode")))
-;		  :buffer helm-anki-browse-buffer-name)
-;	  (message "[helm-anki-browse] no candidate")))))
 
 (defun helm-anki-browse (&optional deck)
   (interactive)
@@ -91,10 +79,15 @@
 	(if candidates
 	    (helm :sources (helm-build-sync-source "Anki cards"
 			     :candidates candidates
-			     :action (lambda (candidate)
-				       (helm-anki-browse--edit-card candidate))
+			     :action '(("Update" . (lambda (candidate)
+						     (helm-anki-browse--edit-note candidate)))
+				       ("Create" . (lambda (candidate)
+						     (helm-anki-browse--addNote candidate)))
+				       ("Delete" . (lambda (candidate)
+						     (helm-anki-browse--deleteNote candidate))))
 			     :candidate-number-limit 9999
 			     ;; :header-line "Created" ; can't effect, should be alist, but in case of using alist, (migemo . t) is not effect!
+			     :persistent-help "View note"
 			     :keymap helm-anki-browse-keymap
 			     :migemo t)
 		  :buffer helm-anki-browse-buffer-name)
@@ -120,55 +113,79 @@
       (setq Frontvalue (let-alist card .fields.Front.value))
       (setq Backvalue  (let-alist card .fields.Back.value))
       (setq FrontBackvalue  (format "%-30s: %s" Frontvalue Backvalue))
-      ;;(add-to-list 'candidates `(,Frontvalue . ,Backvalue) t))
-      (add-to-list 'candidates `(,FrontBackvalue . (,noteId ,Frontvalue ,Backvalue)) t))
+      (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :Front ,Frontvalue :Back ,Backvalue)) t))
     candidates))
 
 (defsubst helm-anki-browse--edit-func-to-keys (func)
   (key-description (car-safe (where-is-internal func helm-anki-browse-edit-card-map))))
 
-(defun helm-anki-browse--edit-card (candidate)
+(defun helm-anki-browse--addNote (candidate)
+  (with-current-buffer (get-buffer-create helm-anki-browse--addNote-buffer-name)
+    (setq header-line-format
+	  (format "%s: Add, %s: Abort"
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-note-add)
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-note-abort)))
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (insert (format "deck  : %s\n" (plist-get candidate :deckName))
+	      "Front : \n"
+	      "Back  : \n")
+      (switch-to-buffer (get-buffer helm-anki-browse--addNote-buffer-name))
+      (use-local-map helm-anki-browse-edit-card-map))))
+
+(defun helm-anki-browse--deleteNote (candidate)
+  (my-anki-browse-deleteNotes `(,(plist-get candidate :noteId))))
+
+(defun helm-anki-browse--edit-note (candidate)
   (with-current-buffer (get-buffer-create helm-anki-browse-edit-card-buffer-name)
     (setq header-line-format
 	  (format "%s: Commit, %s: Abort %s: Delete"
-		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-commit)
-		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-abort)
-		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-delete)))
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-note-commit)
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-note-abort)
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-note-delete)))
     ;; https://meech.hatenadiary.org/entry/20100414/1271197161
     ;; refer "read-only と sticky"
     ;; but the followin is incomplete.
     (let ((inhibit-read-only t))
       (erase-buffer)
-      (insert (propertize (format "noteId: %s\n" (nth 0 candidate)) 'read-only t)
+      (insert (propertize (format "noteId: %s\n" (plist-get candidate :noteId)) 'read-only t)
 	      (propertize "Front : " 'read-only t 'rear-nosticky t 'front-sticky t)
-	      (format "%s" (nth 1 candidate))
+	      (format "%s" (plist-get candidate :Front))
 	      (propertize "\n" 'read-only t 'rear-nonsticky t)
 	      (propertize "Back  : " 'read-only t 'rear-nosticky t 'front-sticky t)
-	      (format "%s" (nth 2 candidate))))
+	      (format "%s" (plist-get candidate :Back))))
     (switch-to-buffer (get-buffer helm-anki-browse-edit-card-buffer-name))
     (use-local-map helm-anki-browse-edit-card-map)))
 
-(defun helm-anki-browse--edit-card-commit ()
+(defun helm-anki-browse--edit-note-commit ()
   (interactive)
-  (let ((noteid (helm-anki-browse--edit-card-get-field "noteId"))
-	(front  (helm-anki-browse--edit-card-get-field "Front"))
-	(back   (helm-anki-browse--edit-card-get-field "Back")))
+  (let ((noteid (helm-anki-browse--edit-note-get-field "noteId"))
+	(front  (helm-anki-browse--edit-note-get-field "Front"))
+	(back   (helm-anki-browse--edit-note-get-field "Back")))
     (my-anki-browse-updateNoteFields noteid front back)
-    (helm-anki-browse--edit-card-exit)))
+    (helm-anki-browse--edit-note-exit)))
 
-(defun helm-anki-browse--edit-card-abort ()
+(defun helm-anki-browse--edit-note-add ()
+  (interactive)
+  (let ((deck  (helm-anki-browse--edit-note-get-field "Deck"))
+	(front (helm-anki-browse--edit-note-get-field "Front"))
+	(back  (helm-anki-browse--edit-note-get-field "Back")))
+    (my-anki-browse-addNote deck front back)
+    (helm-anki-browse--edit-note-exit)))
+
+(defun helm-anki-browse--edit-note-abort ()
   (interactive)
   (when (y-or-n-p "Discard changes ?")
     (message "Abort edit"))
-  (helm-anki-browse--edit-card-exit))
+  (helm-anki-browse--edit-note-exit))
 
-(defun helm-anki-browse--edit-card-delete ()
+(defun helm-anki-browse--edit-note-delete ()
   (interactive)
-  (let ((noteid (helm-anki-browse--edit-card-get-field "noteId")))
+  (let ((noteid (helm-anki-browse--edit-note-get-field "noteId")))
     (my-anki-browse-deleteNotes `(,noteid))
-    (helm-anki-browse--edit-card-exit)))
+    (helm-anki-browse--edit-note-exit)))
 
-(defun helm-anki-browse--edit-card-get-field (field)
+(defun helm-anki-browse--edit-note-get-field (field)
   (let (start end)
     ;;(beginning-of-buffer) ; do not use in Lisp program, read help
     (goto-char (point-min))
@@ -176,7 +193,7 @@
     (setq end   (point-at-eol))
     (buffer-substring-no-properties start end)))
 
-(defun helm-anki-browse--edit-card-exit ()
+(defun helm-anki-browse--edit-note-exit ()
   (kill-buffer (get-buffer helm-anki-browse-edit-card-buffer-name))
   (helm-anki-browse (my-anki-browse-current-deck)))
 
@@ -185,8 +202,8 @@
     (setq header-line-format
 	  (format "%s: Commit, %s: Abort"
 		  ;;(abbreviate-file-name helm-ag--default-directory)
-		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-commit)
-		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-card-abort)))
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-note-commit)
+		  (helm-anki-browse--edit-func-to-keys #'helm-anki-browse--edit-note-abort)))
     ;; https://meech.hatenadiary.org/entry/20100414/1271197161
     (let ((inhibit-read-only t))
       (erase-buffer)
