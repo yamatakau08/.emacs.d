@@ -49,16 +49,16 @@
 ;;
 ;; I suspect it cause in curl command itsefl on msys2 with referring https://github.com/ahungry/org-jira/issues/49#issuecomment-303870919
 ;;
-;; I download curl command windows native from https://curl.haxx.se/dlwiz/
+;; Finally I download curl command windows native from https://curl.haxx.se/dlwiz/
 ;; and specified it as request-curl command.
-;; It WORKS FINE and SOLVED the avobe all cumbersome problem.
+;; It WORKS FINE and SOLVED the above all cumbersome problem.
 
-(setq request-curl
-      (if (eq system-type 'windows-nt)
-	  (progn
-	    (let ((msys-curl-command "/c/winbin/curl-7.69.1-win64-mingw/bin/curl.exe"))
-	      (if (executable-find msys-curl-command) msys-curl-command "curl")))
-	"curl"))
+;(setq request-curl
+;      (if (eq system-type 'windows-nt)
+;	  (progn
+;	    (let ((msys-curl-command "/c/winbin/curl-7.69.1-win64-mingw/bin/curl.exe"))
+;	      (if (executable-find msys-curl-command) msys-curl-command "curl")))
+;	"curl"))
 
 (defcustom my-confluence-url "https://www.tool.company.biz/confluence"
   "Confluence url"
