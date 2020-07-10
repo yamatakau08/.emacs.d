@@ -111,30 +111,30 @@
     candidates))
 
 (defsubst helm-anki-browse-func-to-keys (func map)
-  (message "[helm-anki-browse][debug] -func-to-keys func:%s map:%s" func map)
   (key-description (car-safe (where-is-internal func map))))
 
 ;; update note
 (defun helm-anki-browse--updateNoteFields (candidate)
-  (with-current-buffer (get-buffer-create helm-anki-browse--updateNoteFields-buffer-name)
-    (setq header-line-format
-	  (format "%s: Commit, %s: Abort, %s: Delete"
-		  (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-commit helm-anki-browse--updateNoteFields-map)
-		  (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-abort  helm-anki-browse--updateNoteFields-map)
-		  (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-delete helm-anki-browse--updateNoteFields-map)))
-    ;; https://meech.hatenadiary.org/entry/20100414/1271197161
-    ;; refer "read-only と sticky"
-    ;; but the followin is incomplete.
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (insert (propertize (format "noteId: %s\n" (plist-get candidate :noteId)) 'read-only t)
-	      (propertize "Front : " 'read-only t 'rear-nosticky t 'front-sticky t)
-	      (format "%s" (plist-get candidate :Front))
-	      (propertize "\n" 'read-only t 'rear-nonsticky t)
-	      (propertize "Back  : " 'read-only t 'rear-nosticky t 'front-sticky t)
-	      (format "%s" (plist-get candidate :Back))))
-    (switch-to-buffer (get-buffer helm-anki-browse--updateNoteFields-buffer-name))
-    (use-local-map helm-anki-browse--updateNoteFields-map)))
+  (let ((buffer-name helm-anki-browse--updateNoteFields-buffer-name))
+    (with-current-buffer (get-buffer-create buffer-name)
+      (setq header-line-format
+	    (format "%s: Commit, %s: Abort, %s: Delete"
+		    (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-commit helm-anki-browse--updateNoteFields-map)
+		    (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-abort  helm-anki-browse--updateNoteFields-map)
+		    (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-delete helm-anki-browse--updateNoteFields-map)))
+      ;; https://meech.hatenadiary.org/entry/20100414/1271197161
+      ;; refer "read-only と sticky"
+      ;; but the followin is incomplete.
+      (let ((inhibit-read-only t))
+	(erase-buffer)
+	(insert (propertize (format "noteId: %s\n" (plist-get candidate :noteId)) 'read-only t)
+		(propertize "Front : " 'read-only t 'rear-nosticky t 'front-sticky t)
+		(format "%s" (plist-get candidate :Front))
+		(propertize "\n" 'read-only t 'rear-nonsticky t)
+		(propertize "Back  : " 'read-only t 'rear-nosticky t 'front-sticky t)
+		(format "%s" (plist-get candidate :Back))))
+      (switch-to-buffer (get-buffer buffer-name))
+      (use-local-map helm-anki-browse--updateNoteFields-map))))
 
 (defun helm-anki-browse--updateNoteFields-commit ()
   (interactive)
