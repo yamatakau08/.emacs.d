@@ -27,13 +27,9 @@
 
 ;; Todo
 ;; use request get field
-;; my-ank-browse--request ignore error message '<=' not supported between instances of 'str' and 'int'
-;; when update note, succeed to update
-;;   - add mingw32.exe
-;; [error] request--curl-sync: semaphore never called
 ;; chage my-anki-browse-version to use my-anki-browse--request, not to use request directly
 ;; move each (:version . my-anki-browse--anki-coonect-version to my-anki-browse-reqeust ?
-;; rename my-anki-browse--request to my-anki-browse--anki-connect-request ?
+;; On Windows, my-anki-browser-alivep use tasklist /| grep -i anki
 
 ;;; Code:
 (require 'request)
@@ -85,7 +81,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md
 e.g. noteids: array [1,2]
 1,2 noteid"
   ;; (interactive "nnoteIDs: ")
-  (my-anki-browse--request
+  (my-anki-browse--anki-connect-request
    :data (json-encode
 	  `((:action  . "notesInfo")
 	    (:version . ,my-anki-browse--anki-connect-version)
@@ -94,7 +90,7 @@ e.g. noteids: array [1,2]
 (defun my-anki-browse-findNotes (deck)
   "Returns an array of note IDs for a given query. Same query syntax as guiBrowse.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
-  (my-anki-browse--request
+  (my-anki-browse--anki-connect-request
    :data (json-encode
 	  `((:action  . "findNotes")
 	    (:version . ,my-anki-browse--anki-connect-version)
@@ -104,7 +100,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
   "Gets the complete list of deck names for the current user.
 https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-actions"
   (interactive)
-  (let ((deckNames (my-anki-browse--request
+  (let ((deckNames (my-anki-browse--anki-connect-request
 		    :type "POST"
 		    :data (json-encode
 			   `((:action  . "deckNames")
@@ -116,7 +112,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-action
 (defun my-anki-browse-deckNamesAndIds ()
   "Gets the complete list of deck names and their respective IDs for the current user.
 https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md#deck-actions"
-  (my-anki-browse--request
+  (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
 	  `((:action  . "deckNamesAndIds")
@@ -136,7 +132,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
     (read-string "Back : ")))
 
   (let ((modelName "Basic")) ;; modelName fixed "Basic"
-    (my-anki-browse--request
+    (my-anki-browse--anki-connect-request
      :type "POST"
      :data (json-encode
 	    `((:action  . "addNote")
@@ -149,7 +145,7 @@ You can also include audio files which will be added to the note with an optiona
 Please see the documentation for addNote for an explanation of objects in the audio array.
 Gets the complete list of deck names and their respective IDs for the current user.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
-  (my-anki-browse--request
+  (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
 	  `((:action  . "updateNoteFields")
@@ -160,7 +156,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
   "Deletes notes with the given ids.
 If a note has several cards associated with it, all associated cards will be deleted.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
-  (my-anki-browse--request
+  (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
 	  `((:action  . "deleteNotes")
@@ -170,7 +166,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
 (defun my-anki-browse-sync ()
   "Synchronizes the local Anki collections with AnkiWeb.
 https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
-  (my-anki-browse--request
+  (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
 	  `((:action  . "sync")
@@ -205,7 +201,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
 (defvar my-anki-browse--anki-connect-version nil)
 (defvar my-anki-browse--current-deck nil)
 
-(defun my-anki-browse--request (&rest args)
+(defun my-anki-browse--anki-connect-request (&rest args)
   "private common request api to anki connect"
 
   (unless my-anki-browse--anki-connect-version
@@ -230,7 +226,9 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
 	(setq result (let-alist data .result))
 	(setq error  (let-alist data .error))
 	(if error
-	    (message "[my-anki-browse] -request error: %s" error))
+	    (cond ((equal error "'<=' not supported between instances of 'str' and 'int'") nil) ; When update note, have this error but succeed to update on emacs of mingw32.exe
+		  ;;((equal error "semaphore never called"                                 ) nil) ; somtimes have this error on the same envorionment
+		  (t (message "[my-anki-browse] -request error: %s" error))))
 	(my-anki-browse--debug-message "[my-anki-browse][debug] -request result: %s" result)
 	result) ; return the data
     (message "[my-anki-browse] get-version error!")

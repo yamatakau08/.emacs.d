@@ -34,6 +34,8 @@
 ;; edit note buffer, "Front" and "Back" field edit is prohibited after erasing the field content
 ;; When anki-is not launched, helm-ank-browse error handling
 ;; support to change deck of note in helm-buffer
+;; If there is nothing candidate after increment search, f2 has error.
+;; - helmi mini beffer, input a part of strig, then F2, have curios behavior.
 
 ;;; Code:
 (require 'my-anki-browse)
@@ -142,8 +144,8 @@
 	(front  (helm-anki-browse--updateNoteFields-get-field "Front"))
 	(back   (helm-anki-browse--updateNoteFields-get-field "Back")))
     (my-anki-browse-updateNoteFields noteid front back)
-    (helm-anki-browse (my-anki-browse-current-deck))
-    (helm-anki-browse--updateNoteFields-exit)))
+    (helm-anki-browse--updateNoteFields-exit)
+    (helm-anki-browse (my-anki-browse-current-deck))))
 
 (defun helm-anki-browse--updateNoteFields-abort ()
   (interactive)
