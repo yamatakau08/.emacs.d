@@ -1,0 +1,7 @@
+' http://pdf.plantuml.net/PlantUML_Language_Reference_Guide_ja.pdf
+' e.g. @startuml sample.png
+' output file is sample.png
+' if not specified filename.png
+@startuml
+
+@enduml
