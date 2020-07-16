@@ -1,8 +1,8 @@
 ;;; my-anki-browse.el ---                            -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020  Takahiro Yamaguchi
+;; Copyright (C) 2020
 
-;; Author: Takahiro Yamaguchi <yamatakau08@gmail.com>
+;; Author: <yamatakau08@gmail.com>
 ;; Keywords: browse anki cards
 
 ;; This program is free software; you can redistribute it and/or modify

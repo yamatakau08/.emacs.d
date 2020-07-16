@@ -7,3 +7,4 @@
 
 (add-to-list 'auto-insert-alist '(org-mode  . "template.org"))
 (add-to-list 'auto-insert-alist '(ruby-mode . "template.rb"))
+(add-to-list 'auto-insert-alist '("\\.puml" . "template.puml"))
