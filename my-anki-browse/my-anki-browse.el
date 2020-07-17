@@ -24,12 +24,20 @@
 ;; note has fields Front Back if note type is "Basic"
 ;; note has note types "Basic","Basic (and reserved card)","Basic (optional reversed card)","Cloze"
 ;; smart function my-anki-browse--debug-message to add prefixe "[debug]"
+;;
+;; api memo
+;; findCards (arg "query": "deck:deckname")
+;; - ret: cardids
+;; cardsInfo (arg cardids)
+;; - ret: cardid, noteid, fields (Front,Back) ...
 
 ;; Todo
 ;; use request get field
-;; chage my-anki-browse-version to use my-anki-browse--request, not to use request directly
+;; chage my-anki-browse-version to use my-anki-browse--anki-connect-request, not to use request directly
 ;; move each (:version . my-anki-browse--anki-coonect-version to my-anki-browse-reqeust ?
 ;; On Windows, my-anki-browser-alivep use tasklist /| grep -i anki
+;; get cardid of note
+;; - need to dig my-anki-browse-cardsInfo returns nil, but curl returns correctly.
 
 ;;; Code:
 (require 'request)
@@ -131,13 +139,16 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
     (read-string "Front: ")
     (read-string "Back : ")))
 
-  (let ((modelName "Basic")) ;; modelName fixed "Basic"
-    (my-anki-browse--anki-connect-request
-     :type "POST"
-     :data (json-encode
-	    `((:action  . "addNote")
-	      (:version . my-anki-browse--anki-connect-version)
-	      (:params (:note . (:deckName ,deckName :modelName ,modelName :fields (:Front ,Front :Back ,Back)))))))))
+  (let ((modelName "Basic") ;; modelName fixed "Basic"
+	result)
+    (setq result (my-anki-browse--anki-connect-request
+		  :type "POST"
+		  :data (json-encode
+			 `((:action  . "addNote")
+			   (:version . ,my-anki-browse--anki-connect-version)
+			   (:params (:note . (:deckName ,deckName :modelName ,modelName :fields (:Front ,Front :Back ,Back))))))))
+    (if result
+	(message "[my-anki-browse] -addNote: added id: %s" result))))
 
 (defun my-anki-browse-updateNoteFields (noteid Front Back)
   "Modify the fields of an exist note.
@@ -149,7 +160,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
    :type "POST"
    :data (json-encode
 	  `((:action  . "updateNoteFields")
-	    (:version . my-anki-browse--anki-connect-version)
+	    (:version . ,my-anki-browse--anki-connect-version)
 	    (:params (:note . (:id  ,noteid :fields (:Front ,Front :Back ,Back))))))))
 
 (defun my-anki-browse-deleteNotes (noteids)
@@ -160,7 +171,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
    :type "POST"
    :data (json-encode
 	  `((:action  . "deleteNotes")
-	    (:version . my-anki-browse--anki-connect-version)
+	    (:version . ,my-anki-browse--anki-connect-version)
 	    (:params  (:notes . ,noteids))))))
 
 (defun my-anki-browse-sync ()
@@ -170,7 +181,38 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
    :type "POST"
    :data (json-encode
 	  `((:action  . "sync")
-	    (:version . my-anki-browse--anki-connect-version)))))
+	    (:version . ,my-anki-browse--anki-connect-version)))))
+
+(defun my-anki-browse-changeDeck (deck cardids)
+  "Moves cards with the given IDs to a different deck, creating the deck if it doesn't exist yet.
+https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md"
+  (my-anki-browse--anki-connect-request
+   :type "POST"
+   :data (json-encode
+	  `((:action  . "changeDeck")
+	    (:version . ,my-anki-browse--anki-connect-version)
+	    (:params . (:cards ,cardids :deck ,deck))))))
+
+(defun my-anki-browse-findCards (deck)
+  "Returns an array of card IDs for a given query. Functionally identical to guiBrowse but doesn't use the GUI for better performance.
+https://github.com/FooSoft/anki-connect/blob/master/actions/cards.md"
+  (let ((query (format "deck:%s" deck)))
+    (my-anki-browse--anki-connect-request
+     :type "POST"
+     :data (json-encode
+	    `((:action  . "findCards")
+	      (:version . ,my-anki-browse--anki-connect-version)
+	      (:params . (:query ,query)))))))
+
+(defun my-anki-browse-cardsInfo (cardids)
+  "Returns a list of objects containing for each card ID the card fields, front and back sides including CSS, note type, the note that the card belongs to, and deck name, as well as ease and interval.
+https://github.com/FooSoft/anki-connect/blob/master/actions/cards.md"
+  (my-anki-browse--anki-connect-request
+   :type "POST"
+   :data (json-encode
+	  `((:action  . "cardsInfo")
+	    (:version . ,my-anki-browse--anki-connect-version)
+	    (:params . (:cards ,cardids))))))
 
 (defun my-anki-browse-version ()
   "Gets the version of the API exposed by this plugin. Currently versions 1 through 6 are defined.
@@ -227,9 +269,9 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
 	(setq error  (let-alist data .error))
 	(if error
 	    (cond ((equal error "'<=' not supported between instances of 'str' and 'int'") nil) ; When update note, have this error but succeed to update on emacs of mingw32.exe
-		  ;;((equal error "semaphore never called"                                 ) nil) ; somtimes have this error on the same envorionment
-		  (t (message "[my-anki-browse] -request error: %s" error))))
-	(my-anki-browse--debug-message "[my-anki-browse][debug] -request result: %s" result)
+		  ;;((equal error "semaphore never called"                                 ) nil) ; somtimes have this error on emacs of mingw32.exe
+		  (t (message "[my-anki-browse] --anki-connect-request error: %s" error))))
+	(my-anki-browse--debug-message "[my-anki-browse][debug] --anki-connect-request result: %s" result)
 	result) ; return the data
     (message "[my-anki-browse] get-version error!")
     (message "[my-anki-browse] anki doesn't seem to be launched!")))
