@@ -36,6 +36,7 @@
 ;; support to change deck of note in helm-buffer
 ;; If there is nothing candidate after increment search, f2 has error.
 ;; - helmi mini beffer, input a part of strig, then F2, have curios behavior.
+;; on Mac, helm-anki-browse buffer indent is not aligned
 
 ;;; Code:
 (require 'my-anki-browse)
