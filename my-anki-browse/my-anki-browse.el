@@ -38,6 +38,12 @@
 ;; On Windows, my-anki-browser-alivep use tasklist /| grep -i anki
 ;; get cardid of note
 ;; - need to dig my-anki-browse-cardsInfo returns nil, but curl returns correctly.
+;;   on mac success.
+;; (let ((cardsInfo (aref (read (format "%S" (my-anki-browse-cardsInfo [1594024606584]))) 0)))
+;;  (let-alist cardsInfo .cardId)
+;;  (let-alist cardsInfo .note)
+;;  (let-alist cardsInfo .fields.Front.value)
+;;  (let-alist cardsInfo .fields.Back.value))
 
 ;;; Code:
 (require 'request)
@@ -86,7 +92,7 @@
 (defun my-anki-browse-notesInfo (noteids)
   "Returns a list of objects containing for each note ID the note fields, tags, note type and the cards belonging to the note.
 https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md
-e.g. noteids: array [1,2]
+e.g. noteids: array [1,2] or '(1 2)
 1,2 noteid"
   ;; (interactive "nnoteIDs: ")
   (my-anki-browse--anki-connect-request
@@ -185,7 +191,9 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
 
 (defun my-anki-browse-changeDeck (deck cardids)
   "Moves cards with the given IDs to a different deck, creating the deck if it doesn't exist yet.
-https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md"
+https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md
+cardids: [1594024606584] or '(1594024606584)
+"
   (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
@@ -206,7 +214,10 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/cards.md"
 
 (defun my-anki-browse-cardsInfo (cardids)
   "Returns a list of objects containing for each card ID the card fields, front and back sides including CSS, note type, the note that the card belongs to, and deck name, as well as ease and interval.
-https://github.com/FooSoft/anki-connect/blob/master/actions/cards.md"
+https://github.com/FooSoft/anki-connect/blob/master/actions/cards.md
+cardids: [1,2] or '(1 2)
+1,2 cardid
+"
   (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
