@@ -204,6 +204,13 @@ cardids: [1594024606584] or '(1594024606584)
 (defun my-anki-browse-findCards (deck)
   "Returns an array of card IDs for a given query. Functionally identical to guiBrowse but doesn't use the GUI for better performance.
 https://github.com/FooSoft/anki-connect/blob/master/actions/cards.md"
+  (interactive
+   (list
+    (let ((completion-cycle-threshold t))
+      (if (member my-anki-browse-anki-main-deck-name (my-anki-browse-deckNames))
+	  (completing-read "Deck: " (my-anki-browse-deckNames) nil t my-anki-browse-anki-main-deck-name)
+	(completing-read "Deck: " (my-anki-browse-deckNames))))))
+
   (let ((query (format "deck:%s" deck)))
     (my-anki-browse--anki-connect-request
      :type "POST"

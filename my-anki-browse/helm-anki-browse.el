@@ -91,7 +91,7 @@
     (define-key map (kbd "C-c C-k") 'helm-anki-browse--addNote-abort)
     map))
 
-(defun helm-anki-browse--candidates (deck)
+(defun helm-anki-browse--xcandidates (deck)
   (let (candidates
 	noteId
 	Frontvalue
@@ -113,6 +113,30 @@
       (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :Front ,Frontvalue :Back ,Backvalue)) t))
     candidates))
 
+(defun helm-anki-browse--candidates (deck)
+  (let (candidates
+	noteId
+	Frontvalue
+	Backvalue
+	FrontBackValue
+	cards
+	card
+	cardId)
+
+    (if deck
+	(setq cards (my-anki-browse-cardsInfo (my-anki-browse-findCards deck)))
+      (setq cards (my-anki-browse-cardsInfo (call-interactively 'my-anki-browse-deck-cards))))
+
+    (dotimes (i (length cards))
+      (setq card (aref cards i))
+      (setq cardId (let-alist card .cardId))
+      (setq noteId (let-alist card .note))
+      (setq Frontvalue (let-alist card .fields.Front.value))
+      (setq Backvalue  (let-alist card .fields.Back.value))
+      (setq FrontBackvalue  (format "%-30s: %s" Frontvalue Backvalue))
+      (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :cardId: ,cardId :Front ,Frontvalue :Back ,Backvalue)) t))
+    candidates))
+
 (defsubst helm-anki-browse-func-to-keys (func map)
   (key-description (car-safe (where-is-internal func map))))
 
@@ -131,6 +155,7 @@
       (let ((inhibit-read-only t))
 	(erase-buffer)
 	(insert (propertize (format "noteId: %s\n" (plist-get candidate :noteId)) 'read-only t)
+		(propertize (format "cardId: %s\n" (plist-get candidate :cardId)) 'read-only t)
 		(propertize "Front : " 'read-only t 'rear-nosticky t 'front-sticky t)
 		(format "%s" (plist-get candidate :Front))
 		(propertize "\n" 'read-only t 'rear-nonsticky t)
