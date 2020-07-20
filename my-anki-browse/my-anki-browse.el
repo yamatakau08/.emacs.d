@@ -181,6 +181,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
 (defun my-anki-browse-sync ()
   "Synchronizes the local Anki collections with AnkiWeb.
 https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
+  (interactive)
   (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
