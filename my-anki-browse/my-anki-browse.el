@@ -32,18 +32,16 @@
 ;; - ret: cardid, noteid, fields (Front,Back) ...
 
 ;; Todo
-;; use request get field
+;; use request to get field
 ;; chage my-anki-browse-version to use my-anki-browse--anki-connect-request, not to use request directly
 ;; move each (:version . my-anki-browse--anki-coonect-version to my-anki-browse-reqeust ?
 ;; On Windows, my-anki-browser-alivep use tasklist /| grep -i anki
-;; get cardid of note
-;; - need to dig my-anki-browse-cardsInfo returns nil, but curl returns correctly.
-;;   on mac success.
-;; (let ((cardsInfo (aref (read (format "%S" (my-anki-browse-cardsInfo [1594024606584]))) 0)))
-;;  (let-alist cardsInfo .cardId)
-;;  (let-alist cardsInfo .note)
-;;  (let-alist cardsInfo .fields.Front.value)
-;;  (let-alist cardsInfo .fields.Back.value))
+
+;; Memo
+;; msys2 mingw32.exe "my-anki-browse-cardsInfo" doesn't work correctly!, on the other hand mingw64.exe works
+;; - (my-anki-browse-cardsInfo [1594024606584])
+;;   - => nil               ; mingw32
+;;     => [((cardId . ....] ; mingw64
 
 ;;; Code:
 (require 'request)
@@ -193,6 +191,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
   "Moves cards with the given IDs to a different deck, creating the deck if it doesn't exist yet.
 https://github.com/FooSoft/anki-connect/blob/master/actions/decks.md
 cardids: [1594024606584] or '(1594024606584)
+deck is created if deck specified by arg doesn't exist.
 "
   (my-anki-browse--anki-connect-request
    :type "POST"
@@ -212,6 +211,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/cards.md"
 	(completing-read "Deck: " (my-anki-browse-deckNames))))))
 
   (let ((query (format "deck:%s" deck)))
+    (setq my-anki-browse--current-deck deck)
     (my-anki-browse--anki-connect-request
      :type "POST"
      :data (json-encode

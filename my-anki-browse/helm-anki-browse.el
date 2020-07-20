@@ -37,25 +37,39 @@
 ;; If there is nothing candidate after increment search, f2 has error.
 ;; - helmi mini beffer, input a part of strig, then F2, have curios behavior.
 ;; on Mac, helm-anki-browse buffer indent is not aligned
-;; msys2 mingw32.exe (my-anki-browse-cardsInfo doesn't work!, on the other hand mingw64.exe works
+
+;; Memo
+;; msys2 mingw32.exe "my-anki-browse-cardsInfo" doesn't work correctly!, on the other hand mingw64.exe works
+;; - (my-anki-browse-cardsInfo [1594024606584])
+;;   - => nil               ; mingw32
+;;     => [((cardId . ....] ; mingw64
 
 ;;; Code:
 (require 'my-anki-browse)
 
 ;; public
 (defun helm-anki-browse (&optional deck)
+  "helm anki browse"
   (interactive)
   (if (my-anki-browse-anki-alivep)
-      (let ((candidates (helm-anki-browse--candidates deck)))
+      (let (candidates)
+	(if (string= system-configuration "i686-w64-mingw32") ; see memo on the abovle
+	    (setq candidates (helm-anki-browse--xcandidates deck))
+	  (setq candidates (helm-anki-browse--candidates deck)))
+
 	(if candidates
 	    (helm :sources (helm-build-sync-source "Anki notes"
 			     :candidates candidates
-			     :action '(("Update" . (lambda (candidate)
-						     (helm-anki-browse--updateNoteFields candidate)))
-				       ("Create" . (lambda (candidate)
-						     (helm-anki-browse--addNote candidate)))
-				       ("Delete" . (lambda (candidate)
-						     (helm-anki-browse--deleteNote candidate))))
+			     :action '(("Update"      . (lambda (candidate)
+							  (helm-anki-browse--updateNoteFields candidate)))
+				       ("Create"      . (lambda (candidate)
+							  (helm-anki-browse--addNote candidate)))
+				       ("Delete"      . (lambda (candidate)
+							  (helm-anki-browse--deleteNote candidate)))
+				       ("Go to Deck"  . (lambda (candidate)
+							  (helm-anki-browse--gotoDeck candidate)))
+				       ("Change Deck" . (lambda (candidate)
+							  (helm-anki-browse--changeDeck candidate))))
 			     :candidate-number-limit 9999
 			     ;; :header-line "Created" ; can't effect, should be alist, but in case of using alist, (migemo . t) is not effect!
 			     :persistent-help "View note"
@@ -93,6 +107,7 @@
     map))
 
 (defun helm-anki-browse--xcandidates (deck)
+  "for mingw32, it doesn't support changeDeck function, because return nil"
   (let (candidates
 	noteId
 	Frontvalue
@@ -230,6 +245,23 @@
   (my-anki-browse-deleteNotes `(,(plist-get candidate :noteId)))
   ;; to reflect the deleting note, execute helm-anki-browse again
   (helm-anki-browse (my-anki-browse-current-deck)))
+
+;; change Deck
+(defun helm-anki-browse--changeDeck (candidate)
+  (let ((cardId (plist-get candidate :cardId))
+	deck)
+    (let ((completion-cycle-threshold t))
+      (setq deck (completing-read "Deck: " (my-anki-browse-deckNames))))
+    (my-anki-browse-changeDeck deck `[,cardId])
+    (message "[helm-anki-browse]--changeDeck: %s" deck)
+    (helm-anki-browse (my-anki-browse-current-deck))))
+
+;; change Deck
+(defun helm-anki-browse--gotoDeck (candidate)
+  (let ((completion-cycle-threshold t)
+	deck)
+    (setq deck (completing-read "Deck: " (my-anki-browse-deckNames)))
+    (helm-anki-browse deck)))
 
 (provide 'helm-anki-browse)
 ;;; helm-anki-browse.el ends here
