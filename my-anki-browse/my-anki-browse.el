@@ -52,7 +52,7 @@
 ;(setq request-log-level     'debug)
 ;(setq request-message-level 'debug)
 
-(defgroup my-ank-browse nil
+(defgroup my-anki-browse nil
   "My anki browse through anki connect"
   :group 'tools)
 

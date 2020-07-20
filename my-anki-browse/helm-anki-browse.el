@@ -37,6 +37,7 @@
 ;; If there is nothing candidate after increment search, f2 has error.
 ;; - helmi mini beffer, input a part of strig, then F2, have curios behavior.
 ;; on Mac, helm-anki-browse buffer indent is not aligned
+;; msys2 mingw32.exe (my-anki-browse-cardsInfo doesn't work!, on the other hand mingw64.exe works
 
 ;;; Code:
 (require 'my-anki-browse)
@@ -125,7 +126,7 @@
 
     (if deck
 	(setq cards (my-anki-browse-cardsInfo (my-anki-browse-findCards deck)))
-      (setq cards (my-anki-browse-cardsInfo (call-interactively 'my-anki-browse-deck-cards))))
+      (setq cards (my-anki-browse-cardsInfo (call-interactively 'my-anki-browse-findCards))))
 
     (dotimes (i (length cards))
       (setq card (aref cards i))
@@ -134,7 +135,7 @@
       (setq Frontvalue (let-alist card .fields.Front.value))
       (setq Backvalue  (let-alist card .fields.Back.value))
       (setq FrontBackvalue  (format "%-30s: %s" Frontvalue Backvalue))
-      (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :cardId: ,cardId :Front ,Frontvalue :Back ,Backvalue)) t))
+      (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :cardId ,cardId :Front ,Frontvalue :Back ,Backvalue)) t))
     candidates))
 
 (defsubst helm-anki-browse-func-to-keys (func map)
