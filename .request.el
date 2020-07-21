@@ -1,5 +1,5 @@
 (use-package request
-  :ensure request)
+  :ensure t)
 
 ;; Important!
 ;; On msys2 mingw64 emacs environment
@@ -27,6 +27,5 @@
        (let ((curl "/c/winbin/curl-7.69.1-win64-mingw/bin/curl.exe"))
 	 (if (executable-find curl)
 	     curl
-	   (error "install curl from https://curl.haxx.se/dlwiz/")
 	   "curl"))
      "curl")))
