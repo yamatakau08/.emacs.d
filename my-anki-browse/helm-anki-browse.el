@@ -125,7 +125,7 @@
       (setq noteId (let-alist note .noteId))
       (setq Frontvalue (let-alist note .fields.Front.value))
       (setq Backvalue  (let-alist note .fields.Back.value))
-      (setq FrontBackvalue  (format "%-30s: %s" Frontvalue Backvalue))
+      (setq FrontBackvalue  (format "%-30s: %s" (truncate-string-to-width Frontvalue 30) (truncate-string-to-width Backvalue 50)))
       (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :Front ,Frontvalue :Back ,Backvalue)) t))
     candidates))
 
@@ -149,7 +149,8 @@
       (setq noteId (let-alist card .note))
       (setq Frontvalue (let-alist card .fields.Front.value))
       (setq Backvalue  (let-alist card .fields.Back.value))
-      (setq FrontBackvalue  (format "%-30s: %s" Frontvalue Backvalue))
+      ;; FrontBackvalue is for search result buffer helm-buffer.
+      (setq FrontBackvalue  (format "%-30s: %s" (truncate-string-to-width Frontvalue 30) (truncate-string-to-width Backvalue 50)))
       (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :cardId ,cardId :Front ,Frontvalue :Back ,Backvalue)) t))
     candidates))
 

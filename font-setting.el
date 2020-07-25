@@ -36,8 +36,10 @@
 (dolist (font '("Myrica M" "MyricaM M"))
   (catch 'aaa
     (if (member font (font-family-list))
-	(progn
-	  (if (equal (system-name) "JPC20165182")
-	      (my-add-font-in-default-frame-alist (concat font "-10"))
-	    (my-add-font-in-default-frame-alist font)))
+	(cond ((eq system-type 'darwin)
+	       (my-add-font-in-default-frame-alist (concat font "-18")))
+	      ((equal (system-name) "JPC20165182")a
+	       (my-add-font-in-default-frame-alist (concat font "-10")))
+	      (t
+	       (my-add-font-in-default-frame-alist font)))
       (throw 'aaa font))))
