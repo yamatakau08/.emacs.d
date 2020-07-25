@@ -74,6 +74,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.howm.el")
 
 ;;;
+(my-load "~/.emacs.d/.request.el")
 (my-load "~/.emacs.d/.google-translate.el")
 
 ;;;
@@ -87,6 +88,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;;; replace .openwith.el in dired-mode
 ;(my-load "~/.emacs.d/.dired.el")
+
+;;
+(my-load "~/.emacs.d/.dired-x.el")
 
 ;;;
 (my-load "~/.emacs.d/.thingatpt.el")
@@ -195,7 +199,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/say.el")
 
 ;; jira/confluence
-(my-load "~/.emacs.d/.request.el")
+;(my-load "~/.emacs.d/.request.el")
 ;(my-load "~/.emacs.d/.jiralib2.el")
 ;(my-load "~/.emacs.d/.helm-jira.el")
 (my-load "~/.emacs.d/.my-confluence.el")

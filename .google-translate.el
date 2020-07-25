@@ -1,4 +1,9 @@
-;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+;; Workaround on emacs 28.0.50
+;; Error (use-package): google-translate/:catch: Cannot open load file: No such file or directory, popup
+;; File is missing: Cannot open load file, No such file or directory, popup
+(use-package popup
+  :ensure t)
+
 (use-package google-translate
   :ensure t)
 

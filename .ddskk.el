@@ -11,17 +11,18 @@
 ;(add-to-list 'load-path "~/.emacs.d/elpa/ddskk-20170709.839")
 ;(require 'skk-autoloads) ; XEmacs でパッケージとしてインストールした場合は不要
 
-(global-set-key "\C-x\C-j" 'skk-mode)
-(global-set-key "\C-xj"    'skk-auto-fill-mode)
-(global-set-key "\C-xt"    'skk-tutorial)
+;; default setting, should be set to enable
+(global-set-key (kbd "C-x C-j") 'skk-mode)
+(global-set-key (kbd "C-x j")   'skk-auto-fill-mode)
+(global-set-key (kbd "C-x t")   'skk-tutorial)
 
 ;(setq skk-tut-file "~/mylisp/ddskk/etc/SKK.tut")
 
 ;;; https://www.arat.xyz/wordpress/?p=129
-(setq skk-jisyo-code 'utf-8) ; refer skk-vars.el
+(custom-set-variables '(skk-jisyo-code 'utf-8)) ; refer skk-vars.el
 
 ;;
-(setq skk-jisyo "~/.emacs.d/skk-jisyo/.skk-jisyo")
+(custom-set-variables '(skk-jisyo "~/.emacs.d/skk-jisyo/.skk-jisyo"))
 
 ;;
 (custom-set-variables '(skk-henkan-strict-okuri-precedence t))

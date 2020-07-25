@@ -44,7 +44,7 @@
     ;; (w32-shell-execute "open" "explorer" (concat "/e,/select," file-w32)) ; when file, select file in Explorer
     ;; *important* Do not check file-exist-p, because return nil even if actual file exists on UNC path environment.
     ;; open by default App
-    (w32-shell-execute "open" "explorer" file-w32)))
+    (w32-shell-execute "open" file-w32)))
 
 ;;;
 (defun my-app-open-file (&optional file-w32)
