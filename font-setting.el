@@ -38,7 +38,7 @@
     (if (member font (font-family-list))
 	(cond ((eq system-type 'darwin)
 	       (my-add-font-in-default-frame-alist (concat font "-18")))
-	      ((equal (system-name) "JPC20165182")a
+	      ((equal (system-name) "JPC20165182")
 	       (my-add-font-in-default-frame-alist (concat font "-10")))
 	      (t
 	       (my-add-font-in-default-frame-alist font)))

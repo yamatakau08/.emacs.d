@@ -18,7 +18,7 @@ See Link,Images"
     (setq height (plist-get plist_attr_html :height))
 
     (if (and fname-extension
-	     (string-match "png\\|jpg" fname-extension))
+	     (string-match "png\\|PNG\\|jpg\\|JPG" fname-extension))
 	;; image
 	(progn
 	  (if width
