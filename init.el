@@ -112,7 +112,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.wl.el")
 
 ;;;
-(my-load "~/.emacs.d/.cygwin-mount.el")
+;(my-load "~/.emacs.d/.cygwin-mount.el")
 
 ;;; org-mode
 (my-load "~/.emacs.d/.org.el")
