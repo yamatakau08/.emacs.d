@@ -15,7 +15,12 @@
       (require 'org-tempo)
   (message "update org to 9.2.X"))
 
-(setq org-edit-src-content-indentation 0) ; ソースブロックの中身が右にずらさないように左端にする
+;; add "INPROGRESS" in to-do-keywordsin
+;; refer http://aaronbedra.com/emacs.d/#org29f8f0d Org Settings
+(custom-set-variables '(org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE"))))
+
+;; align source block at the left, original 2 space added as indent
+(custom-set-variables '(org-edit-src-content-indentation 0))
 
 ;;; to remove "Validate" link at the bottom of exported html
 ;;; https://stackoverflow.com/questions/15134911/in-org-mode-how-do-i-remove-the-validate-xhtml-1-0-message-from-html-export
