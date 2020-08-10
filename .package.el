@@ -7,8 +7,9 @@
 ;; setq is no effect, use custom-set-variables
 (custom-set-variables
  '(package-archives
-   '(("org"   . "https://orgmode.org/elpa/"     )
-     ("melpa" . "https://melpa.org/packages/"   ))))
+   '(("org"   . "https://orgmode.org/elpa/")
+     ("melpa" . "https://melpa.org/packages/")
+     ("celpa" . "https://celpa.conao3.com/packages/"))))
 
 ;;; Unnecessary call on Emacs 27
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-380470596

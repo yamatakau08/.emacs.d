@@ -223,6 +223,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 (my-load "~/.emacs.d/.my-plantuml.el")
 
+(my-load "~/.emacs.d/.dired-posframe.el")
+
 ;; custom-set-variables,faces is automatically added in the end of init.el
 ;; when that function uses variables are executed.
 ;; To avoid to that, use the following settings
