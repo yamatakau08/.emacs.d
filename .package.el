@@ -12,6 +12,8 @@
      ("gnu"   . "https://elpa.gnu.org/packages/")
      ("celpa" . "https://celpa.conao3.com/packages/"))))
 
+(custom-set-variables '(use-package-verbose t))
+
 ;;; Unnecessary call on Emacs 27
 ;;; https://github.com/jkitchin/scimax/issues/194#issuecomment-380470596
 (if (< emacs-major-version 27)
