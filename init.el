@@ -225,7 +225,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 (my-load "~/.emacs.d/.dired-posframe.el")
 
-;(my-load "~/.emacs.d/.frog-jump-buffer.el")
+(my-load "~/.emacs.d/.frog-jump-buffer.el")
 
 ;; custom-set-variables,faces is automatically added in the end of init.el
 ;; when that function uses variables are executed.
