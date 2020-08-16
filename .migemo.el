@@ -1,11 +1,14 @@
 ;; migemo
-;; reference
+;; refer
 ;; http://0xcc.net/migemo/
 
 (use-package migemo
-  :ensure t)
-
-;(require 'migemo) ; package使用していている場合不要
+  :ensure t
+  :config
+  (custom-set-variables
+   '(migemo-user-dictionary  nil) ; don't use user-dictionary
+   '(migemo-regex-dictionary nil))
+  )
 
 (cond
  ((eq system-type 'windows-nt)
@@ -71,9 +74,6 @@
 
 (load-library "migemo")
 (migemo-init)
-
-(setq migemo-user-dictionary  nil) ; don't use user-dictionary
-(setq migemo-regex-dictionary nil)
 
 ;; judge if migemo-command exists
 (unless (file-exists-p migemo-command)

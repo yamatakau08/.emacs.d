@@ -1,9 +1,13 @@
-;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
 (use-package helm
   :ensure t
   :config
 
-  (helm-migemo-mode t)
+  (helm-migemo-mode t) ; enable migemo
+
+  ;; https://github.com/syohex/emacs-helm-ag#enable-helm-follow-mode-by-default
+  ;; in helm-ag candidate buffer, selected search result with ctl-n or ctl-p
+  ;; other window follow that action and shows the part selected in candidate buffer
+  ;; need to execcute C-c C-f in helm minibuffer to enable helm-follow-mode
   (custom-set-variables '(helm-follow-mode-persistent t))
 
   (defun advice-around:helm-mini (orig-func &rest args)
@@ -20,7 +24,7 @@
 	 ("C-r" . helm-occur))
   )
 
-;(require 'helm-config) ; https://github.com/emacs-helm/helm/wiki#install
+;(require 'helm-config) ; https://github.com/emacs-helm/helm/wiki#if-installed-from-source
 ;(require 'helm) ; helm-config を require すると、helm-migiemo-mode を設定するとエラーになるので、(require 'helm) する
 
 ;;
@@ -39,12 +43,3 @@
 ;  ;(define-key global-map (kbd "C-r") 'helm-occur)
 ;;  )
 ;  )
-
-;; enable migemo
-;(helm-migemo-mode 1)
-
-;; https://github.com/syohex/emacs-helm-ag#enable-helm-follow-mode-by-default
-;; in helm-ag candidate buffer, selected search result with ctl-n or ctl-p
-;; other window follow that action and shows the part selected in candidate buffer
-;; need to execcute C-c C-f in helm minibuffer to enable helm-follow-mode
-;(custom-set-variables '(helm-follow-mode-persistent t))
