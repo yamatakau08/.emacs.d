@@ -21,11 +21,9 @@
  ((eq system-type 'windows-nt)
   (setq associated-program-alist
 	'(((lambda (file)
-	     ;; note: if html is in file suffix regexp, helm-find-file can't open url which has html,
-	     ;; I don't include htlm in file suffix regexp
-	     ;;(w32-shell-execute "open" file)) "\\.\\(pdf\\|png\\|JPG\\|msg\\|pptx\\|xls\\|xlsx\\|xlsm\\|docx\\|avi\\|mp4\\)$")))
-	     ;; don't include JPG/png image file suffixes, they are appeared in the emacs buffer with normal file open
-	     (w32-shell-execute "open" file)) "\\.\\(pdf\\|msg\\|pptx\\|xls\\|xlsx\\|xlsm\\|doc\\|docx\\|avi\\|mp4\\|png\\)$")))
+	     ;; note: I don't include htlm in file suffix regexp
+	     ;; if html is in file suffix regexp, helm-find-file can't open url which has html,
+	     (w32-shell-execute "open" file)) "\\.\\(pdf\\|msg\\|pptx\\|xls\\|xlsx\\|xlsm\\|doc\\|docx\\|avi\\|mp4\\|jpg\\|JPG\\|png\\|PNG\\)$")))
   )
  ((eq system-type 'darwin)
   (setq associated-program-alist

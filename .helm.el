@@ -7,7 +7,7 @@
 
 ;;
 (when (featurep 'helm)
-  (global-set-key (kbd "C-x b") 'helm-mini)
+  ;;(global-set-key (kbd "C-x b") 'helm-mini) ; assing frog-jump-buffer
   (global-set-key (kbd "C-x f") 'helm-find-files)
   ;; (global-set-key (kbd "C-x o") 'helm-buffers-list) ; to tentative setting
 ;;;

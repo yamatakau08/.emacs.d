@@ -9,6 +9,7 @@
  '(package-archives
    '(("org"   . "https://orgmode.org/elpa/")
      ("melpa" . "https://melpa.org/packages/")
+     ("gnu"   . "https://elpa.gnu.org/packages/")
      ("celpa" . "https://celpa.conao3.com/packages/"))))
 
 ;;; Unnecessary call on Emacs 27
