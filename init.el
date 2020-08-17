@@ -104,6 +104,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;(my-load "~/.emacs.d/.helm-google.el")
 (my-load "~/.emacs.d/.helm-swoop.el")
 (my-load "~/.emacs.d/.helm-ag.el")
+(my-load "~/.emacs.d/.helm-posframe.el")
 
 ;;;
 (my-load "~/.emacs.d/.magit.el")

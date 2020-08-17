@@ -1,17 +1,14 @@
 (use-package dired-posframe
-  ;; https://celpa.conao3.com/
   :ensure t
-  ;; need to study about :binding
-;  :bind (;(dired-mode-map
-;         ("C-t" . nil)
-;         ("C-t" . dired-posframe-show))
+  :config
+  (custom-set-variables '(dired-posframe-file-size-limit (* 10 1024 1024)))
+
+  :bind (("z" . dired-posframe-show))
   )
 
-(custom-set-variables '(dired-posframe-file-size-limit (* 10 1024 1024)))
-
-(add-hook 'dired-mode-hook
-	  (lambda ()
-	    (define-key dired-mode-map "z" 'dired-posframe-show)))
+;(add-hook 'dired-mode-hook
+;	  (lambda ()
+;	    (define-key dired-mode-map "z" 'dired-posframe-show)))
 
 ;(defun peep-dired--image-p (path)
 ;  "check if file is a kind of image or text"
