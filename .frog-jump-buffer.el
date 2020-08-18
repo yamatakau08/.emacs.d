@@ -26,9 +26,11 @@
   (defun frog-jump-buffer-find-or-create-buffer (res)
     (if (tab-bar-get-buffer-tab res)
 	(tab-bar-switch-to-tab res)
-      (message "[debug] frog-jump-buffer-find-or-create-buffer: %s" (assoc-default res (frog-jump-buffer-recentf-buffers)))
-      ;;(find-file-other-tab res)
-      (run-associated-program (assoc-default res (frog-jump-buffer-recentf-buffers))))))
+      (let ((file-or-buffer (assoc-default res (frog-jump-buffer-recentf-buffers))))
+	(message "[debug] frog-jump-buffer-find-or-create-buffer: %s" file-or-buffer)
+	(if file-or-buffer
+	    (run-associated-program (assoc-default res (frog-jump-buffer-recentf-buffers)))
+	  (message "[debug] frog-jump-buffer-find-or-create-buffer: can't open %s" res))))))
 
 ;; need to modify to sort filename (nreverse buffers)
 ;(defun frog-jump-buffer-recentf-buffers ()
