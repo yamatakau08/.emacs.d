@@ -10,18 +10,26 @@
   ;; need to execcute C-c C-f in helm minibuffer to enable helm-follow-mode
   (custom-set-variables '(helm-follow-mode-persistent t))
 
-  (defun advice-around:helm-mini (orig-func &rest args)
+  ;; found define another function is useful
+  ;;(defun advice-around:helm-mini (orig-func &rest args)
+  ;; (helm-posframe-enable)
+  ;;  (apply orig-func args)
+  ;;  (helm-posframe-disable))
+  ;; (advice-add 'helm-mini :around  #'advice-around:helm-mini)
+
+  (defun helm-mini-posframe ()
+    (interactive)
     (helm-posframe-enable)
-    (apply orig-func args)
+    (helm-mini)
     (helm-posframe-disable))
 
-  (advice-add 'helm-mini :around  #'advice-around:helm-mini)
 
   :bind (;;("C-x b" . helm-mini) ; assign frog-jump-buffer
 	 ("C-x f" . helm-find-files)
 	 ;;("C-x o" . helm-buffers-list))
-	 ("C-s" . helm-occur)
-	 ("C-r" . helm-occur))
+	 ;;("C-s" . helm-occur) ; Since simple C-s and C-r is useful, don't use helm-occur
+	 ;;("C-r" . helm-occur) ;
+	 )
   )
 
 ;(require 'helm-config) ; https://github.com/emacs-helm/helm/wiki#if-installed-from-source

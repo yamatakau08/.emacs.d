@@ -73,3 +73,46 @@
 
 ;; replace return is dired-find-file in dired-run-associated-program
 (define-key dired-mode-map [return] 'dired-run-associated-program)
+
+(defun run-associated-program (file-name-arg &optional wildcards) ; add optional arg to use interactive block of find-file function, actually no used
+  "Run program or function associated with file-name-arg.
+      If no application is associated with file, then `find-file'."
+  ;; modified to use same interactive block of find-file function.
+  ;; because C-x C-f assigned run-associated-program original (interactive "ffile:") can't handle directory correctly inside buffer of file.
+  (interactive
+   (find-file-read-args "Find file: "
+                        (confirm-nonexistent-file-or-buffer)))
+  (let ((items associated-program-alist)
+	item
+	program
+	regexp
+	file-name
+	result)
+    (setq file-name (expand-file-name file-name-arg))
+    (while (and (not result) items)
+      (setq item (car items))
+      (setq program (nth 0 item))
+      (setq regexp (nth 1 item))
+      (if (string-match regexp file-name)
+	  (cond ((stringp program)
+		 (setq result (start-process program nil program file-name)))
+		((functionp program)
+		 (funcall program
+			  (replace-regexp-in-string "/" "\\\\" file-name) ; modified to change windows path to internal one
+			  )
+		 ;; This implementation assumes everything went well,
+		 ;; or that the called function handled an error by
+		 ;; itself:
+		 (setq result t))))
+      (setq items (cdr items)))
+    ;; fail to run
+    (unless result
+      (let ((tab-name (file-name-nondirectory (directory-file-name file-name))))
+	(message "[debug] run-associated-program file-name: %s tab-name: %s" file-name tab-name)
+	(if (tab-bar-get-buffer-tab tab-name)
+	    (tab-bar-switch-to-tab tab-name)
+	  (find-file-other-tab file-name)))) ; modified to use "file-name" as arg, original arg is "file" is not defined
+    ))
+
+;; arg buffer-or-name of swithc-to-buffer
+;; #("*scratch*" 0 9 (face frog-menu-candidates-face))

@@ -7,18 +7,28 @@
    '(frog-jump-buffer-max-buffers 20))
 
   ;; redfine original function
-  (defun frog-jump-buffer-find-or-create-buffer (res)
-    "Switch to buffer, or if closed, find and create it first."
-    (let ((buffer (if frog-jump-buffer-include-virtual-buffers
-		      (find-file (assoc-default res (frog-jump-buffer-recentf-buffers)))
-                    res)))
-      (if frog-jump-buffer-target-other-window
-          ;;(switch-to-buffer-other-window buffer) ; original
-          (switch-to-buffer-other-window nil) ; my modification
-	(switch-to-buffer buffer))))
+;  (defun frog-jump-buffer-find-or-create-buffer (res)
+;    "Switch to buffer, or if closed, find and create it first."
+;    (let ((buffer (if frog-jump-buffer-include-virtual-buffers
+;		      (find-file (assoc-default res (frog-jump-buffer-recentf-buffers)))
+;                    res)))
+;      (if frog-jump-buffer-target-other-window
+;          ;;(switch-to-buffer-other-window buffer) ; original
+;	  (progn
+;	    (message "[debug] frog-jump-buffer-find-or-create-buffer 1")
+;            (switch-to-buffer-other-window nil)) ; my modification
+;	(switch-to-buffer buffer))))
 
   :bind (("C-x b" . frog-jump-buffer)
 	 ("C-x c" . frog-jump-buffer-other-window)))
+
+(with-eval-after-load "frog-jump-buffer"
+  (defun frog-jump-buffer-find-or-create-buffer (res)
+    (if (tab-bar-get-buffer-tab res)
+	(tab-bar-switch-to-tab res)
+      (message "[debug] frog-jump-buffer-find-or-create-buffer: %s" (assoc-default res (frog-jump-buffer-recentf-buffers)))
+      ;;(find-file-other-tab res)
+      (run-associated-program (assoc-default res (frog-jump-buffer-recentf-buffers))))))
 
 ;; need to modify to sort filename (nreverse buffers)
 ;(defun frog-jump-buffer-recentf-buffers ()
