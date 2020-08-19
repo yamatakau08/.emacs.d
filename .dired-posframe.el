@@ -3,7 +3,8 @@
   :config
   (custom-set-variables '(dired-posframe-file-size-limit (* 10 1024 1024)))
 
-  :bind (("z" . dired-posframe-show))
+  :bind (:map dired-mode-map
+	      ("z" . dired-posframe-show))
   )
 
 ;(add-hook 'dired-mode-hook
