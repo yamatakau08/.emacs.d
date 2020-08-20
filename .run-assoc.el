@@ -27,7 +27,7 @@
   )
  ((eq system-type 'darwin)
   (setq associated-program-alist
-	'(("open" "\\.pdf$")))
+	'(("open" "\\.\\(pdf\\|mp4\\)$")))
       )
  ((eq system-type 'gnu/linux)
   ;; refer https://github.com/emacsmirror/run-assoc.git
