@@ -1,28 +1,13 @@
-;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
 (use-package skk
-  :ensure ddskk)
+  :ensure ddskk
+  :bind  (("C-x C-j" . skk-mode)
+	  ;;("C-x j"   . skk-auto-fill-mode)
+	  ;;("C-x t"   . skk-tutorial)
+	  )
+  :config
+  ;;https://www.arat.xyz/wordpress/?p=129
+  (custom-set-variables '(skk-jisyo-code 'utf-8)) ; refer skk-vars.el
 
-;;; require explicitly
-;;; if skk is not installed, face "command-execute: Wrong type argument: commandp, skk-mode"
-(require 'skk)
-
-; install ddskk on Mac refer the following page
-; http://yoppa.org/blog/6162.html
-;(add-to-list 'load-path "~/.emacs.d/elpa/ddskk-20170709.839")
-;(require 'skk-autoloads) ; XEmacs でパッケージとしてインストールした場合は不要
-
-;; default setting, should be set to enable
-(global-set-key (kbd "C-x C-j") 'skk-mode)
-(global-set-key (kbd "C-x j")   'skk-auto-fill-mode)
-(global-set-key (kbd "C-x t")   'skk-tutorial)
-
-;(setq skk-tut-file "~/mylisp/ddskk/etc/SKK.tut")
-
-;;; https://www.arat.xyz/wordpress/?p=129
-(custom-set-variables '(skk-jisyo-code 'utf-8)) ; refer skk-vars.el
-
-;;
-(custom-set-variables '(skk-jisyo "~/.emacs.d/skk-jisyo/.skk-jisyo"))
-
-;;
-(custom-set-variables '(skk-henkan-strict-okuri-precedence t))
+  (custom-set-variables '(skk-jisyo "~/.emacs.d/skk-jisyo/.skk-jisyo"))
+  (custom-set-variables '(skk-henkan-strict-okuri-precedence t))
+  )
