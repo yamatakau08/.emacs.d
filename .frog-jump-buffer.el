@@ -19,7 +19,7 @@
             (switch-to-buffer-other-window nil)) ; my modification
 	(switch-to-buffer buffer))))
 
-  :bind (("C-x b" . frog-jump-buffer)
+  :bind (;;("C-x b" . frog-jump-buffer)
 	 ("C-x c" . frog-jump-buffer-other-window)))
 
 ;; for tab-bar, still in progress
