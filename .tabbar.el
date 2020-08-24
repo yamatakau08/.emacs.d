@@ -5,4 +5,5 @@
   (custom-set-variables '(tabbar-buffer-groups-function nil) ; defvar var is available.
 			'(tabbar-use-images nil))
   :bind (("C-." . tabbar-forward-tab)
-	 ("C-," . tabbar-backward-tab)))
+	 ("C-," . tabbar-backward-tab) ; when buffer is in org-mode, "C-," is prior the key as in org-mode
+	 ))

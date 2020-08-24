@@ -1,4 +1,3 @@
-;; http://www.math.s.chiba-u.ac.jp/~matsu/emacs/emacs21/autoinsert.html
 (use-package autoinsert
   :init
   (add-hook 'find-file-hooks 'auto-insert)

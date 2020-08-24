@@ -37,14 +37,12 @@
 	    (w32-shell-execute "open" file))
 	  "\\.\\(pdf\\|msg\\|pptx\\|xls\\|xlsx\\|xlsm\\|doc\\|docx\\|avi\\|jpg\\|JPG\\|png\\|PNG\\|wmv\\)$")))
       ((eq system-type 'darwin)
-       '(associated-program-alist
-	 '(("open" "\\.\\(pdf\\|mp4\\)$"))))
+       '(("open" "\\.\\(pdf\\|mp4\\)$")))
       ((eq system-type 'gnu/linux)
        ;; refer https://github.com/emacsmirror/run-assoc.git
-       '(associated-program-alist
-	 '(("gnochm" "\\.chm$")
-	   ("evince" "\\.pdf$")
-	   ("mplayer" "\\.mp3$")
+       '(("gnochm" "\\.chm$")
+	 ("evince" "\\.pdf$")
+	 ("mplayer" "\\.mp3$")
 	   ((lambda (file)
 	      (let ((newfile (concat (file-name-sans-extension (file-name-nondirectory file)) ".txt")))
 		(cond
@@ -60,7 +58,7 @@
 	   ("evince" "\\.ps$")
 	    ("fontforge" "\\.\\(sfd\\(ir\\)?\\|ttf\\|otf\\)$")
 	    ((lambda (file)
-	       (browse-url (concat "file:///" (expand-file-name file)))) "\\.html?$")))))))
+	       (browse-url (concat "file:///" (expand-file-name file)))) "\\.html?$"))))))
 
   ;; following setting refer https://www.emacswiki.org/emacs/RunAssoc
   (defun helm-find-files-maybe-run-assoc (orig-fun &rest args)

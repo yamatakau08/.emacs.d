@@ -1,10 +1,12 @@
-;;; to https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
 (use-package wl
-  :ensure wanderlust)
+  :ensure wanderlust ; when t Error (use-package): Failed to install wl: Package ‘wl-’ is unavailable
 
-;;; set t in trouble
-(setq elmo-imap4-debug t)
-(setq elmo-pop3-debug  t)
+  :config
+
+  (if nil ; set t when you need to debug
+      (custom-set-variables '(elmo-imap4-debug t)
+			    '(elmo-pop3-debug  t)))
+  )
 
 ;;; should be defun before being called.
 ;;; https://qiita.com/tadsan/items/17d32514b81f1e8f208a

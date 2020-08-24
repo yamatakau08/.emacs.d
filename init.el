@@ -209,8 +209,8 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;(my-load "~/.emacs.d/restclient_test.el")
 
 ;;
-(my-load "~/.emacs.d/.all-the-icons.el")
-(my-load "~/.emacs.d/.all-the-icons-dired.el")
+;(my-load "~/.emacs.d/.all-the-icons.el")
+;(my-load "~/.emacs.d/.all-the-icons-dired.el")
 
 ;;
 ;(my-load "~/.emacs.d/.yahoo-weather-mode.el")
