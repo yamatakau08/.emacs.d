@@ -3,6 +3,12 @@
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
 (setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
 
+;; Since default directory is set / when launching Emacs on Mac dock,
+;; set it to under HOME directory.
+(setq default-directory (getenv "HOME"))
+;; https://qiita.com/t2psyto/items/05776f010792ba967152
+(setq command-line-default-directory (format "%s/" (getenv "HOME")))
+
 ;;; my-load
 (defun my-load (file)
   (if (file-exists-p file)
@@ -19,7 +25,7 @@
 (my-load "~/.emacs.d/company-network-p.el")
 (my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be after company-network-p and before .package.el
 
-;; package
+;; for package
 (my-load "~/.emacs.d/.package.el")
 
 (set-language-environment "Japanese")
