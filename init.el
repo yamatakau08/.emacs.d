@@ -34,13 +34,9 @@
 ;;; sdic 和英検索がcygwinで正しく動作しない対応
 (prefer-coding-system 'utf-8-unix)
 
-;;; 対応する括弧(),ブレース{},大括弧［] を強調
-(show-paren-mode t)
-
 ;;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 (defun set-exec-path-from-shell-PATH ()
   "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
-
 This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
   (interactive)
 ;; fish doesn't work
@@ -67,7 +63,10 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;;
 (my-load "~/.emacs.d/.cursor-setting.el")
 
-;;; ddskk
+;;
+(my-load "~/.emacs.d/.paren.el")
+
+;; ddskk
 (my-load "~/.emacs.d/.ddskk.el")
 
 ;;;
