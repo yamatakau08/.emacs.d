@@ -1,7 +1,7 @@
 (use-package request
   :ensure t
-  :config
 
+  :custom
   ;; Important!
   ;; On msys2 mingw64 emacs environment
   ;; When request-backend is curl, request's GET method has the following error and doesn't work.
@@ -21,12 +21,10 @@
   ;; I download curl command windows native from https://curl.haxx.se/dlwiz/
   ;; and specified it as request-curl command.
   ;; Finally it WORKS FINE and SOLVED the all above cumbersome problem.
-
-  (custom-set-variables
-   '(request-curl
-     (cond
-      ((eq system-type 'windows-nt)
-       (let ((curl "c:/winbin/curl-7.69.1-win64-mingw/bin/curl.exe"))
-	 (if (executable-find curl) curl "curl")))
-      (t "curl"))))
+  (request-curl
+   (cond
+    ((eq system-type 'windows-nt)
+     (let ((curl "c:/winbin/curl-7.69.1-win64-mingw/bin/curl.exe"))
+       (if (executable-find curl) curl "curl")))
+      (t "curl")))
   )

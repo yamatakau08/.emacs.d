@@ -5,7 +5,18 @@
 ;;; Error (use-package): Cannnot load
 ;;; https://github.com/jwiegley/use-package/issues/597#issuecomment-352898477
 (use-package org
-  :ensure org-plus-contrib)
+  :ensure org-plus-contrib
+  :custom
+  ;; add "INPROGRESS" in to-do-keywordsin
+  ;; refer http://aaronbedra.com/emacs.d/#org29f8f0d Org Settings
+  (org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE")))
+
+  ;; align source block at the left, original 2 space added as indent
+  (org-edit-src-content-indentation 0) ; is defined org-src.el
+
+  ;; C-c C-x C-d で DONE の時刻 CLOSED: [YYYY-MM-DD...] を記録
+  ;; TODO を C-c C-t で DONEに変更した際にも追加される
+  (org-log-done 'time))
 
 ;;; org-version changed to Ver. 9.2.1,、"<e TAB" template doesn't work
 ;;; supported by emacs-jp slack
@@ -15,26 +26,11 @@
       (require 'org-tempo)
   (message "update org to 9.2.X"))
 
-;; add "INPROGRESS" in to-do-keywordsin
-;; refer http://aaronbedra.com/emacs.d/#org29f8f0d Org Settings
-(custom-set-variables '(org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE"))))
-
-;; align source block at the left, original 2 space added as indent
-(custom-set-variables '(org-edit-src-content-indentation 0))
-
-;;; to remove "Validate" link at the bottom of exported html
-;;; https://stackoverflow.com/questions/15134911/in-org-mode-how-do-i-remove-the-validate-xhtml-1-0-message-from-html-export
-(setq org-html-validation-link nil)
-
 ;;; http://nobunaga.hatenablog.jp/entry/2015/10/25/161305
 ;;; より howmモード時に、org-modeを有効にする
 ;;; auto-mode-alist の設定だけで一旦対応
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.txt$"  . org-mode))
-
-;;; C-c C-x C-d でDONEの時刻を記録
-;;; TODOをC-c C-tでDONEした際に、CLOSED: [YYYY-MM-DD...] でも追加される
-(setq org-log-done 'time)
 
 ;;; 2019/02/19
 ;;; To suppress Emacs is too slow when opening org-mode file or enable org-mode
