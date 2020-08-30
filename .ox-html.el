@@ -19,14 +19,14 @@
   :custom
   ;; the same works
   ;; #+attr_html: :frame box in org file
- (org-html-table-default-attributes
-  '(:rules "groups" ; groups is needed to have vertical line inside table
-	   :frame "border"))
+  (org-html-table-default-attributes
+   '(:rules "groups" ; groups is needed to have vertical line inside table
+	    :frame "border"))
 
- ;; not to export postamble "created" ... in html
- ;; see the org manual HTML preamble and postamble
- (org-html-postamble nil)
+  ;; not to export postamble "created" ... in html
+  ;; see the org manual HTML preamble and postamble
+  (org-html-postamble nil)
 
- ;; to remove "Validate" link at the bottom of exported html
- ;; https://stackoverflow.com/questions/15134911/in-org-mode-how-do-i-remove-the-validate-xhtml-1-0-message-from-html-export
- ( org-html-validation-link nil))
+  ;; to remove "Validate" link at the bottom of exported html
+  ;; https://stackoverflow.com/questions/15134911/in-org-mode-how-do-i-remove-the-validate-xhtml-1-0-message-from-html-export
+  (org-html-validation-link nil))

@@ -1,6 +1,18 @@
 (use-package wl
   :ensure wanderlust ; when t Error (use-package): Failed to install wl: Package ‘wl-’ is unavailable
 
+  :init
+  ;; select correct email address when we _start_ writing a draft.
+  (add-hook 'wl-mail-setup-hook 'wl-draft-config-exec)
+  ;; don't apply the templates when sending the draft otherwise
+  ;; choosing another template with C-c C-j won't have any effect
+  (remove-hook 'wl-draft-send-hook 'wl-draft-config-exec)
+
+  ;; http://www.ss.scphys.kyoto-u.ac.jp/person/yasui/emacs/mail.html
+  ;; より、サマリモードに入った直後は、wl-summary-prepared-hook にする事で、正常動作
+  (add-hook  'wl-summary-prepared-hook 'my-wl-summary-mode-hook)
+  ;;(add-hook 'wl-summary-mode-hook     'my-wl-summary-mode-hook)
+
   :custom
   (if nil ; set t the followings when debug
       (elmo-imap4-debug t)
@@ -63,6 +75,13 @@
 
   ;; 大きなメッセージを分割して送信しない
   (setq mime-edit-split-message nil)
+
+  ;;; サマリーモードに入った際に、日付逆順でソート
+  (defun my-wl-summary-mode-hook ()
+    (interactive)
+    (wl-summary-sort-by-date t)
+    (beginning-of-buffer) ; sort後、bufferのトップにカーソルを移動
+    )
   )
 
 ;;; should be defun before being called.
@@ -123,24 +142,6 @@
 ;;; It's the best to user Windows openssl until openssl ver1.1 above on cygin is released
 ;(when (eq system-type 'windows-nt) ; may be cygwin is better
 ;  (nconc ssl-program-arguments '("-crlf"))) ; need this option for Gmail through proxy environment
-
-;;; select correct email address when we _start_ writing a draft.
-(add-hook 'wl-mail-setup-hook 'wl-draft-config-exec)
-;;; don't apply the templates when sending the draft otherwise
-;;; choosing another template with C-c C-j won't have any effect
-(remove-hook 'wl-draft-send-hook 'wl-draft-config-exec)
-
-;;; サマリーモードに入った際に、日付逆順でソート
-(defun my-wl-summary-mode-hook ()
-  (interactive)
-  (wl-summary-sort-by-date t)
-  (beginning-of-buffer) ; sort後、bufferのトップにカーソルを移動
-)
-
-;;; http://www.ss.scphys.kyoto-u.ac.jp/person/yasui/emacs/mail.html
-;;; より、サマリモードに入った直後は、wl-summary-prepared-hook にする事で、正常動作
-(add-hook  'wl-summary-prepared-hook 'my-wl-summary-mode-hook)
-;(add-hook 'wl-summary-mode-hook     'my-wl-summary-mode-hook)
 
 ;;;
 ;;; 通常の設定では、表示できない文字対応

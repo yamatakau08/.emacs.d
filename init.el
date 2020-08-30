@@ -25,9 +25,6 @@
 (my-load "~/.emacs.d/company-network-p.el")
 (my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be after company-network-p and before .package.el
 
-;; for package
-(my-load "~/.emacs.d/.package.el")
-
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zoneが日本になっていないので、実時間と mode-line 時間表示が異なるので設定
 
@@ -54,53 +51,45 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 (set-exec-path-from-shell-PATH)
 
-;;; to open file associated application
-;(my-load "~/.emacs.d/my-app-open-file.el")
+;; for package, use-package
+(my-load "~/.emacs.d/.package.el")
 
-;;;
+;;
+;; library
+;;
 (my-load "~/.emacs.d/window-setting.el")
-
-;;;
 (my-load "~/.emacs.d/font-setting.el")
-
-;;;
+(my-load "~/.emacs.d/.simple.el")
 (my-load "~/.emacs.d/.mode-line.el")
-
-;;;
 (my-load "~/.emacs.d/.cursor-setting.el")
-
-;;
 (my-load "~/.emacs.d/.paren.el")
-
-;; ddskk
-(my-load "~/.emacs.d/.ddskk.el")
-
-;;;
-(my-load "~/.emacs.d/.howm.el")
-
-;;;
-(my-load "~/.emacs.d/.request.el")
-(my-load "~/.emacs.d/.google-translate.el")
-
-;;;
-(my-load "~/.emacs.d/.migemo.el")
-
-;;;
-;(my-load "~/.emacs.d/.search-web.el")
-
-;;;
-(my-load "~/.emacs.d/google.el")
-
-;;; replace .openwith.el in dired-mode
-;(my-load "~/.emacs.d/.dired.el")
-
-;;
-(my-load "~/.emacs.d/.dired-x.el")
-
-;;;
+;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
+(my-load "~/.emacs.d/.dired-x.el") ; only disable key assign
 (my-load "~/.emacs.d/.thingatpt.el")
 (my-load "~/.emacs.d/.ffap.el")
+(my-load "~/.emacs.d/.tramp.el")
+(my-load "~/.emacs.d/.windmove.el")
+(my-load "~/.emacs.d/.ansi-color.el")
+(my-load "~/.emacs.d/.whitespace.el")
+(my-load "~/.emacs.d/.info.el")
+(my-load "~/.emacs.d/.autoinsert.el")
+(my-load "~/.emacs.d/.quickurl.el")
+(my-load "~/.emacs.d/.eshell.el")
+(my-load "~/.emacs.d/.nxml-mode.el")
+(my-load "~/.emacs.d/.sgml-mode.el")
+(my-load "~/.emacs.d/.hideshow.el")
+(my-load "~/.emacs.d/.ruby-mode.el")
 
+;;
+;; package
+;;
+(my-load "~/.emacs.d/.ddskk.el")
+(my-load "~/.emacs.d/.howm.el")
+(my-load "~/.emacs.d/.request.el")
+(my-load "~/.emacs.d/.google-translate.el")
+(my-load "~/.emacs.d/.migemo.el")
+;;(my-load "~/.emacs.d/.origami.el")
+;;(my-load "~/.emacs.d/.search-web.el")
 ;; helm
 (my-load "~/.emacs.d/.helm.el")
 ;; http://extra-vision.blogspot.com/2016/09/helm-emacs.html
@@ -110,130 +99,60 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.helm-swoop.el")
 (my-load "~/.emacs.d/.helm-ag.el")
 (my-load "~/.emacs.d/.helm-posframe.el")
-
-;;;
 (my-load "~/.emacs.d/.magit.el")
-
-;;;
 (my-load "~/.emacs.d/.wl.el")
+(my-load "~/.emacs.d/.sdic.el")
+(my-load "~/.emacs.d/.company.el")
 
-;;;
-;(my-load "~/.emacs.d/.cygwin-mount.el")
-
-;;; org-mode
+;; org-mode
 (my-load "~/.emacs.d/.org.el")
 (my-load "~/.emacs.d/.ox-html.el")
 (my-load "~/.emacs.d/.ox-confluence.el")
-(my-load "~/.emacs.d/my-skips.el")
 
-;;;
-(my-load "~/.emacs.d/.sdic.el")
-
-;;;
-;(my-load "~/.emacs.d/.org-drill.el")
-
-;;;
-;(my-load "~/.emacs.d/.anki-editor.el")
-
-;;;
-;;(my-load "~/.emacs.d/.my-anki-connect.el")
-
-;;;
-(my-load "~/.emacs.d/.tramp.el")
-
-;;;
-;(my-load "~/.emacs.d/.ox-confluence.el")
-
-;;;
-(my-load "~/.emacs.d/.company.el")
-
-;;;
-(my-load "~/.emacs.d/.windmove.el")
-
-;;;
 (my-load "~/.emacs.d/.visual-regexp.el")
-
-;;;
-(my-load "~/.emacs.d/.ansi-color.el")
-
-;;;
-(my-load "~/.emacs.d/.whitespace.el")
-
-;;;
 (my-load "~/.emacs.d/.dumb-jump.el")
+(my-load "~/.emacs.d/.dired-posframe.el")
+(my-load "~/.emacs.d/.frog-jump-buffer.el")
+(my-load "~/.emacs.d/.tabbar.el")
 
-;;;
+;; jira/confluence
+(my-load "~/.emacs.d/.request.el")
+;;(my-load "~/.emacs.d/.jiralib2.el")
+;;(my-load "~/.emacs.d/.helm-jira.el")
+;;(my-load "~/.emacs.d/.org-drill.el")
+;;(my-load "~/.emacs.d/.anki-editor.el")
+;;(my-load "~/.emacs.d/.ivy.el")
+;;(my-load "~/.emacs.d/.counsel.el")
+;;(my-load "~/.emacs.d/.openwith.el")
+;;(my-load "~/.emacs.d/.all-the-icons.el")
+;;(my-load "~/.emacs.d/.all-the-icons-dired.el")
+
+;;
+;; useful packages are not registerd in elpa ...
+;;
+(my-load "~/.emacs.d/google.el")
 (my-load "~/.emacs.d/.instant-maximized-window.el")
-
-;;;
-(my-load "~/.emacs.d/.info.el")
-
-;;; nxml
-(my-load "~/.emacs.d/.nxml-mode.el")
-
-;;;
-(my-load "~/.emacs.d/.sgml-mode.el")
-
-;;;
-(my-load "~/.emacs.d/.hideshow.el")
-
-;;;
-;(my-load "~/.emacs.d/.origami.el")
-
-;;;
-;(my-load "~/.emacs.d/.ivy.el")
-
-;;;
-;(my-load "~/.emacs.d/.counsel.el")
-
-;;;
-(my-load "~/.emacs.d/.ruby-mode.el")
-
-;;;
-;(my-load "~/.emacs.d/.openwith.el")
-
-;;;
 (my-load "~/.emacs.d/.run-assoc.el")
+;;(my-load "~/.emacs.d/.cygwin-mount.el")
+
+;;
+;; my-own package
+;;
+;;(my-load "~/.emacs.d/my-app-open-file.el") ; to open file associated application
+(my-load "~/.emacs.d/my-skips.el")
+;;(my-load "~/.emacs.d/.my-anki-connect.el")
 
 ;; english conversation expression dictionary
 (my-load "~/.emacs.d/.eced.el")
-
-;;
-(my-load "~/.emacs.d/.eshell.el")
-
-;;
 (my-load "~/.emacs.d/say.el")
 
-;; jira/confluence
-;(my-load "~/.emacs.d/.request.el")
-;(my-load "~/.emacs.d/.jiralib2.el")
-;(my-load "~/.emacs.d/.helm-jira.el")
 (my-load "~/.emacs.d/.my-confluence.el")
-
-;; test
-;(my-load "~/.emacs.d/restclient_test.el")
-
-;;
-;(my-load "~/.emacs.d/.all-the-icons.el")
-;(my-load "~/.emacs.d/.all-the-icons-dired.el")
-
-;;
-;(my-load "~/.emacs.d/.yahoo-weather-mode.el")
-;(my-load "~/.emacs.d/.weatherline-mode.el")
-
-(my-load "~/.emacs.d/.autoinsert.el")
-
-(my-load "~/.emacs.d/.quickurl.el")
-
 (my-load "~/.emacs.d/.my-anki-browse.el")
-
 (my-load "~/.emacs.d/.my-plantuml.el")
 
-(my-load "~/.emacs.d/.dired-posframe.el")
-
-(my-load "~/.emacs.d/.frog-jump-buffer.el")
-
-(my-load "~/.emacs.d/.tabbar.el")
+;; developing
+;;(my-load "~/.emacs.d/.yahoo-weather-mode.el")
+;;(my-load "~/.emacs.d/.weatherline-mode.el")
 
 ;; custom-set-variables,faces is automatically added in the end of init.el
 ;; when that function uses variables are executed.

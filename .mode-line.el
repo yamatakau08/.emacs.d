@@ -12,10 +12,6 @@
 
 (display-time) ; 時間表示を行なう
 
-;;; for line,column number
-(setq line-number-mode t)
-(setq column-number-mode t)
-
 ;;; 改行コードを、DOS等の環境名ではなくコード名で表示する
 ;;; http://d.hatena.ne.jp/mhrs/20061227/p2
 (setq eol-mnemonic-unix "(LF)")

@@ -24,7 +24,6 @@
     (helm-mini)
     (helm-posframe-disable))
 
-
   :bind (("C-x b" . helm-mini) ; not to assign for frog-jump-buffer
 	 ("C-x f" . helm-find-files)
 	 ;;("C-x o" . helm-buffers-list))

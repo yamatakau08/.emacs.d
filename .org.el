@@ -1,11 +1,43 @@
 ;;; Since pre-installed org version is 9.1.9,
 ;;; install org version 9.2.X by package to use some functions provied by its version.
-;;; :ensure t
-;;; https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
-;;; Error (use-package): Cannnot load
-;;; https://github.com/jwiegley/use-package/issues/597#issuecomment-352898477
 (use-package org
+  ;; :ensure t
+  ;; https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
+  ;; Error (use-package): Cannnot load
+  ;; https://github.com/jwiegley/use-package/issues/597#issuecomment-352898477
   :ensure org-plus-contrib
+
+  :init
+  ;; org-version changed to Ver. 9.2.1,、"<e TAB" template doesn't work
+  ;; supported by emacs-jp slack
+  ;; need to (require 'org-temp)
+  ;; on Ver. 9.1.9 this cause "Problems while trying to load feature org-tempo"
+  (if (version< "9.1.9" (org-version))
+      (require 'org-tempo)
+    (message "update org to 9.2.X"))
+
+  ;; refer https://orgmode.org/manual/Conflicts.html
+  ;; Make windmove work in Org mode:
+  ;;(add-hook 'org-shiftup-final-hook    'windmove-up   )
+  ;;(add-hook 'org-shiftleft-final-hook  'windmove-left )
+  ;;(add-hook 'org-shiftdown-final-hook  'windmove-down )
+  ;;(add-hook 'org-shiftright-final-hook 'windmove-right)
+  (add-hook 'org-shiftup-hook #'windmove-up) ; need to study :hook
+  (add-hook 'org-shiftleft    #'windmove-left )
+  (add-hook 'org-shiftdown    #'windmove-down )
+  (add-hook 'org-shiftright   #'windmove-right)
+
+  ;; org day of the week format Japanese to English
+  ;; https://w.atwiki.jp/opentfc/pages/116.html "日付を挿入"
+  ;;(add-hook 'org-mode-hook
+  ;;          (lambda ()
+  ;;            (set (make-local-variable 'system-time-locale) "C")))
+  ;; https://qiita.com/tadsan/items/9d287a57c26711387043#make-local-variable
+  ;; recomment to use setq-local instead of make-local-variable is compatibility under Emacs 24.3
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (setq-local system-time-locale "C")))
+
   :custom
   ;; add "INPROGRESS" in to-do-keywordsin
   ;; refer http://aaronbedra.com/emacs.d/#org29f8f0d Org Settings
@@ -16,32 +48,52 @@
 
   ;; C-c C-x C-d で DONE の時刻 CLOSED: [YYYY-MM-DD...] を記録
   ;; TODO を C-c C-t で DONEに変更した際にも追加される
-  (org-log-done 'time))
+  (org-log-done 'time)
 
-;;; org-version changed to Ver. 9.2.1,、"<e TAB" template doesn't work
-;;; supported by emacs-jp slack
-;;; need to (require 'org-temp)
-;;; on Ver. 9.1.9 this cause "Problems while trying to load feature org-tempo"
-(if (version< "9.1.9" (org-version))
-      (require 'org-tempo)
-  (message "update org to 9.2.X"))
+  :config
+  ;; 2019/02/19
+  ;; To suppress Emacs is too slow when opening org-mode file or enable org-mode
+  ;; on org-plus-contrib-20190218
+  ;; because org-mode loads org-gnus even though I don't use gnus.... makes movemail
+  ;; emacs-jp slack teach me how to not to load org-gnus
+  (delq 'org-gnus org-modules)
 
-;;; http://nobunaga.hatenablog.jp/entry/2015/10/25/161305
-;;; より howmモード時に、org-modeを有効にする
-;;; auto-mode-alist の設定だけで一旦対応
-(add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.txt$"  . org-mode))
+  ;; to Daily report descending when :step day is set on org-clock-reprot
+  (my-load "~/.emacs.d/ad_org-clock-report.el")
 
-;;; 2019/02/19
-;;; To suppress Emacs is too slow when opening org-mode file or enable org-mode
-;;; on org-plus-contrib-20190218
-;;; because org-mode loads org-gnus even though I don't use gnus.... makes movemail
-;;; emacs-jp slack teach me how to not to load org-gnus
-(with-eval-after-load "org"
-  (delq 'org-gnus org-modules))
+  ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
+  ;; function jk-org-kwd gets the propertie specifed by args.
+  ;; your original propertiy is also available.
+  ;; To utilize my original #+PAGEID: 123456 property in org file for Confluence page update
+  ;; property should be BIG CHARATER
+  ;; the following function is available in org BUFFER, means it's not available in with-temp-buffer with org-mode.
 
-;; Org-captureを呼び出すキーシーケンス
-(define-key global-map "\C-cc" 'org-capture)
+  ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
+  (defun jk-org-kwds ()
+    "parse the buffer and return a cons list of (property . value)
+from lines like:
+#+PROPERTY: value"
+    (org-element-map (org-element-parse-buffer 'element) 'keyword
+      (lambda (keyword)
+	(cons (org-element-property :key   keyword)
+              (org-element-property :value keyword)))))
+
+  (defun jk-org-kwd (KEYWORD)
+    "get the value of a KEYWORD in the form of #+KEYWORD: value"
+    (cdr (assoc KEYWORD (jk-org-kwds))))
+
+  :mode
+  ;; http://nobunaga.hatenablog.jp/entry/2015/10/25/161305
+  ;; "設定" より file suffix が howm の時、org-mode 有効
+  ;; auto-mode-alist 設定だけで一旦対応
+  ;;(add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
+  ;;(add-to-list 'auto-mode-alist '("\\.txt$"  . org-mode))
+  ("\\.howm\\'" . org-mode)
+  ("\\.txt\\'"  . org-mode)
+
+  :bind*
+  (("C-c c" . 'org-capture))
+  )
 
 ;;; to suppress not to put the annotation whichi is link text in org capture buffer
 ;;; without this settings, org-capture-templates template propertie "** %?" behave the same.
@@ -58,9 +110,6 @@
       (progn
 	(find-file my-skips-org-file)
 	(goto-char (car org-clock-history)))))
-
-;;; to Daily report descending when :step day is set on org-clock-reprot
-(my-load "~/.emacs.d/ad_org-clock-report.el")
 
 ;;; redefine tempo-insert to suppress autoindent the following
 ;;; * test
@@ -174,56 +223,9 @@ possible."
 ;(advice-add 'org-tempo-complete-tag :around #'ad:org-tempo-around)
 ;;;(advice-remove 'org-tempo-complete-tag #'ad:org-tempo-around)
 
-;; refer https://orgmode.org/manual/Conflicts.html
-;; Make windmove work in Org mode:
-;;(add-hook 'org-shiftup-final-hook    'windmove-up   )
-;;(add-hook 'org-shiftleft-final-hook  'windmove-left )
-;;(add-hook 'org-shiftdown-final-hook  'windmove-down )
-;;(add-hook 'org-shiftright-final-hook 'windmove-right)
-
-(add-hook 'org-shiftup-hook    'windmove-up   )
-(add-hook 'org-shiftleft-hook  'windmove-left )
-(add-hook 'org-shiftdown-hook  'windmove-down )
-(add-hook 'org-shiftright-hook 'windmove-right)
-
-;;; org day of the week format Japanese to English
-;;; https://w.atwiki.jp/opentfc/pages/116.html "日付を挿入"
-;(add-hook 'org-mode-hook
-;          (lambda ()
-;            (set (make-local-variable 'system-time-locale) "C")))
-;; https://qiita.com/tadsan/items/9d287a57c26711387043#make-local-variable
-;; recomment to use setq-local instead of make-local-variable is compatibility under Emacs 24.3
-(add-hook 'org-mode-hook
-          (lambda ()
-            (setq-local system-time-locale "C")))
-
-;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
-;; function jk-org-kwd gets the propertie specifed by args.
-;; your original propertiy is also available.
-;; To utilize my original #+PAGEID: 123456 property in org file for Confluence page update
-;; property should be BIG CHARATER
-;; the following function is available in org BUFFER, means it's not available in with-temp-buffer with org-mode.
-
-;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
-(defun jk-org-kwds ()
-  "parse the buffer and return a cons list of (property . value)
-from lines like:
-#+PROPERTY: value"
-  (org-element-map (org-element-parse-buffer 'element) 'keyword
-                   (lambda (keyword) (cons (org-element-property :key   keyword)
-                                           (org-element-property :value keyword)))))
-
-(defun jk-org-kwd (KEYWORD)
-  "get the value of a KEYWORD in the form of #+KEYWORD: value"
-  (cdr (assoc KEYWORD (jk-org-kwds))))
-
 ;; to open html file in share folder which is exported by org with browser on windows environment
 (defun advice:w32-shell-execute-filter-args (args)
-  ;; (message "filter-args before: %s" args) ; for debug
-  ;;(message "%s" (cadr args))
   (setcar (cdr args) (replace-regexp-in-string "/" "\\\\" (cadr args))) ; pass ("opne" "path is replaced with '/'")
-  ;;(setf (cdr args) (replace-regexp-in-string "/" "\\\\" (cadr args))) ; fail ("opne" . "path is replaced with '/'")
-  ;; (message "filter-args after: %s" args) ; for debug
   args ; return args processed for w32-shell-execute function to execute
 )
 
