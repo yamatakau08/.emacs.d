@@ -26,7 +26,7 @@
    '(request-curl
      (cond
       ((eq system-type 'windows-nt)
-       (let ((curl "c:/winbin/curl-7.69.1-win64-mingw/bin/curl.exe"))
+       (let ((curl "c:/winbin/curl-win64-mingw/bin/curl.exe"))
 	 (if (executable-find curl) curl "curl")))
       (t "curl"))))
   )
