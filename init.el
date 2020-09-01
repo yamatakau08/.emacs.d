@@ -15,9 +15,6 @@
       (load file)
     (y-or-n-p (message "%s is not found,proceed?" file))))
 
-;;; to suppress Emacs file open is extremly slow
-(custom-set-variables '(vc-handled-backends nil))
-
 ;;; load private settings
 (my-load "~/.emacs.d/private.el")
 
@@ -27,10 +24,6 @@
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zoneが日本になっていないので、実時間と mode-line 時間表示が異なるので設定
-
-;;; no backup files
-(setq make-backup-files nil)
-(setq auto-save-default nil)
 
 ;;; 新規作成時のファイルの文字コードを utf-8-unix
 (set-default-coding-systems 'utf-8-unix)
@@ -59,9 +52,14 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;
 ;; library
 ;;
+(my-load "~/.emacs.d/.files.el") ; no backup
+;; in .vc.el, (custom-set-variables '(vc-handled-backends nil)) to suppress Emacs file open is extremly slow
+(my-load "~/.emacs.d/.vc.el")
+
 (my-load "~/.emacs.d/window-setting.el")
 (my-load "~/.emacs.d/font-setting.el")
-(my-load "~/.emacs.d/.simple.el")
+
+(my-load "~/.emacs.d/.simple.el") ; line-number,column-number in mode line
 (my-load "~/.emacs.d/.mode-line.el")
 (my-load "~/.emacs.d/.cursor-setting.el")
 (my-load "~/.emacs.d/.paren.el")
@@ -89,17 +87,18 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.howm.el")
 (my-load "~/.emacs.d/.request.el")
 (my-load "~/.emacs.d/.google-translate.el")
-(my-load "~/.emacs.d/.esqlite.el") ; for my eced
+(my-load "~/.emacs.d/.esqlite.el") ; for my own tool eced
 (my-load "~/.emacs.d/.migemo.el")
 ;;(my-load "~/.emacs.d/.origami.el")
 ;;(my-load "~/.emacs.d/.search-web.el")
+
 ;; helm
 (my-load "~/.emacs.d/.helm.el")
-;; http://extra-vision.blogspot.com/2016/09/helm-emacs.html
-
 (my-load "~/.emacs.d/.helm-swoop.el")
 (my-load "~/.emacs.d/.helm-ag.el")
 (my-load "~/.emacs.d/.helm-posframe.el")
+;;(my-load "~/.emacs.d/.helm-google.el")
+
 (my-load "~/.emacs.d/.magit.el")
 (my-load "~/.emacs.d/.wl.el")
 (my-load "~/.emacs.d/.sdic.el")
@@ -119,8 +118,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.request.el") ; curl for anki/jira/confluence
 (my-load "~/.emacs.d/.macrostep.el")
 
-;;(my-load "~/.emacs.d/.helm-migemo.el")
-;;(my-load "~/.emacs.d/.helm-google.el")
 ;;(my-load "~/.emacs.d/.jiralib2.el")
 ;;(my-load "~/.emacs.d/.helm-jira.el")
 ;;(my-load "~/.emacs.d/.org-drill.el")
@@ -137,8 +134,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/google.el")
 (my-load "~/.emacs.d/.instant-maximized-window.el")
 (my-load "~/.emacs.d/.run-assoc.el")
-
-;;(my-load "~/.emacs.d/.cygwin-mount.el")
 
 ;;
 ;; my-own package
