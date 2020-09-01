@@ -16,7 +16,7 @@
     (y-or-n-p (message "%s is not found,proceed?" file))))
 
 ;;; to suppress Emacs file open is extremly slow
-(setq vc-handled-backends nil)
+(custom-set-variables '(vc-handled-backends nil))
 
 ;;; load private settings
 (my-load "~/.emacs.d/private.el")
@@ -51,7 +51,9 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 (set-exec-path-from-shell-PATH)
 
+;;
 ;; for package, use-package
+;;
 (my-load "~/.emacs.d/.package.el")
 
 ;;
@@ -87,15 +89,14 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.howm.el")
 (my-load "~/.emacs.d/.request.el")
 (my-load "~/.emacs.d/.google-translate.el")
+(my-load "~/.emacs.d/.esqlite.el") ; for my eced
 (my-load "~/.emacs.d/.migemo.el")
 ;;(my-load "~/.emacs.d/.origami.el")
 ;;(my-load "~/.emacs.d/.search-web.el")
 ;; helm
 (my-load "~/.emacs.d/.helm.el")
 ;; http://extra-vision.blogspot.com/2016/09/helm-emacs.html
-;; helm-migemo is not needed, is included helm itself
-;(my-load "~/.emacs.d/.helm-migemo.el")
-;(my-load "~/.emacs.d/.helm-google.el")
+
 (my-load "~/.emacs.d/.helm-swoop.el")
 (my-load "~/.emacs.d/.helm-ag.el")
 (my-load "~/.emacs.d/.helm-posframe.el")
@@ -115,8 +116,11 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.frog-jump-buffer.el")
 (my-load "~/.emacs.d/.tabbar.el")
 
-;; jira/confluence
-(my-load "~/.emacs.d/.request.el")
+(my-load "~/.emacs.d/.request.el") ; curl for anki/jira/confluence
+(my-load "~/.emacs.d/.macrostep.el")
+
+;;(my-load "~/.emacs.d/.helm-migemo.el")
+;;(my-load "~/.emacs.d/.helm-google.el")
 ;;(my-load "~/.emacs.d/.jiralib2.el")
 ;;(my-load "~/.emacs.d/.helm-jira.el")
 ;;(my-load "~/.emacs.d/.org-drill.el")
@@ -133,6 +137,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/google.el")
 (my-load "~/.emacs.d/.instant-maximized-window.el")
 (my-load "~/.emacs.d/.run-assoc.el")
+
 ;;(my-load "~/.emacs.d/.cygwin-mount.el")
 
 ;;
