@@ -1,11 +1,11 @@
 (use-package frog-jump-buffer
   :ensure t
 
-  :config
-  (custom-set-variables
-   '(frog-jump-buffer-default-filter 'frog-jump-buffer-filter-recentf)
-   '(frog-jump-buffer-max-buffers 20))
+  :custom
+  (frog-jump-buffer-default-filter 'frog-jump-buffer-filter-recentf)
+  (frog-jump-buffer-max-buffers 20)
 
+  :config
   ;; redfine original function
   (defun frog-jump-buffer-find-or-create-buffer (res)
     "Switch to buffer, or if closed, find and create it first."

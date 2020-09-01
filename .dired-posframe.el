@@ -1,7 +1,7 @@
 (use-package dired-posframe
   :ensure t
-  :config
-  (custom-set-variables '(dired-posframe-file-size-limit (* 10 1024 1024)))
+  :custom
+  (dired-posframe-file-size-limit (* 10 1024 1024))
 
   :bind (:map dired-mode-map
 	      ("z" . dired-posframe-show)))

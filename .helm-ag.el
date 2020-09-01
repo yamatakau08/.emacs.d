@@ -1,5 +1,22 @@
 (use-package helm-ag
-  :ensure t)
+  :ensure t
+
+  :config
+  (custom-set-variables
+   '(helm-ag-base-command
+     ;; add --hidden option
+     (if (helm-ag--windows-p)
+	 "ag --vimgrep --hidden"
+       "ag --nocolor --nogroup --hidden")))
+
+  :bind
+  ;; don't use this settings
+  ;; replace C-s/C-r to helm-ag-this-file
+  ;; firstly I replace C-s/C-r with helm-ag-this-file.
+  ;; it's not availabe in buffers e.g. *GNU Emacs*,is available ony file buffers
+  ;;(("C-s" . helm-ag-this-file)
+  ;; ("C-r" . helm-ag-this-file))
+  )
 
 ;;; to install "ag"
 ;;; $ brew install ag, ag is installed in /usr/local/bin on mac
@@ -49,12 +66,10 @@
 ;            #'find-file-noselect--filter-args)
 
 (defun helm-ag--find-file-action--filter-args (args)
-  ;;(print args) ; for debug
   (if (eq (nth 1 args) 'find-file)
       (setf (nth 1 args) (lambda (filename) (switch-to-buffer (find-file-noselect filename t))))
-      ;(setf (nth 1 args) 'helm-ag--find-file-action-find-file)
+    ;;(setf (nth 1 args) 'helm-ag--find-file-action-find-file)
     )
-  ;;(print args) ; for debug
   args)
 
 (advice-add #'helm-ag--find-file-action :filter-args
@@ -62,7 +77,7 @@
 
 ;; To pass ag option, such as: --elisp --depth 0 in helm-ag
 ;; refer https://github.com/syohex/emacs-helm-ag/blob/master/README.md#use-long-option
-;; --ignore=pattern is oK, --ignore pattern is not oK
+;; --ignore=pattern is pass, --ignore pattern is fail
 ;; in minibuffer helm-ag prompt, input rg option following
 ;; Pattern: --elisp --depth=0 pattern
 ;; --elisp, you can find file types ag --list-file-types
@@ -80,9 +95,6 @@
 ;;      .rb  .rhtml  .rjs  .rxml  .erb  .rake  .spec
 ;;  --shell
 ;;      .sh  .bash  .csh  .tcsh  .ksh  .zsh  .fish
-
-;; ag additional option
-;(custom-set-variables '(helm-ag-command-option "--depth 0"))
 
 ;; i tried to pass ag option (helm-ag-command-option "--depth 0") until I don't know how to pass ag option to helm-ag
 ;(defun my-helm-do-ag (&optional basedir targets)
@@ -117,17 +129,6 @@
 ;              (file-name-as-directory (car helm-ag--default-target)))
 ;             (helm-ag--default-target nil))
 ;        (helm-do-ag--helm)))))
-
-
-;; don't use this settings
-;(when (featurep 'helm-ag)
-;  ;; replace C-s/C-r to helm-ag-this-file
-;  ;; firstly I replace C-s/C-r with helm-ag-this-file.
-;  ;; but it can't be used in buffers e.g. *GNU Emacs* is not file buffers
-;  ;; helm-ag-this-file: Wrong type argument: stringp, nil
-;  (define-key global-map (kbd "C-s") 'helm-ag-this-file)
-;  (define-key global-map (kbd "C-r") 'helm-ag-this-file)
-;  )
 
 ;; if rg exist, set rg as helm-ag-base-command
 ;(setq rg-command "/mingw64/bin/rg.exe") ; need .exe on windows environment

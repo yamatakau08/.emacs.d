@@ -2,6 +2,10 @@
   :ensure t
   :init (tabbar-mode 1)
 
+  :custom
+  (tabbar-use-images nil)
+  (tabbar-buffer-groups-function nil) ; the variable defined defvar var custom-set-variable is available
+
   :bind* (("C-." . tabbar-forward-tab)
 	  ;; When buffer is in org-mode, "C-," is assinged org-cycle-agenda-files
 	  ;; prior the key as in org-mode, not tabbar
@@ -9,9 +13,6 @@
 	  ("C-," . tabbar-backward-tab))
 
   :config
-  (custom-set-variables '(tabbar-buffer-groups-function nil) ; defvar var is available.
-			'(tabbar-use-images nil))
-
   ;; http://hico-horiuchi.hateblo.jp/entry/20121208/1354975316
   (set-face-attribute
    'tabbar-default nil
