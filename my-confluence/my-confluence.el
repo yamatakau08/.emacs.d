@@ -90,46 +90,48 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 
   (message "[my-confluence] -get-cookie getting cookie ...")
 
-  (let ((xusername (or username
-		       my-confluence-user-login-name
-		       (read-string "Confluence Username: ")))
-	(xpassword (or password
-		       (read-passwd "Confluence Password: "))))
-    (setq my-confluence--session nil) ; clear the last cookie
-    (request
-      my-confluence-auth-url
-      :sync t
-      :type "POST"
-      :headers '(("Content-Type" . "application/json"))
-      :data (json-encode
-	     `(("username" . ,xusername)
-	       ("password" . ,xpassword)))
-      :parser 'json-read ; parse-error occurs without json-encode at ":data" part
-      :success (cl-function
-		(lambda (&key data &allow-other-keys)
-		  (setq my-confluence--session
-			;;(format "username=id:%s=%s" ; jirlib2.el pattern
-			;; it's ok without "username=id:" above.
-			;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/
-			;; shows cookie like JSESSIONID=6E3487971234567896704A9EB4AE501F
-			(format "%s=%s"
-				(cdr (assoc 'name  (car data)))
-				(cdr (assoc 'value (car data)))))
-		  (message "[my-confluence] -get-cookie cookie: %s" my-confluence--session)))
-      ;; &allow-other-keys : fail
-      ;; &allow-other-keys&rest : fail document error
-      ;; &key data *error-thrown &rest _ fail
-      :status-code '((401 . (lambda (&key data &allow-other-keys &rest _)
-			      (message "[my-confluence] -get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown)))))
-      :error (cl-function
-	      ;; https://tkf.github.io/emacs-request/ regacy document
-	      ;; "&allow-other-keys&rest _" is document error
-	      ;;(lambda (&key error-thrown &allow-other-keys&rest _)
-	      ;; correct one is
-	      ;; https://github.com/tkf/emacs-request/blob/master/README.rst#examples
-	      (lambda (&rest args &key error-thrown &allow-other-keys)
-		(message "[my-confluence] -get-cookie error: %s" error-thrown))))
-    my-confluence--session))
+  (if (not my-confluence-auth-url)
+      (message "[my-confluence] set my-confluence-auth!")
+    (let ((xusername (or username
+			 my-confluence-user-login-name
+			 (read-string "Confluence Username: ")))
+	  (xpassword (or password
+			 (read-passwd "Confluence Password: "))))
+      (setq my-confluence--session nil) ; clear the last cookie
+      (request
+	my-confluence-auth-url
+	:sync t
+	:type "POST"
+	:headers '(("Content-Type" . "application/json"))
+	:data (json-encode
+	       `(("username" . ,xusername)
+		 ("password" . ,xpassword)))
+	:parser 'json-read ; parse-error occurs without json-encode at ":data" part
+	:success (cl-function
+		  (lambda (&key data &allow-other-keys)
+		    (setq my-confluence--session
+			  ;;(format "username=id:%s=%s" ; jirlib2.el pattern
+			  ;; it's ok without "username=id:" above.
+			  ;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/
+			  ;; shows cookie like JSESSIONID=6E3487971234567896704A9EB4AE501F
+			  (format "%s=%s"
+				  (cdr (assoc 'name  (car data)))
+				  (cdr (assoc 'value (car data)))))
+		    (message "[my-confluence] -get-cookie cookie: %s" my-confluence--session)))
+	;; &allow-other-keys : fail
+	;; &allow-other-keys&rest : fail document error
+	;; &key data *error-thrown &rest _ fail
+	:status-code '((401 . (lambda (&key data &allow-other-keys &rest _)
+				(message "[my-confluence] -get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown)))))
+	:error (cl-function
+		;; https://tkf.github.io/emacs-request/ regacy document
+		;; "&allow-other-keys&rest _" is document error
+		;;(lambda (&key error-thrown &allow-other-keys&rest _)
+		;; correct one is
+		;; https://github.com/tkf/emacs-request/blob/master/README.rst#examples
+		(lambda (&rest args &key error-thrown &allow-other-keys)
+		  (message "[my-confluence] -get-cookie error: %s" error-thrown))))
+      my-confluence--session)))
 
 (defun my-confluence-get-content-body-storage-by-id (pageId)
   "Get Confluence content specified pageId"
