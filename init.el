@@ -23,7 +23,7 @@
 (my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be after company-network-p and before .package.el
 
 (set-language-environment "Japanese")
-(setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zoneが日本になっていないので、実時間と mode-line 時間表示が異なるので設定
+(setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zone が日本になっていないので、実時間と mode-line 時間表示が異なるので設定
 
 ;;; 新規作成時のファイルの文字コードを utf-8-unix
 (set-default-coding-systems 'utf-8-unix)
@@ -52,33 +52,31 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;
 ;; library
 ;;
+(my-load "~/.emacs.d/.vc.el") ; (custom-set-variables '(vc-handled-backends nil)) to suppress Emacs file open is extremly slow
 (my-load "~/.emacs.d/.files.el") ; no backup
-;; in .vc.el, (custom-set-variables '(vc-handled-backends nil)) to suppress Emacs file open is extremly slow
-(my-load "~/.emacs.d/.vc.el")
-
-(my-load "~/.emacs.d/window-setting.el")
-(my-load "~/.emacs.d/font-setting.el")
-
-(my-load "~/.emacs.d/.simple.el") ; line-number,column-number in mode line
 (my-load "~/.emacs.d/.mode-line.el")
-(my-load "~/.emacs.d/.cursor-setting.el")
+(my-load "~/.emacs.d/.simple.el") ; line-number,column-number in mode line
+(my-load "~/.emacs.d/.time.el")
+
+(my-load "~/.emacs.d/.frame.el")
+
+;;(my-load "~/.emacs.d/.info.el")
 (my-load "~/.emacs.d/.paren.el")
 ;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
 (my-load "~/.emacs.d/.dired-x.el") ; only disable key assign
 (my-load "~/.emacs.d/.thingatpt.el")
 (my-load "~/.emacs.d/.ffap.el")
-(my-load "~/.emacs.d/.tramp.el")
+(my-load "~/.emacs.d/.password-cache.el")
 (my-load "~/.emacs.d/.windmove.el")
 (my-load "~/.emacs.d/.ansi-color.el")
 (my-load "~/.emacs.d/.whitespace.el")
-(my-load "~/.emacs.d/.info.el")
 (my-load "~/.emacs.d/.autoinsert.el")
 (my-load "~/.emacs.d/.quickurl.el")
-(my-load "~/.emacs.d/.eshell.el")
+(my-load "~/.emacs.d/.shell.el")
+(my-load "~/.emacs.d/.ruby-mode.el")
 (my-load "~/.emacs.d/.nxml-mode.el")
 (my-load "~/.emacs.d/.sgml-mode.el")
 (my-load "~/.emacs.d/.hideshow.el")
-(my-load "~/.emacs.d/.ruby-mode.el")
 
 ;;
 ;; package
@@ -136,7 +134,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.run-assoc.el")
 
 ;;
-;; my-own package
+;; my-own function, utility etc...
 ;;
 ;;(my-load "~/.emacs.d/my-app-open-file.el") ; to open file associated application
 (my-load "~/.emacs.d/my-skips.el")

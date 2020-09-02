@@ -38,9 +38,9 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
+;; use-package
 (use-package use-package
   :custom
   (use-package-verbose t)
   (use-package-expand-minimally t) ; to show minimal steps when executing macrostep
   )
-

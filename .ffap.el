@@ -1,15 +1,14 @@
-;;; customize ffap to get the file path in which has ' ' and '　' .
-;;; helm-find-files (C-x f) use ffap can handle that as file
-
-;;; modify ffap-string-at-point-mode-alist 'file
-;;(with-eval-after-load "ffap"
-(with-eval-after-load "ffap"
+(use-package ffap
+  :config
+  ;; customize ffap to get the file path in which has ' ' and '　' .
+  ;; helm-find-files (C-x f) use ffap can handle that as file
+  ;; modify ffap-string-at-point-mode-alist 'file
   ;; callf: refer https://qiita.com/kawabata@github/items/9a1a1e211c57a56578d8#%E6%B1%8E%E5%A4%89%E6%95%B0%E3%82%92%E6%89%B1%E3%81%86%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%A8%E3%81%9D%E3%81%AE%E4%BE%8B
   (callf concat (cadr (assoc 'file ffap-string-at-point-mode-alist)) " 　") ; add ' ' space and '　' zenkau space for the file path have them
 )
 
 ;;; test file path pattern
-;;; M-: (ffapthing-at-point 'filename)
+;;; M-: (thing-at-point 'filename)
 ;;; file path should be within "file path"
 ;;; on windows
 ;;; "\\jps00004944\share_data\SQA1-HA\10_Test_Project_FY17\NewAudio\02_検証計画書\Schedule-NewAudio-Evaluation.pptx"

@@ -6,10 +6,6 @@
 ;	(background-color . "LemonChiffon")))
 ;
 
-;(if (not (eq window-system 'w32))
-;    (setq default-frame-alise '(background-color . "gray"))
-;  (message "tako"))
-
 (if (not (eq window-system 'nil))
     (setq default-frame-alist ; add-to-listで書き直す
 	  '((foreground-color . "black")

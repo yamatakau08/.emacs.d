@@ -1,3 +1,4 @@
+;; effect environment variable INFOPATH
 ;; note adding info directory in Info-default-directory-list doesn't effect
 ;; use Info-directory-list
 ;;(add-to-list 'Info-default-directory-list "/mingw64/share/info/")

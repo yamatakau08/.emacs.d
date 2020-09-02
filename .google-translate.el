@@ -5,16 +5,24 @@
   :ensure t)
 
 (use-package google-translate
-  :ensure t)
+  :ensure t
+  :custom
+  (google-translate-translation-listening-debug t)
 
-;;; https://qiita.com/tadsan/items/6c658cc471be61cbc8f6
-;;; "設定ファイルの書き方"より、packageを使用する場合
-;;; load-path追加必要無し
-;;; (add-to-list 'load-path "~/.emacs.d/elpa/google-translate-20170713.119")
-;;; require する必要無し
-;;; (require 'google-translate)
+  (google-translate-default-source-language "en")
+  (google-translate-default-target-language "ja")
 
-(setq google-translate-translation-listening-debug t)
+  ;; window (buffer with translation) gets focus in google-translate-core-ui.el
+  (google-translate-pop-up-buffer-set-focus t)
+
+  :bind
+  (;("C-c t" . google-translate-at-point)
+   ;("C-c T" . google-translate-query-translate)
+   ("C-c t" . my-google-translate-at-point)
+   ("C-c T" . my-google-query-translate)
+   ("C-c r" . google-translate-at-point-reverse)
+   ("C-c R" .'google-translate-query-translate-reverse))
+  )
 
 ;;; for registering word in Anki
 ;;(add-to-list 'load-path "~/.emacs.d/my-anki-connect")
@@ -26,19 +34,6 @@
 (require 'google-translate-default-ui) ; need for my-google-translate-at-point
 
 ;;;
-(setq google-translate-default-source-language "en"
-      google-translate-default-target-language "ja")
-
-;(global-set-key "\C-ct" 'google-translate-at-point)
-;(global-set-key "\C-cT" 'google-translate-query-translate)
-(global-set-key (kbd "C-c t") 'my-google-translate-at-point)
-(global-set-key (kbd "C-c T") 'my-google-query-translate)
-
-;;; see google-translate-default-ui.el
-(global-set-key (kbd "C-c r") 'google-translate-at-point-reverse)
-(global-set-key (kbd "C-c R") 'google-translate-query-translate-reverse)
-
-;;;
 ;;; my original function is enable not to care if the word is English or Japanese
 ;;;
 (defun my-google-translate-at-point ()
@@ -47,17 +42,12 @@
       (%google-translate-at-point nil t)
     (%google-translate-at-point nil nil)))
 
-;;
 (defun my-google-query-translate (from)
   (interactive "sFrom: ")
   (if (string-match "\\cj" from)
       (google-translate-translate "ja" "en" from nil)
     (google-translate-translate "en" "ja" from nil)))
 
-;;; window (buffer with translation) gets focus in google-translate-core-ui.el
-(setq google-translate-pop-up-buffer-set-focus t)
-
-;;
 (defun my-google-translate-register-item-in-anki ()
   "push note which have from and to word Basic note-type in Anki deck \
    specified gt-anki-push-deck variable through AnkiConnect"
