@@ -1,7 +1,7 @@
 (use-package request
   :ensure t
 
-  :custom
+  :config
   ;; Important!
   ;; On msys2 mingw64 emacs environment
   ;; When request-backend is curl, request's GET method has the following error and doesn't work.
@@ -21,11 +21,13 @@
   ;; I download curl command windows native from https://curl.haxx.se/dlwiz/
   ;; and specified it as request-curl command.
   ;; Finally it WORKS FINE and SOLVED the all above cumbersome problem.
+  ;; should be set in :config, not :custom, I don't know why it's not effective in :custom section
   (custom-set-variables
    '(request-curl
      (cond
       ((eq system-type 'windows-nt)
        (let ((curl "c:/winbin/curl-win64-mingw/bin/curl.exe"))
-	 (if (executable-find curl) curl "curl")))
+	 (if (executable-find curl)
+	     curl "curl")))
       (t "curl"))))
   )

@@ -1,9 +1,11 @@
 (use-package thingatpt
-  :custom
+  :config
   ;; add ' ' space, '　' zenkaku space, '\\' to get windows file path
-  (thing-at-point-file-name-chars (concat thing-at-point-file-name-chars " 　\\"))
+  ;; if this setting in :custom, Symbol's value as variable is void: thing-at-point-file-name-chars
+  (setq thing-at-point-file-name-chars (concat thing-at-point-file-name-chars " 　\\"))
   )
 
+;thing-at-point-file-name-chars
 ;; test file path pattern
 ;; M-: (thing-at-point 'filename)
 ;; file path should be within "file path"
