@@ -25,3 +25,5 @@
 	 ;; split-string ":" is to get the english phrase of "Eced result"
 	 (cmd (format "say -v \"%s\" -r %s \"%s\"" say-voice say-rate (cadr (split-string line ":")))))
     (shell-command-to-string cmd)))
+
+(provide 'my-say)

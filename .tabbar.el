@@ -37,7 +37,7 @@
     "Return the list of buffers to show in tabs.
 Exclude buffers whose name starts with a space, when they are not
 visiting a file.  The current buffer is always included."
-    (let ((hide-buffers '("*helm mini*" "*Completions*" "*helm find files*")))
+    (let ((hide-buffers '("*helm mini*" "*Completions*" "*helm find files*" "*howm-keys:*")))
       (delq nil
             (mapcar #'(lambda (b)
 			(cond

@@ -1,1 +1,3 @@
-(require 'my-plantuml "~/.emacs.d/my-plantuml/my-plantuml.el" t)
+(use-package my-plantuml
+  :load-path "~/.emacs.d/my-plantuml")
+

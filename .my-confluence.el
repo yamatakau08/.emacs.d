@@ -1,7 +1,8 @@
-(require 'my-confluence "~/.emacs.d/my-confluence/my-confluence.el" t)
+(use-package my-confluence
+  :load-path "~/.emacs.d/my-confluence"
 
-;; company-jira-auth-url,company-confluece-url variable set in .private.el
-(custom-set-variables '(my-confluence-auth-url company-jira-auth-url))
-(custom-set-variables '(my-confluence-url      company-confluence-url))
-
-(custom-set-variables '(my-confluence-user-login-name "0000910700"))
+  :custom
+  ;; company-jira-auth-url,company-confluece-url variable set in .private.el
+  (my-confluence-auth-url company-jira-auth-url)
+  (my-confluence-url      company-confluence-url)
+  (my-confluence-user-login-name "0000910700"))

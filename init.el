@@ -77,6 +77,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.nxml-mode.el")
 (my-load "~/.emacs.d/.sgml-mode.el")
 (my-load "~/.emacs.d/.hideshow.el")
+(my-load "~/.emacs.d/.flyspell.el")
 
 ;;
 ;; package
@@ -142,11 +143,11 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 
 ;; english conversation expression dictionary
 (my-load "~/.emacs.d/.eced.el")
-(my-load "~/.emacs.d/say.el")
-
 (my-load "~/.emacs.d/.my-confluence.el")
 (my-load "~/.emacs.d/.my-anki-browse.el")
+(my-load "~/.emacs.d/.helm-anki-browse.el")
 (my-load "~/.emacs.d/.my-plantuml.el")
+(my-load "~/.emacs.d/.my-say.el")
 
 ;; developing
 ;;(my-load "~/.emacs.d/.yahoo-weather-mode.el")
