@@ -3,8 +3,7 @@
 
   :custom
   (magit-refresh-verbose t) ; put the process time in Message buffer.
-  ;; https://magit.vc/manual/magit/Repository-Setup.html
-  ;; (magit-clone-set-remote.pushDefault t)
+  (magit-clone-set-remote.pushDefault t)
 
   :config
   ;; to disable auto fill mode in commit buffer, delete git-commit-turn-on-auto-fill

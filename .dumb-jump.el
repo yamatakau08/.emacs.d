@@ -1,16 +1,20 @@
 (use-package dumb-jump
-  :ensure t)
+  :ensure t
+  :custom
+  ;; https://github.com/jacktasia/dumb-jump/blob/master/README.md#debugging-a-jump
+  ;;(dumb-jump-debug t) ; to put out debug message of dumb-jump
 
-;;; https://github.com/jacktasia/dumb-jump/blob/master/README.md#debugging-a-jump
-;(setq dumb-jump-debug t) ; to put out debug message of dumb-jump
+  ;; default 2s, over 2s, even if there are results, don't display anything.
+  (dumb-jump-max-find-time 60)
 
-(setq dumb-jump-selector 'helm)
+  (dumb-jump-selector 'helm)
 
-(if (eq system-type 'windows-nt) ; on mingw64
-    ;; since 'git-grep and 'gnu-grep doesn't work, use 'ag
-    ;;(setq dumb-jump-prefer-searcher 'ag)
-    ;; since the above dumb-jump-prefer-searcher doesn't effect, use dumb-jump-force-searcher
-    (setq dumb-jump-force-searcher  'ag))
+  :config
+  (if (eq system-type 'windows-nt) ; on mingw64
+      ;; since 'git-grep and 'gnu-grep doesn't work, use 'ag.
+      ;; since (setq dumb-jump-prefer-searcher 'ag) doesn't effect, use dumb-jump-force-searcher.
+      (setq dumb-jump-force-searcher  'ag))
+  )
 
 ;;; dumb-jump-fallback-regex initial value is "\\bJJJ\\j"
 ;;; Since without "\\b" can search on shell-mode, remove "\\b" from it.
@@ -32,6 +36,3 @@
 ;;; .dumbjump
 ;;; on msys, use path format drive letter likely c:
 ;;; +c:/msys64/mingw64/lib/ruby/2.6.0
-
-;;; default 2s, over 2s, even if there are results, don't display anything.
-(setq dumb-jump-max-find-time 60)

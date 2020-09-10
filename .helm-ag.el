@@ -40,8 +40,6 @@
        (mapconcat #'identity `(,helm-ag-base-command "--hidden") " ") ; add --hidden for targetting .??* files
        )))
 
-
-
   ;; to suppress "File XXX changed on disk. Read from disk?" dialog
   ;; while helm-ag-this file XXX file is updating, likely log file
 

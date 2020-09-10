@@ -49,15 +49,25 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;
 (my-load "~/.emacs.d/.package.el")
 
+(use-package emacs
+  :no-require t
+  :custom
+  ;; for model-line
+  ;; 改行コードを、DOS等の環境名ではなくコード名で表示する
+  ;; https://qiita.com/kai2nenobu/items/ddf94c0e5a36919bc6db
+  (eol-mnemonic-unix "(LF)")
+  (eol-mnemonic-dos  "(CRLF)")
+  (eol-mnemonic-mac  "(CR)")
+  )
+
 ;;
 ;; library
 ;;
 (my-load "~/.emacs.d/.vc.el") ; (custom-set-variables '(vc-handled-backends nil)) to suppress Emacs file open is extremly slow
 (my-load "~/.emacs.d/.files.el") ; no backup
-(my-load "~/.emacs.d/.mode-line.el")
 (my-load "~/.emacs.d/.simple.el") ; line-number,column-number in mode line
 (my-load "~/.emacs.d/.time.el")
-
+;;(my-load "~/.emacs.d/.mode-line.el")
 (my-load "~/.emacs.d/.frame.el")
 
 ;;(my-load "~/.emacs.d/.info.el")
