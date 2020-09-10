@@ -66,7 +66,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (my-load "~/.emacs.d/.dired-x.el") ; only disable key assign
 (my-load "~/.emacs.d/.thingatpt.el")
 (my-load "~/.emacs.d/.ffap.el")
-(my-load "~/.emacs.d/.password-cache.el")
 (my-load "~/.emacs.d/.windmove.el")
 (my-load "~/.emacs.d/.ansi-color.el")
 (my-load "~/.emacs.d/.whitespace.el")
@@ -126,6 +125,7 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;;(my-load "~/.emacs.d/.openwith.el")
 ;;(my-load "~/.emacs.d/.all-the-icons.el")
 ;;(my-load "~/.emacs.d/.all-the-icons-dired.el")
+;;(my-load "~/.emacs.d/.password-cache.el")
 
 ;;
 ;; useful packages are not registerd in elpa ...

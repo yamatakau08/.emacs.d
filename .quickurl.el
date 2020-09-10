@@ -40,5 +40,3 @@ buffer, this default action can be modified via
       (if pos
 	  (move-to-column pos))))
   )
-  
-  
