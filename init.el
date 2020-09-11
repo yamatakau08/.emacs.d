@@ -31,24 +31,25 @@
 (prefer-coding-system 'utf-8-unix)
 
 ;;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
-(defun set-exec-path-from-shell-PATH ()
-  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
-This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
-  (interactive)
-;; fish doesn't work
-;  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
-;; fish work
-  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (getenv "PATH"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-
-(set-exec-path-from-shell-PATH)
+;(defun set-exec-path-from-shell-PATH ()
+;  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
+;This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
+;  (interactive)
+;  ;; fish doesn't work
+;  ;;(let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+;  ;; fish work
+;  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (getenv "PATH"))))
+;    (setenv "PATH" path-from-shell)
+;    (setq exec-path (split-string path-from-shell path-separator))))
+;
+;(set-exec-path-from-shell-PATH)
 
 ;;
 ;; for package, use-package
 ;;
 (my-load "~/.emacs.d/.package.el")
 
+;; emacs
 (use-package emacs
   :no-require t
   :custom
@@ -59,6 +60,13 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
   (eol-mnemonic-dos  "(CRLF)")
   (eol-mnemonic-mac  "(CR)")
   )
+
+;(message "[debug] befor exec-path: %s" exec-path)
+;(use-package exec-path-from-shell
+;  :ensure t
+;  :config (exec-path-from-shell-initialize)
+;  )
+;(message "[debug] after exec-path: %s" exec-path)
 
 ;;
 ;; library

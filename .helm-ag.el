@@ -1,6 +1,6 @@
 (use-package helm-ag
+  :if (executable-find "ag")
   :ensure t
-
   :after helm
 
   :init
