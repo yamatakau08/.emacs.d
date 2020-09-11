@@ -30,7 +30,7 @@
 		((equal (system-name) "JPC20165182")
 		 (add-to-list 'default-frame-alist `(font . ,(concat font "-10"))))
 		(t
-		 (my-add-font-in-default-frame-alist font)))
+		 (add-to-list 'default-frame-alist `(font . ,font))))
 	(throw 'aaa font))))
 
 
