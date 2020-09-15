@@ -109,7 +109,7 @@
 	 (target `(file+olp ,my-skips-org-file ,lvl1heading ,node-headline))
 	 (template "** %?")
 	 (props '(:clock-in 1 :clock-keep 1)))
-    ;; (add-to-list 'org-capture-templates `(,keys ,description ,type ,target ,template :clock-in 1 :clock-keep 1) 
+    ;; (add-to-list 'org-capture-templates `(,keys ,description ,type ,target ,template :clock-in 1 :clock-keep 1)
     (add-to-list 'org-capture-templates `(,keys ,description ,type ,target ,template ,@props) t)
     ))
 

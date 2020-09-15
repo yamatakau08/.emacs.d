@@ -1,7 +1,8 @@
 (require 'browse-url)
 (require 'thingatpt)
-;; w3m-url-encode-string の rename 版 (w3m.el を入れてないから)
+
 (defun my-url-encode-string (str &optional coding)
+  "w3m-url-encode-string の rename 版 (w3m.el を入れてないから)"
   (apply (function concat)
          (mapcar
           (lambda (ch)
@@ -18,7 +19,6 @@
           (append (encode-coding-string (or str "") (or coding 'iso-2022-jp))
                   nil))))
 
-;; google で検索。引数無しだと mini-buffer で編集できる。
 (defun google (str &optional flag)
   "google で検索。引数無しだと mini-buffer で編集できる。"
   (interactive
