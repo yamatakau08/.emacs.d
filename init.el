@@ -44,6 +44,7 @@
 ;
 ;(set-exec-path-from-shell-PATH)
 
+(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
 (add-to-list 'exec-path "/usr/local/bin")
 
 ;;

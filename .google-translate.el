@@ -59,4 +59,3 @@
 ;;  (message "new args:%s" args)
 ;;  (apply origi-func args))
 ;;(advice-add 'url-retrieve-synchronously :around 'advice:around)
-

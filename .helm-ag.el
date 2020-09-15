@@ -1,15 +1,12 @@
 (use-package helm-ag
-  :if (executable-find "ag")
   :ensure t
-  :after helm
 
-  :init
-  ;; on mac
-  ;; $ brew install ag, ag is installed in /usr/local/bin
-  ;; unfortunately, exec-path doesn't include /usr/local/bin even if that path is set in .bash_profile.
-  ;; tentative add /usr/local/bin in exec-path
-  (if (eq system-type 'darwin)
-      (add-to-list 'exec-path "/usr/local/bin"))
+  :if (if (executable-find "ag") ; should set ag path in exec-path which is set in init.el
+	  t
+	(message "[debug] .helm-ag.el, Install ag and add path in exec-path in init.el")
+	nil)
+
+  :after helm
 
   ;;:custom
   ;; https://github.com/syohex/emacs-helm-ag#enable-helm-follow-mode-by-default
@@ -22,7 +19,7 @@
   ;;(helm-ag-base-command
   ;; (mapconcat #'identity `(,helm-ag-base-command "--hidden") " "))
 
-  :bind
+  ;; :bind
   ;; don't use this settings
   ;; firstly I replace C-s/C-r with helm-ag-this-file.
   ;; it's not availabe in buffers e.g. *GNU Emacs*,is available ony file buffers
