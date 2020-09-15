@@ -44,6 +44,8 @@
 ;
 ;(set-exec-path-from-shell-PATH)
 
+(add-to-list 'exec-path "/usr/local/bin")
+
 ;;
 ;; for package, use-package
 ;;
@@ -58,8 +60,7 @@
   ;; https://qiita.com/kai2nenobu/items/ddf94c0e5a36919bc6db
   (eol-mnemonic-unix "(LF)")
   (eol-mnemonic-dos  "(CRLF)")
-  (eol-mnemonic-mac  "(CR)")
-  )
+  (eol-mnemonic-mac  "(CR)"))
 
 ;(message "[debug] befor exec-path: %s" exec-path)
 ;(use-package exec-path-from-shell
