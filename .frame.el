@@ -82,3 +82,10 @@
 ;; unzip it, then dobule click Myrica.TTC to install
 ;; restart Emacs, evaluate (w32-select-font) in *scratch* buffer
 ;; check if "Myrica M" or "MyricaM" is selected
+
+
+(defun workarea-width-height ()
+  "get width and height of workarea size of display monitio which is the most small"
+  (let ((width (nth  2 (frame-monitor-workarea)))
+	(height (nth 3 (frame-monitor-workarea))))
+    (list width height)))
