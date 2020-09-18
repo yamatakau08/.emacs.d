@@ -24,7 +24,7 @@
    '(associated-program-alist
      (cond
       ((eq system-type 'windows-nt)
-       '(((lambda (file)
+       '(((lambda (file) ; for mp4 file on only windows8.1
 	    ;;(shell-command-to-string (format "%s %s" "start" (replace-regexp-in-string "/" "\\\\\\\\" file))))
 	    ;; the above is the test code
 	    ;; no need to execute the function "replace-regexp-in-string" in run-assoc
@@ -35,7 +35,7 @@
 	    ;; note: don't include ".htlm" in the file suffix regexp
 	    ;; if ".html" is in file suffix regexp, helm-find-file can't open the that url.
 	    (w32-shell-execute "open" file))
-	  "\\.\\(pdf\\|msg\\|pptx\\|xls\\|xlsx\\|xlsm\\|doc\\|docx\\|avi\\|jpg\\|JPG\\|png\\|PNG\\|wmv\\)$")))
+	  "\\.\\(pdf\\|msg\\|pptx\\|xls\\|xlsx\\|xlsm\\|doc\\|docx\\|avi\\|jpg\\|JPG\\|png\\|PNG\\|wmv\\|mp4\\)$")))
       ((eq system-type 'darwin)
        '(("open" "\\.\\(pdf\\|mp4\\)$")))
       ((eq system-type 'gnu/linux)

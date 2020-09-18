@@ -7,11 +7,11 @@
       (border-color . "black")
       (mouse-color  . "white")
       (cursor-color . "black")
-      (width . 80)
-      (height . 45)
-      (top . 0)
-      (left . 100)
-      (alpha . 80)
+      (width . 120)
+      (height . 47)
+      (top . 8)
+      (left . 360)
+      (alpha . 75)
       ;; font
       ;;(font . "Myrica M-10") ; set by :config section
       ;; ime font
