@@ -22,17 +22,22 @@
 
   :config
   ;; font setting
-  (dolist (font '("Myrica M" "MyricaM M"))
-    (catch 'aaa
-      (if (member font (font-family-list))
-	  (cond ((eq system-type 'darwin)
-		 (add-to-list 'default-frame-alist `(font . ,(concat font "-18"))))
-		((equal (system-name) "JPC20165182")
-		 (add-to-list 'default-frame-alist `(font . ,(concat font "-10"))))
-		(t
-		 (add-to-list 'default-frame-alist `(font . ,font))))
-	(throw 'aaa font))))
+  ;; the followings are the values from frame-parameters when using Myrica M font
+  ;; (font . "-outline-Myrica M-normal-normal-normal-mono-20-*-*-*-c-*-iso8859-1") ; on Windows
+  ;; When set the above value on Mac, returns the following
+  ;; (font .       "-*-Myrica M-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+  ;; almost the same but, height will be shorter than Windows'one
 
+  (let (;; Myrica font https://myrica.estable.jp/
+	(font "Myrica M")
+	;;(font "MyricaM M")
+	)
+    (if (member font (font-family-list))
+	(cond ((eq system-type 'darwin)
+	       ;; -16 is the almost same as on Windows Myrica M font -10
+	       (add-to-list 'default-frame-alist `(font . ,(concat font "-16"))))
+	      ((equal (system-name) "JPC20165182")
+	       (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))))
 
   ;; alpha
   ;; http://th.nao.ac.jp/MEMBER/zenitani/elisp-j.html#alpha
@@ -49,6 +54,16 @@
 	       alpha)))
       (set-frame-parameter (selected-frame) 'alpha x)))
 
+  (defun my-put-frame-parameters ()
+    "put frame parameters"
+    (dolist (param (frame-parameters))
+      (pp param)))
+
+  (defun workarea-width-height ()
+    "get width and height of workarea size of display monitio which is the most small"
+    (let ((width (nth  2 (frame-monitor-workarea)))
+	  (height (nth 3 (frame-monitor-workarea))))
+      (list width height)))
   )
 
 ;; font setting memo
@@ -80,12 +95,11 @@
 ;; Myrica https://myrica.estable.jp/
 ;; download Myrica.ttc or MyricaM.ttc zip,
 ;; unzip it, then dobule click Myrica.TTC to install
-;; restart Emacs, evaluate (w32-select-font) in *scratch* buffer
+;; on both Winodws and Mac
+;; restart Emacs,
+;; in scratch
+;; (member "Myrica M" (font-family-list))
+;; (member "MyricaM M" (font-family-list))
+;;
+;; on Windows (w32-select-font) in *scratch* buffer
 ;; check if "Myrica M" or "MyricaM" is selected
-
-
-(defun workarea-width-height ()
-  "get width and height of workarea size of display monitio which is the most small"
-  (let ((width (nth  2 (frame-monitor-workarea)))
-	(height (nth 3 (frame-monitor-workarea))))
-    (list width height)))
