@@ -3,10 +3,11 @@
   ;; effect environment variable INFOPATH
   ;; note adding info directory in Info-default-directory-list doesn't effect
   ;; use Info-directory-list
-  ;;(add-to-list 'Info-default-directory-list "/mingw64/share/info/")
 
-  ;; on mingw64 environment /usr/share/info is /msys64/usr/share/info
-  ;; and emacs.info is in /msys64/mingw64/share/info
-  ;; so set /mingw64/share/info.
-  (add-to-list 'Info-directory-list "/mingw64/share/info/")
+  ;; on Windows Emacs ftp sitepackage
+  ;; Though there are info for emacs in "c:/msys64/usr/share/info" which in Info-directory-list,
+  ;; Info can't show emacs lisp info and so on
+  ;; add c:/winbin/emacs-28.0.50/x86_64/share/info/ manually.
+  ;; The following setting is also available on other platforms Mac,Linux... maybe
+  (add-to-list 'Info-directory-list (format "%s../share/info" (invocation-directory)))
   )

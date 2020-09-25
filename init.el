@@ -80,7 +80,7 @@
 ;;(my-load "~/.emacs.d/.mode-line.el")
 (my-load "~/.emacs.d/.frame.el")
 
-;;(my-load "~/.emacs.d/.info.el")
+(my-load "~/.emacs.d/.info.el")
 (my-load "~/.emacs.d/.paren.el")
 ;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
 (my-load "~/.emacs.d/.dired-x.el") ; only disable key assign
