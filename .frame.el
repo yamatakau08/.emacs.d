@@ -7,10 +7,10 @@
       (border-color . "black")
       (mouse-color  . "white")
       (cursor-color . "black")
-      (width . 120)
-      (height . 47)
+      (width . 120) ; column, unit is NOT pixel, get pixel (frame-pixel-width)
+      (height . 47) ; row, unit is NOT pixel,get pixel (frame-pixel-height)
       (top . 8)
-      (left . 360)
+      (left . 339) ; Fix on for Windows (workarea width - frame-pixel-width) / 2
       (alpha . 75)
       ;; font
       ;;(font . "Myrica M-10") ; set by :config section
@@ -28,8 +28,8 @@
   ;; (font .       "-*-Myrica M-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1")
   ;; almost the same but, height will be shorter than Windows'one
 
-  (let (;; Myrica font https://myrica.estable.jp/
-	(font "Myrica M")
+  ;; font setting, Myrica font https://myrica.estable.jp/
+  (let ((font "Myrica M")
 	;;(font "MyricaM M")
 	)
     (if (member font (font-family-list))
@@ -64,6 +64,11 @@
     (let ((width (nth  2 (frame-monitor-workarea)))
 	  (height (nth 3 (frame-monitor-workarea))))
       (list width height)))
+
+  ;; on Windows
+  ;;(message "workarea: %S" (workarea-width-height)) ;(1920 1042)
+  ;;(message "frame   : %S %S" (frame-pixel-width) (frame-pixel-height)) ; 1002 828
+  ;; frame-pixel-width,height is not final one
   )
 
 ;; font setting memo
