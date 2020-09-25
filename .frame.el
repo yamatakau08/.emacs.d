@@ -65,9 +65,12 @@
 	  (height (nth 3 (frame-monitor-workarea))))
       (list width height)))
 
-  ;; on Windows
-  ;;(message "workarea: %S" (workarea-width-height)) ;(1920 1042)
-  ;;(message "frame   : %S %S" (frame-pixel-width) (frame-pixel-height)) ; 1002 828
+  ;; for debug, when launching Emacs, after loading this block
+  ;; On Windows
+  ;; work-area-width-height (1920 1042)
+  ;; frame-pixel-width,height 1002 828
+  (message "workarea: %S" (workarea-width-height))
+  (message "frame   : %S %S" (frame-pixel-width) (frame-pixel-height))
   ;; frame-pixel-width,height is not final one
   )
 
@@ -108,3 +111,10 @@
 ;;
 ;; on Windows (w32-select-font) in *scratch* buffer
 ;; check if "Myrica M" or "MyricaM" is selected
+
+;; Mac Book Air 13.3 inch
+;; Final frame pixel size, final means font setting is applied.
+;; (frame-pixel-width)
+;; 995
+;; (frame-pixel-height)
+;; 756
