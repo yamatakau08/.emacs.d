@@ -132,9 +132,11 @@
 (my-load "~/.emacs.d/.dired-posframe.el")
 (my-load "~/.emacs.d/.frog-jump-buffer.el")
 (my-load "~/.emacs.d/.tabbar.el")
-
 (my-load "~/.emacs.d/.request.el") ; curl for anki/jira/confluence
 (my-load "~/.emacs.d/.macrostep.el")
+(my-load "~/.emacs.d/.flycheck.el")
+(my-load "~/.emacs.d/.ruby-refactor.el")
+(my-load "~/.emacs.d/.emr.el")
 
 ;;(my-load "~/.emacs.d/.jiralib2.el")
 ;;(my-load "~/.emacs.d/.helm-jira.el")

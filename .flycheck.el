@@ -1,2 +1,4 @@
-;;
-(add-hook 'ruby-mode-hook 'flycheck-mode)
+(use-package flycheck
+  :ensure t
+  :hook (ruby-mode . flycheck-mode)
+  )

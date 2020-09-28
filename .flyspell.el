@@ -1,4 +1,6 @@
 (use-package flyspell
+  ;; should install hunspell,hunspell-en
+  
   ;; :ensure-system-package ; Give up, don't work well on msys2
   ;; ((hunspell    . "pacman -S --noconfirm mingw-w64-i686-hunspell")
   ;;  (hunspell-en . "pacman -S --noconfirm mingw-w64-i686-hunspell-en"))
