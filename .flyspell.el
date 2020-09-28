@@ -1,7 +1,7 @@
 (use-package flyspell
-  ;;:ensure-system-package ; remove this section,work but finally didn't work well on msys2
-  ;;((hunspell . "pacman -S mingw-w64-i686-hunspell")
-  ;; (hunspell . "pacman -S mingw-w64-i686-hunspell-en")))
+  ;; :ensure-system-package ; Give up, don't work well on msys2
+  ;; ((hunspell    . "pacman -S --noconfirm mingw-w64-i686-hunspell")
+  ;;  (hunspell-en . "pacman -S --noconfirm mingw-w64-i686-hunspell-en"))
 
   :if (executable-find "hunspell")
 
