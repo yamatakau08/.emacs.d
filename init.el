@@ -97,6 +97,7 @@
 (my-load "~/.emacs.d/.sgml-mode.el")
 (my-load "~/.emacs.d/.hideshow.el")
 (my-load "~/.emacs.d/.flyspell.el")
+(my-load "~/.emacs.d/.calendar.el")
 
 ;;
 ;; package
@@ -137,6 +138,7 @@
 (my-load "~/.emacs.d/.flycheck.el")
 (my-load "~/.emacs.d/.ruby-refactor.el")
 (my-load "~/.emacs.d/.emr.el")
+(my-load "~/.emacs.d/.japanese-holidays.el")
 
 ;;(my-load "~/.emacs.d/.jiralib2.el")
 ;;(my-load "~/.emacs.d/.helm-jira.el")
