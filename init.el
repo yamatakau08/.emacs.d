@@ -98,6 +98,7 @@
 (my-load "~/.emacs.d/.hideshow.el")
 (my-load "~/.emacs.d/.flyspell.el")
 (my-load "~/.emacs.d/.calendar.el")
+(my-load "~/.emacs.d/.cc-mode.el")
 
 ;;
 ;; package
