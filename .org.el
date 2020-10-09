@@ -39,6 +39,8 @@
               (setq-local system-time-locale "C")))
 
   :custom
+  (org-support-shift-select t)
+
   ;; add "INPROGRESS" in to-do-keywordsin
   ;; refer http://aaronbedra.com/emacs.d/#org29f8f0d Org Settings
   (org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE")))
