@@ -7,6 +7,22 @@
   ;; https://github.com/jwiegley/use-package/issues/597#issuecomment-352898477
   :ensure org-plus-contrib
 
+  :hook
+  ;; https://github.com/jwiegley/use-package#hooks
+  ;; When using :hook omit the "-hook" suffix if you specify the hook explicitly, as this is appended by default.
+
+  ;; refer https://orgmode.org/manual/Conflicts.html
+  ;; ((org-shiftup-final    . windmove-up   )
+  ;;  (org-shiftleft-final  . windmove-left )
+  ;;  (org-shiftdown-final  . windmove-down )
+  ;;  (org-shiftright-final . windmove-right))
+
+  ;; the following also works
+  ((org-shiftup    . windmove-up   )
+   (org-shiftleft  . windmove-left )
+   (org-shiftdown  . windmove-down )
+   (org-shiftright . windmove-right))
+
   :init
   ;; org-version changed to Ver. 9.2.1,、"<e TAB" template doesn't work
   ;; supported by emacs-jp slack
@@ -15,17 +31,6 @@
   (if (version< "9.1.9" (org-version))
       (require 'org-tempo)
     (message "update org to 9.2.X"))
-
-  ;; refer https://orgmode.org/manual/Conflicts.html
-  ;; Make windmove work in Org mode:
-  ;;(add-hook 'org-shiftup-final-hook    'windmove-up   )
-  ;;(add-hook 'org-shiftleft-final-hook  'windmove-left )
-  ;;(add-hook 'org-shiftdown-final-hook  'windmove-down )
-  ;;(add-hook 'org-shiftright-final-hook 'windmove-right)
-  (add-hook 'org-shiftup-hook #'windmove-up) ; need to study :hook
-  (add-hook 'org-shiftleft    #'windmove-left )
-  (add-hook 'org-shiftdown    #'windmove-down )
-  (add-hook 'org-shiftright   #'windmove-right)
 
   ;; org day of the week format Japanese to English
   ;; https://w.atwiki.jp/opentfc/pages/116.html "日付を挿入"
@@ -39,8 +44,6 @@
               (setq-local system-time-locale "C")))
 
   :custom
-  (org-support-shift-select t)
-
   ;; add "INPROGRESS" in to-do-keywordsin
   ;; refer http://aaronbedra.com/emacs.d/#org29f8f0d Org Settings
   (org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE")))
