@@ -3,8 +3,18 @@
 ;;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547097797720600
 ;;; Importing package-keyring.gpg...done
 ;;; error in process sentinel: if: Error retrieving: http://melpa.org/packages/archive-contents (error connection-failed "failed with code 110" :host "melpa.org" :service 80)
-(if (eq (my-get-network-type) 'company)
-    (let ((proxy-server-port (format "%s:%s" wl-proxy-server wl-proxy-port)))
-      (setq url-proxy-services
-	    `(("http"  . ,proxy-server-port)
-	      ("https" . ,proxy-server-port)))))
+;; (if (eq (my-network-type) 'company)
+;;     (let ((proxy-server-port (format "%s:%s" wl-proxy-server wl-proxy-port)))
+;;       (setq url-proxy-services
+;; 	    `(("http"  . ,proxy-server-port)
+;; 	      ("https" . ,proxy-server-port)))))
+
+(use-package url-vars
+  :custom
+  (url-proxy-services `(("http"  . ,(if (eq (my-network-type) 'company)
+					(format "%s:%s" wl-proxy-server wl-proxy-port)
+				      nil))
+			("https" . ,(if (eq (my-network-type) 'company)
+					(format "%s:%s" wl-proxy-server wl-proxy-port)
+				      nil))))
+  )

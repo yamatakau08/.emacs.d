@@ -33,7 +33,7 @@
 
 ;; install "use-package"
 ;; https://emacs.stackexchange.com/questions/39250/error-package-use-package-is-unavailable
-(if (my-get-network-type)
+(if (my-network-type)
     (package-refresh-contents)) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))

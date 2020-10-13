@@ -134,7 +134,7 @@
     (setq ssl-program-name "openssl")
   (setq ssl-program-name "openssl"))
 
-(if (eq (my-get-network-type) 'company)
+(if (eq (my-network-type) 'company)
     (nconc ssl-program-arguments
 	   '("-proxy" (format "%s:%s" wl-proxy-server wl-proxy-port))))
 
