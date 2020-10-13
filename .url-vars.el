@@ -11,10 +11,8 @@
 
 (use-package url-vars
   :custom
-  (url-proxy-services `(("http"  . ,(if (eq (my-network-type) 'company)
-					(format "%s:%s" wl-proxy-server wl-proxy-port)
-				      nil))
-			("https" . ,(if (eq (my-network-type) 'company)
-					(format "%s:%s" wl-proxy-server wl-proxy-port)
-				      nil))))
+  (url-proxy-services `(("http" . ,(when (eq (my-network-type) 'company)
+				     (format "%s:%s" wl-proxy-server wl-proxy-port)))
+			("https". ,(when (eq (my-network-type) 'company)
+				     (format "%s:%s" wl-proxy-server wl-proxy-port)))))
   )
