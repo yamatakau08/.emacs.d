@@ -12,7 +12,7 @@
        )))
 
 (use-package run-assoc
-  :load-path "~/.emacs.d/run-assoc"
+  :load-path "run-assoc"
 
   :bind (("C-x C-f" . run-associated-program)
 	 :map dired-mode-map

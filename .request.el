@@ -16,7 +16,7 @@
   ;; PUT have the following error
   ;; Debugger entered--Lisp error: (error \"error: (error Multibyte text in HTTP request: PUT https://www.tool.company.biz/confluence/rest/api/content/...
   ;;
-  ;; I suspect it cause in curl command itsefl on msys2 with referring https://github.com/ahungry/org-jira/issues/49#issuecomment-303870919
+  ;; I suspect it cause in curl command itself on msys2 with referring https://github.com/ahungry/org-jira/issues/49#issuecomment-303870919
   ;;
   ;; I download curl command windows native from https://curl.haxx.se/dlwiz/
   ;; and specified it as request-curl command.

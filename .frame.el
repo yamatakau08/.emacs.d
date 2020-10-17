@@ -11,7 +11,7 @@
       (height . 47) ; row, unit is NOT pixel,get pixel (frame-pixel-height)
       (top . 8)
       (left . 339) ; Fix on for Windows (workarea width - frame-pixel-width) / 2
-      (alpha . 75)
+      (alpha . 100)
       ;; font
       ;;(font . "Myrica M-10") ; set by :config section
       ;; ime font

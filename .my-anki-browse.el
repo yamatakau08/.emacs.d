@@ -1,5 +1,5 @@
 (use-package my-anki-browse
-  :load-path "~/.emacs.d/my-anki-browse"
+  :load-path "my-anki-browse"
   ;;:after google-translate
   :custom (my-anki-browse-anki-main-deck-name "英語")
   :config

@@ -1,5 +1,5 @@
 (use-package sdic
-  :load-path "~/.emacs.d/sdic/lisp"
+  :load-path "sdic/lisp"
 
   :init
   ;; work arround for sdic doesn't work
