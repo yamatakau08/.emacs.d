@@ -18,10 +18,8 @@
 ;;; load private settings
 (my-load "~/.emacs.d/private.el")
 
-;;; check if ip-address is company's network
-;;(my-load "~/.emacs.d/company-network-p.el")
+;; check if ip-address is company's network
 (my-load "~/.emacs.d/my-network-type.el")
-(my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be after company-network-p and before .package.el
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zone が日本になっていないので、実時間と mode-line 時間表示が異なるので設定
@@ -81,6 +79,7 @@
 ;;(my-load "~/.emacs.d/.mode-line.el")
 (my-load "~/.emacs.d/.frame.el")
 
+(my-load "~/.emacs.d/.url-vars.el")
 (my-load "~/.emacs.d/.info.el")
 (my-load "~/.emacs.d/.paren.el")
 ;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
