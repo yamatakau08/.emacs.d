@@ -14,6 +14,14 @@
 ;    51509920738105335     4k drwxrwxrwx  1 0000910700 Domain Users     4k 12-23 17:10 .git
 ;     1125899907103619     2k -rw-rw-rw-  1 0000910700 Domain Users   1.6k 12-23 17:10 window-setting.el
 
+(use-package dired
+  :config
+  ;; original dired-get-marked-files function returns the file under the point when there is no marked files.
+  (defun my-dired-get-marked-files ()
+    (when (> (string-to-number (dired-number-of-marked-files)) 0)
+      (dired-get-marked-files)))
+  )
+
 ;; dired にて、windows に関連付けられたファイルを起動する。
 ;; original https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
 ;; modified
@@ -33,6 +41,6 @@
 	  (start-process "open-with-default-app" nil "open" fname))
 	 ))))
 
-(add-hook 'dired-mode-hook
-	  (lambda ()
-	    (define-key dired-mode-map "z" 'uenox-dired-winstart)))
+;; (add-hook 'dired-mode-hook
+;; 	  (lambda ()
+;; 	    (define-key dired-mode-map "z" 'uenox-dired-winstart)))

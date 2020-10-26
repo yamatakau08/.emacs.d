@@ -143,7 +143,7 @@
 (my-load "~/.emacs.d/.japanese-holidays.el")
 
 ;;(my-load "~/.emacs.d/.jiralib2.el")
-;;(my-load "~/.emacs.d/.helm-jira.el")
+(my-load "~/.emacs.d/.helm-jira.el")
 ;;(my-load "~/.emacs.d/.org-drill.el")
 ;;(my-load "~/.emacs.d/.anki-editor.el")
 ;;(my-load "~/.emacs.d/.ivy.el")

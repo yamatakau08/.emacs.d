@@ -30,4 +30,10 @@
 	 (if (executable-find curl)
 	     curl "curl")))
       (t "curl"))))
+
+  ;; for debug, evaluate when want to debug
+  ;; Though the following are customize variables, put them in :config section
+  ;; easy to set evaluate s-expression
+  ;; (setq request-log-level     'debug)
+  ;; (setq request-message-level 'debug)
   )
