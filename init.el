@@ -21,7 +21,6 @@
 ;;; check if ip-address is company's network
 ;;(my-load "~/.emacs.d/company-network-p.el")
 (my-load "~/.emacs.d/my-network-type.el")
-(my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be after company-network-p and before .package.el
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zone が日本になっていないので、実時間と mode-line 時間表示が異なるので設定
@@ -100,6 +99,7 @@
 (my-load "~/.emacs.d/.flyspell.el")
 (my-load "~/.emacs.d/.calendar.el")
 (my-load "~/.emacs.d/.cc-mode.el")
+(my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be loaded after company-network-p,use-package is active
 
 ;;
 ;; package
