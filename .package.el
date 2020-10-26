@@ -43,5 +43,4 @@
   :custom
   (use-package-verbose t)
   (use-package-expand-minimally t) ; to show minimal steps when executing macrostep
-  (use-package-compute-statistics t)
-  )
+  (use-package-compute-statistics t))
