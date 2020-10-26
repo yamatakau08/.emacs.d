@@ -18,8 +18,7 @@
 ;;; load private settings
 (my-load "~/.emacs.d/private.el")
 
-;;; check if ip-address is company's network
-;;(my-load "~/.emacs.d/company-network-p.el")
+;; check if ip-address is company's network
 (my-load "~/.emacs.d/my-network-type.el")
 
 (set-language-environment "Japanese")
@@ -80,6 +79,7 @@
 ;;(my-load "~/.emacs.d/.mode-line.el")
 (my-load "~/.emacs.d/.frame.el")
 
+(my-load "~/.emacs.d/.url-vars.el")
 (my-load "~/.emacs.d/.info.el")
 (my-load "~/.emacs.d/.paren.el")
 ;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
@@ -143,7 +143,7 @@
 (my-load "~/.emacs.d/.japanese-holidays.el")
 
 ;;(my-load "~/.emacs.d/.jiralib2.el")
-(my-load "~/.emacs.d/.helm-jira.el")
+;;(my-load "~/.emacs.d/.helm-jira.el")
 ;;(my-load "~/.emacs.d/.org-drill.el")
 ;;(my-load "~/.emacs.d/.anki-editor.el")
 ;;(my-load "~/.emacs.d/.ivy.el")

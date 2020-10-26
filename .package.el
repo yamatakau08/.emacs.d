@@ -1,5 +1,5 @@
-;;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:package:start
-(require 'package)
+;; https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:package:start
+(require 'package) ;; need to execute pckage functions
 
 ;; need to set package-archives before executing "package-initialize"
 ;; when include ("gnu"   . "https://elpa.gnu.org/packages/") and use setq for pacakge-archives in company network,
