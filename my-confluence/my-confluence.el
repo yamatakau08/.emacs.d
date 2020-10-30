@@ -73,7 +73,7 @@ Probably you can get the auth url after login JIRA, and replace base url \"www.t
   :group 'my-confluence
   :type  'string)
 
-(defcustom my-confluence-user-login-name nil
+(defcustom my-confluence-username nil
   "Username for login Confluence as same as JIRA login in my company"
   :group 'my-confluence
   :type  'string)
@@ -93,7 +93,7 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
   (if (not my-confluence-auth-url)
       (message "[my-confluence] set my-confluence-auth!")
     (let ((xusername (or username
-			 my-confluence-user-login-name
+			 my-confluence-username
 			 (read-string "Confluence Username: ")))
 	  (xpassword (or password
 			 (read-passwd "Confluence Password: "))))
@@ -466,7 +466,7 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 ;; -H 'Content-Type: application/json' \
 ;; -d '{"wiki": " * one\n * two"}'
 
-  (let ((body))
+  (let (body)
     (request
       (format "%s/rest/tinymce/1/markdownxhtmlconverter" my-confluence-url)
       :sync t
@@ -479,10 +479,60 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 		  (switch-to-buffer "*request-result*")
 		  (erase-buffer)
 		  (insert (format "%s" data))
-		  (setq body data))
-		))
-    body)
-  )
+		  (setq body data))))
+    body))
+
+(defun my-confluence-create-or-update-attachment ()
+  "Add attachments the files which are marked in Dired in confluence content id you specified"
+  (interactive)
+
+  (unless my-confluence--session
+    (my-confluence-get-cookie))
+
+  (let* ((files (when (> (string-to-number (dired-number-of-marked-files)) 0) (dired-get-marked-files)))
+	 (limitsize 40000000) ; upload limit size
+	 (uploadfiles
+	  (delq nil (mapcar (lambda (file)
+			      (if (> (file-attribute-size (file-attributes file)) limitsize)
+				  (progn
+				    (message "%s > %s" file limitsize)
+				    nil)
+				file)) files)))
+	 content-id)
+    (if files
+	(if uploadfiles
+	    (progn
+	      (setq content-id (read-string "Content Id: ")) ;; need to check if inputed string is nil
+	      (request
+		(format "%s/rest/api/content/%s/child/attachment" my-confluence-url content-id)
+		:sync t
+		:type "POST"  ; for create, success if the file is not already uploaded.
+		;;:type "PUT" ; for create or update, always return http error 405
+		:headers '(("X-Atlassian-Token" . "no-check"))
+		:files (mapcar (lambda (file) `("file" . ,file)) uploadfiles)
+		:success (cl-function (lambda (&key data &allow-other-keys)
+					(message "I sent: %S" (assoc-default 'args data))))
+		:error   (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
+					(message "Got error: %S" error-thrown)))))
+	  (message "No upload files!"))
+      (message "No marked files!"))))
+
+
+(defun my-confluence-search-content-by-cql (cql)
+  (interactive)
+  (request
+    (format "%s/rest/api/content/search" my-confluence-url)
+    :sync t
+    :type "GET"
+    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
+    :parser 'json-read
+    :params '(("cql" . "space=HASCAC and type=page and creator=0000910700"))
+    :success (cl-function
+	      (lambda (&key data &allow-other-keys)
+		(message "success: %s" data)))
+    :error   (cl-function
+	      (lambda (&rest args &key error-thrown &allow-other-keys)
+		(message "Got error: %S" error-thrown)))))
 
 ;;
 (provide 'my-confluence)
