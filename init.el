@@ -171,6 +171,7 @@
 ;; english conversation expression dictionary
 (my-load "~/.emacs.d/.eced.el")
 (my-load "~/.emacs.d/.my-confluence.el")
+(my-load "~/.emacs.d/.helm-confluence.el")
 (my-load "~/.emacs.d/.my-anki-browse.el")
 (my-load "~/.emacs.d/.helm-anki-browse.el")
 (my-load "~/.emacs.d/.my-plantuml.el")

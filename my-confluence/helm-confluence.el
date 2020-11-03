@@ -23,8 +23,8 @@
 ;;
 
 ;;; Code:
-(require 'cl)
 (require 'request)
+(require 'helm)
 
 (defcustom helm-confluence--password nil
   "Password to use when logging in to Confluence.  Not recommended to set this (helm-confluence will save password per session)."
@@ -63,7 +63,7 @@
    :params `(("cql" . ,cql))
    :success (cl-function
 	     (lambda (&key data &allow-other-keys)
-	       (funcall callback (cdr (car data)))))
+	       (funcall callback (cdr (assoc 'results data)))))
    :error   (cl-function
 	     (lambda (&rest args &key error-thrown &allow-other-keys)
 	       (message "Got error: %S" error-thrown)))))
@@ -82,15 +82,19 @@
     (browse-url-default-browser (format "%s%s" my-confluence-url webui))))
 
 (defun helm-confluence-get-my-pages ()
+  "Get the list of the pages of currentUser()"
   (interactive)
-  (helm-confluence-search-content-by-cql
-   (format "creator=%s and type=page" my-confluence-username)
+  ;;(helm-confluence-search-content-by-cql
+  (my-confluence--search-content-by-cql
+   ;;(format "creator=currentUser() and type=page") ; don't get all pages
+   (format "(space in (SSTB) and creator=currentUser() and type=page) or (creator=currentUser() and type=page)")
    (lambda (results)
      (let* ((helm-src
 	     (helm-build-sync-source "my-pages"
                :candidates (helm-confluence--build-candidate-my-pages results)
 	       :action (helm-make-actions
                         "Open in browser" #'helm-confluence--action-open-page)
+	       :candidate-number-limit 10000
 	       :migemo t)))
        (helm :sources helm-src)))))
 

@@ -66,27 +66,6 @@
   ;; to Daily report descending when :step day is set on org-clock-reprot
   (my-load "~/.emacs.d/ad_org-clock-report.el")
 
-  ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
-  ;; function jk-org-kwd gets the propertie specifed by args.
-  ;; your original propertiy is also available.
-  ;; To utilize my original #+PAGEID: 123456 property in org file for Confluence page update
-  ;; property should be BIG CHARATER
-  ;; the following function is available in org BUFFER, means it's not available in with-temp-buffer with org-mode.
-
-  ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
-  (defun jk-org-kwds ()
-    "parse the buffer and return a cons list of (property . value)
-from lines like:
-#+PROPERTY: value"
-    (org-element-map (org-element-parse-buffer 'element) 'keyword
-      (lambda (keyword)
-	(cons (org-element-property :key   keyword)
-              (org-element-property :value keyword)))))
-
-  (defun jk-org-kwd (KEYWORD)
-    "get the value of a KEYWORD in the form of #+KEYWORD: value"
-    (cdr (assoc KEYWORD (jk-org-kwds))))
-
   :mode
   ;; http://nobunaga.hatenablog.jp/entry/2015/10/25/161305
   ;; "設定" より file suffix が howm の時、org-mode 有効

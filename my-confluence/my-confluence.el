@@ -174,8 +174,8 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
       (progn
 	(with-temp-buffer
 	  (insert-file-contents org-file-name)
-	  (org-mode) ; important to enable org-mode, jk-org-kwds function the following works in ONLY org-mode
-	  (my-confluence-update-content org-file-name) ; in this buffer, should execute, because jk-org-kwds works in org-mode buffer
+	  (org-mode) ; important to enable org-mode, jk-org-kwd function the following works in ONLY org-mode
+	  (my-confluence-update-content org-file-name) ; in this buffer, should execute, because jk-org-kwd works in org-mode buffer
 	  ))
 ;      (progn
 ;	;(find-file-noselect org-file-name)
@@ -255,9 +255,7 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
   (interactive)
   (let ((pageId (or (jk-org-kwd "PAGEID")
 		    (read-string "pageId: "))))
-    (cond
-     ((eq system-type 'windows-nt)
-      (w32-shell-execute "open" (format "%s/pages/viewpage.action?pageId=%s" company-confluence-url pageId))))))
+    (browse-url-default-browser (format "%s/pages/viewpage.action?pageId=%s" company-confluence-url pageId))))
 
 ;; private
 
@@ -517,22 +515,41 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 	  (message "No upload files!"))
       (message "No marked files!"))))
 
-
-(defun my-confluence-search-content-by-cql (cql)
-  (interactive)
+(defun my-confluence--search-content-by-cql (cql callback)
   (request
     (format "%s/rest/api/content/search" my-confluence-url)
     :sync t
     :type "GET"
     :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
     :parser 'json-read
-    :params '(("cql" . "space=HASCAC and type=page and creator=0000910700"))
-    :success (cl-function
-	      (lambda (&key data &allow-other-keys)
-		(message "success: %s" data)))
+    :params `(("cql" . ,cql))
+   :success (cl-function
+	     (lambda (&key data &allow-other-keys)
+	       (funcall callback (cdr (assoc 'results data)))))
     :error   (cl-function
 	      (lambda (&rest args &key error-thrown &allow-other-keys)
 		(message "Got error: %S" error-thrown)))))
+
+;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
+;; function jk-org-kwd gets the propertie specifed by args.
+;; your original propertiy is also available.
+;; To utilize my original #+PAGEID: 123456 property in org file for Confluence page update
+;; property should be BIG CHARATER
+;; the following function is available in org BUFFER, means it's not available in with-temp-buffer with org-mode.
+
+;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
+(defun jk-org-kwds ()
+  "parse the buffer and return a cons list of (property . value)
+from lines like:
+#+PROPERTY: value"
+  (org-element-map (org-element-parse-buffer 'element) 'keyword
+    (lambda (keyword)
+      (cons (org-element-property :key   keyword)
+            (org-element-property :value keyword)))))
+
+(defun jk-org-kwd (KEYWORD)
+  "get the value of a KEYWORD in the form of #+KEYWORD: value"
+  (cdr (assoc KEYWORD (jk-org-kwds))))
 
 ;;
 (provide 'my-confluence)
