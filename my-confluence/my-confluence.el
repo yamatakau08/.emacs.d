@@ -27,7 +27,7 @@
 
 ;; for debug
 ;(setq request-log-level     'debug)
-;(setq request-message-level 'debug)
+(setq request-message-level 'debug)
 
 (defgroup my-confluence nil
   "My confluence rest api interface"
@@ -87,16 +87,15 @@ https://developer.atlassian.com/server/jira/platform/cookie-based-authentication
 https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-authentication/"
 
   (interactive)
-
   (message "[my-confluence] -get-cookie getting cookie ...")
 
   (if (not my-confluence-auth-url)
       (message "[my-confluence] set my-confluence-auth!")
-    (let ((xusername (or username
-			 my-confluence-username
-			 (read-string "Confluence Username: ")))
-	  (xpassword (or password
-			 (read-passwd "Confluence Password: "))))
+    (let* ((xusername (or username
+			  my-confluence-username
+			  (read-string "Confluence Username: ")))
+	   (xpassword (or password
+			  (read-passwd (format "Confluence Password for %s: " xusername)))))
       (setq my-confluence--session nil) ; clear the last cookie
       (request
 	my-confluence-auth-url
@@ -110,28 +109,13 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 	:success (cl-function
 		  (lambda (&key data &allow-other-keys)
 		    (setq my-confluence--session
-			  ;;(format "username=id:%s=%s" ; jirlib2.el pattern
-			  ;; it's ok without "username=id:" above.
-			  ;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/
+			  ;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/#step-1--create-a-new-session-using-the-jira-rest-api
 			  ;; shows cookie like JSESSIONID=6E3487971234567896704A9EB4AE501F
-			  (format "%s=%s"
-				  (cdr (assoc 'name  (car data)))
-				  (cdr (assoc 'value (car data)))))
+			  (format "%s=%s" (let-alist data .session.name) (let-alist data .session.value)))
 		    (message "[my-confluence] -get-cookie cookie: %s" my-confluence--session)))
-	;; &allow-other-keys : fail
-	;; &allow-other-keys&rest : fail document error
-	;; &key data *error-thrown &rest _ fail
-	:status-code '((401 . (lambda (&key data &allow-other-keys &rest _)
-				(message "[my-confluence] -get-cookie %s %s" (let-alist data .errorMessages) (plist-get _ :error-thrown)))))
 	:error (cl-function
-		;; https://tkf.github.io/emacs-request/ regacy document
-		;; "&allow-other-keys&rest _" is document error
-		;;(lambda (&key error-thrown &allow-other-keys&rest _)
-		;; correct one is
-		;; https://github.com/tkf/emacs-request/blob/master/README.rst#examples
-		(lambda (&rest args &key error-thrown &allow-other-keys)
-		  (message "[my-confluence] -get-cookie error: %s" error-thrown))))
-      my-confluence--session)))
+		(lambda (&rest ret &key data symbol-status error-thrown &allow-other-keys)
+		  (message "[my-confluence] -get-cookie error: %s" error-thrown)))))))
 
 (defun my-confluence-get-content-body-storage-by-id (pageId)
   "Get Confluence content specified pageId"
@@ -387,31 +371,6 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-get"
 		))
     ))
 
-(defun my-confluence--get-space-list ()
-  "The backend of getting Confluence page by pageId
-https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
-
-  (request
-    (format "%s/rest/api/space" my-confluence-url)
-    :sync t
-    :type "GET"
-    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
-    :parser 'json-read
-    :success (cl-function
-	      (lambda (&key data &allow-other-keys)
-		(switch-to-buffer "*request-result*")
-		(erase-buffer)
-		(my-confluence--parse-spaces data)
-		))
-    ))
-
-(defun my-confluence--parse-spaces (data)
-  "parse spaces list"
-  (let ((v (cdr (assq 'results data))))
-    (dotimes (i (length v))
-      (let ((result (aref v i)))
-	(insert (format "key:%s name:%s\n" (let-alist result .key) (let-alist result .name)))))))
-
 (defun my-confluence--delete-content (pageId)
   "The backend of deleting Confluence page
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-delete"
@@ -443,11 +402,11 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-contentbody-conve
       :data (json-encode `(("value" . ,wiki-content)
 			   ("representation" . "wiki")))
       :parser 'json-read
-;    :success (cl-function
-;	      (lambda (&key data &allow-other-keys)
-;		(switch-to-buffer "*request-result*")
-;		(erase-buffer)
-;		(insert (format "%s" data))))
+      ;; :success (cl-function
+      ;; 		(lambda (&key data &allow-other-keys)
+      ;; 		  (switch-to-buffer "*request-result*")
+      ;; 		  (erase-buffer)
+      ;; 		  (insert (format "%s" data))))
       :success (cl-function
 		(lambda (&key data &allow-other-keys)
 		  (setq converted (let-alist data .value)))))
@@ -493,7 +452,7 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 	  (delq nil (mapcar (lambda (file)
 			      (if (> (file-attribute-size (file-attributes file)) limitsize)
 				  (progn
-				    (message "%s > %s" file limitsize)
+				    (message "[my-confluence] %s > %s" file limitsize)
 				    nil)
 				file)) files)))
 	 content-id)
@@ -509,26 +468,66 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 		:headers '(("X-Atlassian-Token" . "no-check"))
 		:files (mapcar (lambda (file) `("file" . ,file)) uploadfiles)
 		:success (cl-function (lambda (&key data &allow-other-keys)
-					(message "I sent: %S" (assoc-default 'args data))))
+					(message "[my-confluence] I sent: %S" (assoc-default 'args data))))
 		:error   (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
-					(message "Got error: %S" error-thrown)))))
-	  (message "No upload files!"))
-      (message "No marked files!"))))
+					(message "[my-confluence] Got error: %S" error-thrown)))))
+	  (message "[my-confluence] No upload files!"))
+      (message "[my-confluence] No marked files!"))))
+
+(defun my-confluence--request (&rest args)
+  "the common request for confluence rest api,
+if status code 403 assume token is expired, get new cookie then execute request again"
+  (unless my-confluence--session
+    (call-interactively #'my-confluence-get-cookie))
+  ;; once get cookie, even if cookie is modified, request will success. wonder!
+  (if my-confluence--session ; check after execute my-confluence-get-cookie function
+      (apply 'request
+	     (append args
+		     `(:headers (("Content-Type" . "application/json") ("cookie" . ,my-confluence--session)))
+		     '(:sync t)
+		     ;; 403 https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+		     ;; The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
+		     ;; assume 403 is that token is expired
+		     `(:status-code '(403 . ,(lambda (&rest _)
+					       (setq my-confluence--session nil)
+					       (my-confluence--request args))))
+		     `(:error ,(cl-function
+  				(lambda (&rest response &key data error-thrown &allow-other-keys)
+   				  (let ((statusCode (let-alist data .statusCode))
+					(message    (let-alist data .message)))
+				    (message "[my-confluence][error] statusCode:%s %s" statusCode message)))))))
+    (message "[my-confluence][error] session is expired!")))
 
 (defun my-confluence--search-content-by-cql (cql callback)
-  (request
+  "https://developer.atlassian.com/cloud/confluence/rest/api-group-content/#api-api-content-search-get"
+  (my-confluence--request
     (format "%s/rest/api/content/search" my-confluence-url)
-    :sync t
-    :type "GET"
-    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
     :parser 'json-read
-    :params `(("cql" . ,cql))
+    :params `(("cql" . ,cql) ("limit" . 1000)) ; add limit=1000 is from result data, default is 25
+    :success (cl-function
+	      (lambda (&key data &allow-other-keys)
+		(funcall callback data)))))
+
+(defun my-confluence--get-spaces (callback)
+  "The backend of getting Confluence page by pageId
+https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-space-get"
+  (my-confluence--request
+   (format "%s/rest/api/space" my-confluence-url)
+   :parser 'json-read
+   :params '(("limit" . 500)) ; add limit=500 is from result data, default is 25
    :success (cl-function
 	     (lambda (&key data &allow-other-keys)
-	       (funcall callback (cdr (assoc 'results data)))))
-    :error   (cl-function
-	      (lambda (&rest args &key error-thrown &allow-other-keys)
-		(message "Got error: %S" error-thrown)))))
+	       (funcall callback data)))))
+
+(defun my-confluence--get-content-for-space (spacekey callback)
+  "https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-space-spacekey-content-get"
+  (my-confluence--request
+   (format "%s/rest/api/space/%s/content" my-confluence-url spacekey)
+   :parser 'json-read
+   :params '(("limit" . 500)) ; add limit=500 is from result data, default is 25
+   :success (cl-function
+	     (lambda (&key data &allow-other-keys)
+	       (funcall callback data)))))
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
 ;; function jk-org-kwd gets the propertie specifed by args.

@@ -26,55 +26,14 @@
 (require 'request)
 (require 'helm)
 
-(defcustom helm-confluence--password nil
-  "Password to use when logging in to Confluence.  Not recommended to set this (helm-confluence will save password per session)."
-  :type 'string)
-
-(defun helm-confluence--ensure-password ()
-  "Ensures that `helm-confluence--password' is set."
-  (when (not helm-confluence--password)
-    (helm-confluence--read-password)))
-
-(defun helm-confluence--read-password ()
-  "Read a new value for `helm-jira-password'."
-  (setq helm-confluence--password (read-passwd (format "Confluence-Password for %s: " my-confluence-username))))
-
-(defun helm-confluence--build-basic-auth-token ()
-  "Build the base64-encoded auth token from `helm-confluence-username' and `helm-confluence--password'."
-  (base64-encode-string (format "%s:%s" my-confluence-username helm-confluence--password)))
-
-(defun helm-confluence--build-auth-header ()
-  "Build the Authorization-Header for CONFLUENCE requests."
-  (format "Basic %s" (helm-confluence--build-basic-auth-token)))
-
-(defun helm-confluence--request (&rest args)
-  (helm-confluence--ensure-password)
-  (if (plist-get (car args) :headers)
-      (apply 'request (append args '(:sync t)))
-    (apply 'request (append args
-			    `(:headers (("Authorization" . ,(helm-confluence--build-auth-header))))
-			    '(:sync t)))))
-
-(defun helm-confluence-search-content-by-cql (cql callback)
-  (helm-confluence--request
-   (format "%s/rest/api/content/search" my-confluence-url)
-   :type "GET"
-   :parser 'json-read
-   :params `(("cql" . ,cql))
-   :success (cl-function
-	     (lambda (&key data &allow-other-keys)
-	       (funcall callback (cdr (assoc 'results data)))))
-   :error   (cl-function
-	     (lambda (&rest args &key error-thrown &allow-other-keys)
-	       (message "Got error: %S" error-thrown)))))
-
-(defun helm-confluence--build-candidate-my-pages (results)
-  (mapcar
-   (lambda (result)
-     (let* ((id    (let-alist result .id))
-	    (title (let-alist result .title)))
-       `(,(format "%-10s: %s" id title) . ,result)))
-   results))
+(defun helm-confluence--build-candidate-my-pages (ret)
+  (let ((results (let-alist ret .results)))
+    (mapcar
+     (lambda (result)
+       (let* ((id    (let-alist result .id))
+	      (title (let-alist result .title)))
+	 `(,(format "%-10s: %s" id title) . ,result)))
+     results)))
 
 (defun helm-confluence--action-open-page (page-info)
   "Open the given `page' in the browser."
@@ -84,16 +43,63 @@
 (defun helm-confluence-get-my-pages ()
   "Get the list of the pages of currentUser()"
   (interactive)
-  ;;(helm-confluence-search-content-by-cql
   (my-confluence--search-content-by-cql
-   ;;(format "creator=currentUser() and type=page") ; don't get all pages
-   (format "(space in (SSTB) and creator=currentUser() and type=page) or (creator=currentUser() and type=page)")
-   (lambda (results)
+   (format "creator=currentUser() and type=page") ; added limit=10000 in my-confluence--search-content-by-cql
+   (lambda (ret)
      (let* ((helm-src
 	     (helm-build-sync-source "my-pages"
-               :candidates (helm-confluence--build-candidate-my-pages results)
+	       :candidates (helm-confluence--build-candidate-my-pages ret)
 	       :action (helm-make-actions
                         "Open in browser" #'helm-confluence--action-open-page)
+	       :candidate-number-limit 10000
+	       :migemo t)))
+       (helm :sources helm-src)))))
+
+(defun helm-confluence--build-get-content-for-space (ret)
+  (let ((results (let-alist ret .page.results)))
+    (mapcar
+     (lambda (result)
+       (let* ((id    (let-alist result .id))
+	      (title (let-alist result .title)))
+	 `(,(format "%-10s: %s" id title) . ,result)))
+     results)))
+
+(defun helm-confluence--get-content-for-space (spacekey)
+  (my-confluence--get-content-for-space spacekey
+   (lambda (ret)
+     (let* ((helm-src
+	     (helm-build-sync-source "content"
+	       :candidates (helm-confluence--build-get-content-for-space ret)
+	       :action (helm-make-actions
+                        "content for space" #'helm-confluence--action-get-contet-for-space)
+	       :candidate-number-limit 10000
+	       :migemo t)))
+       (helm :sources helm-src)))))
+
+(defun helm-confluence--action-get-contet-for-space (spaceinfo)
+  "List contest of spaceKey"
+  (let ((spacekey (let-alist spaceinfo .key)))
+    (helm-confluence--get-content-for-space spacekey)))
+
+(defun helm-confluence--build-candidate-spaces (ret)
+  (let ((results (let-alist ret .results)))
+    (mapcar
+     (lambda (result)
+       (let* ((key  (let-alist result .key))
+	      (name (let-alist result .name)))
+	 `(,(format "%-20s: %s" key name) . ,result)))
+     results)))
+
+(defun helm-confluence-get-spaces ()
+  "Get the spaces"
+  (interactive)
+  (my-confluence--get-spaces
+   (lambda (ret)
+     (let* ((helm-src
+	     (helm-build-sync-source "spaces"
+	       :candidates (helm-confluence--build-candidate-spaces ret)
+	       :action (helm-make-actions
+                        "content for space" #'helm-confluence--action-get-contet-for-space)
 	       :candidate-number-limit 10000
 	       :migemo t)))
        (helm :sources helm-src)))))
