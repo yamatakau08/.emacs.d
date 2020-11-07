@@ -26,7 +26,7 @@
 (require 'request)
 (require 'helm)
 
-(defun helm-confluence--build-candidate-my-pages (ret)
+(defun helm-confluence--build-candidate-pages (ret)
   (let ((results (let-alist ret .results)))
     (mapcar
      (lambda (result)
@@ -48,28 +48,20 @@
    (lambda (ret)
      (let* ((helm-src
 	     (helm-build-sync-source "my-pages"
-	       :candidates (helm-confluence--build-candidate-my-pages ret)
+	       :candidates (helm-confluence--build-candidate-pages ret)
 	       :action (helm-make-actions
                         "Open in browser" #'helm-confluence--action-open-page)
 	       :candidate-number-limit 10000
 	       :migemo t)))
        (helm :sources helm-src)))))
 
-(defun helm-confluence--build-get-content-for-space (ret)
-  (let ((results (let-alist ret .page.results)))
-    (mapcar
-     (lambda (result)
-       (let* ((id    (let-alist result .id))
-	      (title (let-alist result .title)))
-	 `(,(format "%-10s: %s" id title) . ,result)))
-     results)))
-
 (defun helm-confluence--get-content-for-space (spacekey)
-  (my-confluence--get-content-for-space spacekey
+  (my-confluence--search-content-by-cql
+   (format "space=%s and type=page" spacekey)
    (lambda (ret)
      (let* ((helm-src
 	     (helm-build-sync-source "content"
-	       :candidates (helm-confluence--build-get-content-for-space ret)
+	       :candidates (helm-confluence--build-candidate-pages ret)
 	       :action (helm-make-actions
                         "content for space" #'helm-confluence--action-open-page)
 	       :candidate-number-limit 10000

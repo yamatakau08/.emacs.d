@@ -27,7 +27,7 @@
 
 ;; for debug
 ;(setq request-log-level     'debug)
-(setq request-message-level 'debug)
+;(setq request-message-level 'debug)
 
 (defgroup my-confluence nil
   "My confluence rest api interface"
@@ -135,7 +135,6 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
   "Get Confluence content info specified content-id"
   (interactive "spageId: ")
   (let ((content-info (my-confluence--get-content-info-by-id pageId)))
-    (message "[my-confluence] -get-content-info-by-id: %s" content-info)
     content-info))
 
 (defun my-confluence-update-content-with-org-buffer ()
@@ -174,11 +173,11 @@ if pageId is not specified in org file, prompt to ask pageId."
 	   content-info
 	   status version title type body)
 
-      (org-export-to-file 'confluence cfw nil nil nil t nil) ; export org file into confluence format file
+      (org-export-to-file 'confluence cfw nil nil nil t nil) ; export into confluence format file
 
       (setq content-info (my-confluence-get-content-info-by-id pageId))
       (if (not content-info)
-	  (message "[my-confluence] -update-content not found pageId(%s) or session expired!" pageId)
+	  (message "[my-confluence] -update-content not found pageId(%s)" pageId)
 
 	(setq status  (let-alist content-info .status)
 	      version (let-alist content-info .version)
@@ -219,25 +218,19 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
   )
 
 (defun my-confluence-browse ()
-  "browse confluence page"
+  "browse confluence page specified #+PAGEID in org file"
   (interactive)
-  (let ((pageId (or (jk-org-kwd "PAGEID")
-		    (read-string "pageId: "))))
-    (browse-url-default-browser (format "%s/pages/viewpage.action?pageId=%s" company-confluence-url pageId))))
-
-;; private
-
-;; need to study!
-(defun my-confluence-auth-url-success (key data allow-other-keys)
-  (switch-to-buffer "*request-result*")
-  (erase-buffer)
-  (insert (format "%s" data)))
-
-(defvar my-confluence--get-content-info-by-id-rcall nil)
+  (let ((pageId (jk-org-kwd "PAGEID")))
+    (if pageId
+	(browse-url-default-browser
+	 (format "%s/pages/viewpage.action?pageId=%s" company-confluence-url pageId)))))
 
 (defun my-confluence--get-content-info-by-id (content-id)
   "The backend of getting Confluence content info specified content-id
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
+
+  (unless (my-confluence--is-token-available)
+    (setq my-confluence--session nil)) ; to query password for next-my-confluence-request)
 
   (let (content-info)
     (my-confluence--request
@@ -251,21 +244,16 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
 			     `(version . ,(let-alist data .version.number)) ; for content update
 			     (assoc 'title data)
 			     (assoc 'type data)))))
-     :status-code '((401 . (lambda (&rest _)
-			     (message "[my-confluence] --get-content-info-by-id status-code: 401")
+     :status-code '(;; Even if token is expired, confluence doesn't return 401. this part is for safety.
+		    (401 . (lambda (&rest _)
+			     (message "[my-confluence][debug] --get-content-info-by-id status-code: 401")
 			     (setq my-confluence--session nil)
 			     (my-confluence--get-content-info-by-id content-id))) ; try again
-		    ;; Even if the page specified content-id exists, somehow respond 404
+		    ;; Even if the page specified content-id exists, when token is expired, get respond 404
 		    ;; On the other hand, there is no content specified content-id, respond 404
-		    ;; It's hard to distinguish whether the contet exists or not!
+		    ;; It's hard to distinguish whether the contet really exists or not!
 		    (404 . (lambda (&rest _)
-			     (message "[my-confluence] --get-content-info-by-id status-code: 404")
-			     (unless my-confluence--get-content-info-by-id-rcall
-			       (setq my-confluence--get-content-info-by-id-rcall t)
-			       (setq my-confluence--session nil)
- 			       (my-confluence--get-content-info-by-id content-id))))))
-
-    (setq my-confluence--get-content-info-by-id-rcall nil) ; clear for safety
+			     (message "[my-confluence][debug] --get-content-info-by-id status-code: 404")))))
     content-info))
 
 (defun my-confluence--get-content-body-storage-by-id (pageId)
@@ -314,14 +302,13 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
     ;; add body
     (add-to-list 'uci `(body (storage (value . ,body) (representation . "storage"))) t) ; (*) representaiion should set "storage" to update content
 
-    ;; "representation" "storage","view","wiki" ...
-    ;; https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#converting-content
+    ;; "representation","storage","view","wiki" ...
+    ;; refer https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#converting-content
     ;; See "Convert wiki markup to storage format", "representation":"wiki"
 
-    ;; (*) when set "view" in "representation", faced error!
+    ;; (*) when set "view" in "representation", got error!
     ;; {"statusCode":500,"data":{"authorized":false,"valid":true,"errors":[],"successful":false},"message":"com.atlassian.confluence.api.service.exceptions.ServiceException: java.lang.UnsupportedOperationException: Cannot convert from view to storage"}
 
-    (message "[my-confulence][debug] --update-contennt uci: %s" uci) ; for debug
     (my-confluence--request
      (format "%s/rest/api/content/%s" my-confluence-url pageId)
      :type "PUT"
@@ -330,25 +317,6 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
      :success (cl-function
 	       (lambda (&key data &allow-other-keys)
 		 (message "[my-confluence] --update-content success pageId(%s)" pageId))))))
-
-(defun my-confluence--get-content-list (spaceKey)
-  "The backend of getting Confluence page by pageId
-https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-get"
-
-  (request
-    (format "%s/rest/api/content" my-confluence-url)
-    :sync t
-    :type "GET"
-    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
-    :data (json-encode `(("spaceKey" . ,spaceKey)))
-    :parser 'json-read
-    :success (cl-function
-	      (lambda (&key data &allow-other-keys)
-		(switch-to-buffer "*request-result*")
-		(erase-buffer)
-		(insert (format "%s" data))
-		))
-    ))
 
 (defun my-confluence--delete-content (pageId)
   "The backend of deleting Confluence page
@@ -502,6 +470,10 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
 		 (funcall callback data))))))
 
 ;; user
+(defun my-confluence--is-token-available ()
+  (let ((current-user (my-confluence--get-current-user)))
+    (if (string-equal (let-alist current-user .type) "known") t nil)))
+
 (defun my-confluence--get-current-user ()
   "https://developer.atlassian.com/cloud/confluence/rest/api-group-users/#api-api-user-current-get"
   (let (ret)
@@ -510,11 +482,7 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
      :parser 'json-read
      :success (cl-function
  	       (lambda (&key data &allow-other-keys)
-		 (if (string= (let-alist data .type) "anonymous") ; check token is expired shows type "anonymouse"
-		     (progn
-		       (setq my-confluence--session nil)
-		       (my-confluence--get-current-user))
- 		   (setq ret data)))))
+ 		 (setq ret data))))
     ret))
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
