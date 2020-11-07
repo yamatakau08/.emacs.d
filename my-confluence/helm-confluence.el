@@ -71,7 +71,7 @@
 	     (helm-build-sync-source "content"
 	       :candidates (helm-confluence--build-get-content-for-space ret)
 	       :action (helm-make-actions
-                        "content for space" #'helm-confluence--action-get-contet-for-space)
+                        "content for space" #'helm-confluence--action-open-page)
 	       :candidate-number-limit 10000
 	       :migemo t)))
        (helm :sources helm-src)))))

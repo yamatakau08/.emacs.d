@@ -134,13 +134,7 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 (defun my-confluence-get-content-info-by-id (pageId)
   "Get Confluence content info specified content-id"
   (interactive "spageId: ")
-  (unless my-confluence--session
-    (my-confluence-get-cookie))
   (let ((content-info (my-confluence--get-content-info-by-id pageId)))
-    (unless content-info ; retry due to cookie is expired or pageId doesn't exist
-      (message "[my-confluence] -get-content-info-by-id retry due to pageId(%s) not found or session expired..." pageId)
-      (my-confluence-get-cookie)
-      (setq content-info (my-confluence--get-content-info-by-id pageId)))
     (message "[my-confluence] -get-content-info-by-id: %s" content-info)
     content-info))
 
@@ -171,38 +165,28 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
   "Update Confluence page specified by pageId in org file.
 if pageId is not specified in org file, prompt to ask pageId."
 
-  (if (string= "org" (file-name-extension org-buffer-file-name))
-      (let* ((cfw (format "%s.cfw" (file-name-sans-extension org-buffer-file-name))) ; cfw: ConFluence Wiki
-	     pageId content-info
-	     status version title type body)
+  (if (not (string= "org" (file-name-extension org-buffer-file-name)))
+      (message "[my-confluence] -update-content not in org buffer or file")
 
-	;; function jk-org-kwd is defined in ~/.emacs.d/.org.el
-	;; read keyword #+PAGEID: value in org file
-	(setq pageId (jk-org-kwd "PAGEID"))
+    (let* ((cfw (format "%s.cfw" (file-name-sans-extension org-buffer-file-name))) ; cfw: ConFluence Wiki
+	   (pageId (or (jk-org-kwd "PAGEID") ;; read keyword #+PAGEID: in org file
+		       (read-string "pageId: ")))
+	   content-info
+	   status version title type body)
 
-	(unless pageId
-	  (setq pageId (read-string "pageId: ")))
+      (org-export-to-file 'confluence cfw nil nil nil t nil) ; export org file into confluence format file
 
-	(org-export-to-file 'confluence cfw nil nil nil t nil) ; export org to confluence format file
+      (setq content-info (my-confluence-get-content-info-by-id pageId))
+      (if (not content-info)
+	  (message "[my-confluence] -update-content not found pageId(%s) or session expired!" pageId)
 
-	(unless my-confluence--session
-	  (my-confluence-get-cookie))
-
-	(if my-confluence--session
-	    (progn
-	      (setq content-info (my-confluence-get-content-info-by-id pageId))
-	      (if content-info
-		  (progn
-		    (setq status  (let-alist content-info .status)
-			  version (let-alist content-info .version)
-			  title   (let-alist content-info .title)
-			  type    (let-alist content-info .type)
-			  body    (my-confluence-convert-content-body cfw))
-		    (message "[my-confluence] -update-content updating pageId(%s)" pageId)
-		    (my-confluence--update-content content-info body))
-		(message "[my-confluence] -update-content not found pageId(%s) or session expired!" pageId))))
-	)
-    (message "[my-confluence] -update-content not in org buffer or file")))
+	(setq status  (let-alist content-info .status)
+	      version (let-alist content-info .version)
+	      title   (let-alist content-info .title)
+	      type    (let-alist content-info .type)
+	      body    (my-confluence-convert-content-body cfw))
+	(message "[my-confluence] -update-content updating pageId(%s)" pageId)
+	(my-confluence--update-content content-info body)))))
 
 (defun my-confluence-convert-content-body (wiki-file)
   "Convert confluence-wiki file format to html format is inside body"
@@ -249,37 +233,40 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
   (erase-buffer)
   (insert (format "%s" data)))
 
+(defvar my-confluence--get-content-info-by-id-rcall nil)
+
 (defun my-confluence--get-content-info-by-id (content-id)
   "The backend of getting Confluence content info specified content-id
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
 
-  (message "[my-confluence] --get-content-info-by-id getting content info id(%s) ..." content-id)
-
   (let (content-info)
-    (request
-      (format "%s/rest/api/content/%s" my-confluence-url content-id)
-      :sync t
-      :type "GET"
-      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
-      :parser 'json-read
-      :success (cl-function
-		(lambda (&key data &allow-other-keys) ; pass &key argument name should be data
-		  ;;(lambda (&key data &rest _ &allow-other-keys) ; fail
-		  ;;(lambda (&key data) ; fail without &allow-other-keys
-		  (setq content-info
-			(list (assoc 'id data)
-			      (assoc 'status data)
-			      `(version . ,(let-alist data .version.number)) ; for content update
-			      (assoc 'title data)
-			      (assoc 'type data)))
-		  ))
-      ;; Even if content specified contet-id exists, somehow respond 404
-      ;; On the other hand, there is no content specified content-id, respond 404
-      ;; It's hard to distinguish whether the contet exists or not!
-      :status-code '((404 . (lambda (&rest _)
-			      (message "[my-confluence] --get-content-info-by-id status-code: 404")))))
-    content-info
-  ))
+    (my-confluence--request
+     (format "%s/rest/api/content/%s" my-confluence-url content-id)
+     :parser 'json-read
+     :success (cl-function
+	       (lambda (&key data &allow-other-keys)
+		 (setq content-info
+		       (list (assoc 'id data)
+			     (assoc 'status data)
+			     `(version . ,(let-alist data .version.number)) ; for content update
+			     (assoc 'title data)
+			     (assoc 'type data)))))
+     :status-code '((401 . (lambda (&rest _)
+			     (message "[my-confluence] --get-content-info-by-id status-code: 401")
+			     (setq my-confluence--session nil)
+			     (my-confluence--get-content-info-by-id content-id))) ; try again
+		    ;; Even if the page specified content-id exists, somehow respond 404
+		    ;; On the other hand, there is no content specified content-id, respond 404
+		    ;; It's hard to distinguish whether the contet exists or not!
+		    (404 . (lambda (&rest _)
+			     (message "[my-confluence] --get-content-info-by-id status-code: 404")
+			     (unless my-confluence--get-content-info-by-id-rcall
+			       (setq my-confluence--get-content-info-by-id-rcall t)
+			       (setq my-confluence--session nil)
+ 			       (my-confluence--get-content-info-by-id content-id))))))
+
+    (setq my-confluence--get-content-info-by-id-rcall nil) ; clear for safety
+    content-info))
 
 (defun my-confluence--get-content-body-storage-by-id (pageId)
   "The backend of getting Confluence page
@@ -320,10 +307,8 @@ https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#
 https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/ \"Update a page\"
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
 
-  (let ((uci (copy-alist content-info))
-	pageId) ; uci: update content info
-    ;; get id
-    (setq pageId (let-alist uci .id))
+  (let* ((uci (copy-alist content-info)) ; uci: update content info
+	 (pageId (let-alist uci .id)))   ; get id
     ;; increment version
     (setcdr (assoc 'version uci)  `((number . ,(+ (let-alist uci .version) 1))))
     ;; add body
@@ -336,21 +321,15 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
     ;; (*) when set "view" in "representation", faced error!
     ;; {"statusCode":500,"data":{"authorized":false,"valid":true,"errors":[],"successful":false},"message":"com.atlassian.confluence.api.service.exceptions.ServiceException: java.lang.UnsupportedOperationException: Cannot convert from view to storage"}
 
-    (message "[my-confulence] --update-contennt uci: %s" uci) ; for debug
-
-    (request
-      (format "%s/rest/api/content/%s" my-confluence-url pageId)
-      :sync t
-      :type "PUT"
-      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
-      :data    (json-encode uci)
-      :parser  'json-read
-      :success (cl-function
-		(lambda (&key data &allow-other-keys)
-		  (message "[my-confluence] --update-content success pageId(%s)" pageId)))
-      :error   (cl-function
-		(lambda (&rest args &key error-thrown &allow-other-keys)
-		  (message "[my-confluence] --update-content error: %S" error-thrown))))))
+    (message "[my-confulence][debug] --update-contennt uci: %s" uci) ; for debug
+    (my-confluence--request
+     (format "%s/rest/api/content/%s" my-confluence-url pageId)
+     :type "PUT"
+     :data    (json-encode uci)
+     :parser  'json-read
+     :success (cl-function
+	       (lambda (&key data &allow-other-keys)
+		 (message "[my-confluence] --update-content success pageId(%s)" pageId))))))
 
 (defun my-confluence--get-content-list (spaceKey)
   "The backend of getting Confluence page by pageId
@@ -475,8 +454,7 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
       (message "[my-confluence] No marked files!"))))
 
 (defun my-confluence--request (&rest args)
-  "the common request for confluence rest api,
-if status code 403 assume token is expired, get new cookie then execute request again"
+  "the common request for confluence rest api"
   (unless my-confluence--session
     (call-interactively #'my-confluence-get-cookie))
   ;; once get cookie, even if cookie is modified, request will success. wonder!
@@ -485,18 +463,12 @@ if status code 403 assume token is expired, get new cookie then execute request 
 	     (append args
 		     `(:headers (("Content-Type" . "application/json") ("cookie" . ,my-confluence--session)))
 		     '(:sync t)
-		     ;; 403 https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-		     ;; The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
-		     ;; assume 403 is that token is expired
-		     `(:status-code '(403 . ,(lambda (&rest _)
-					       (setq my-confluence--session nil)
-					       (my-confluence--request args))))
 		     `(:error ,(cl-function
   				(lambda (&rest response &key data error-thrown &allow-other-keys)
    				  (let ((statusCode (let-alist data .statusCode))
 					(message    (let-alist data .message)))
 				    (message "[my-confluence][error] statusCode:%s %s" statusCode message)))))))
-    (message "[my-confluence][error] session is expired!")))
+    (message "[my-confluence][error] password incorrect!")))
 
 (defun my-confluence--search-content-by-cql (cql callback)
   "https://developer.atlassian.com/cloud/confluence/rest/api-group-content/#api-api-content-search-get"
@@ -506,7 +478,13 @@ if status code 403 assume token is expired, get new cookie then execute request 
     :params `(("cql" . ,cql) ("limit" . 1000)) ; add limit=1000 is from result data, default is 25
     :success (cl-function
 	      (lambda (&key data &allow-other-keys)
-		(funcall callback data)))))
+		(funcall callback data)))
+    ;; 403 https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+    ;; The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
+    ;; assume 403 is that token is expired for search method
+    :status-code '(403 . (lambda (&rest _)
+			   (setq my-confluence--session nil)
+			   (my-confluence--search-content-by-cql cql callback)))))
 
 (defun my-confluence--get-spaces (callback)
   "The backend of getting Confluence page by pageId
@@ -516,18 +494,28 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
    :parser 'json-read
    :params '(("limit" . 500)) ; add limit=500 is from result data, default is 25
    :success (cl-function
-	     (lambda (&key data &allow-other-keys)
-	       (funcall callback data)))))
+ 	     (lambda (&key data &allow-other-keys)
+	       (if (<= (let-alist data .size) 0) ; assume size is 0, session is expired.
+		   (progn
+		     (setq my-confluence--session nil) ; to get new session, then call again
+		     (my-confluence--get-spaces callback))
+		 (funcall callback data))))))
 
-(defun my-confluence--get-content-for-space (spacekey callback)
-  "https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-space-spacekey-content-get"
-  (my-confluence--request
-   (format "%s/rest/api/space/%s/content" my-confluence-url spacekey)
-   :parser 'json-read
-   :params '(("limit" . 500)) ; add limit=500 is from result data, default is 25
-   :success (cl-function
-	     (lambda (&key data &allow-other-keys)
-	       (funcall callback data)))))
+;; user
+(defun my-confluence--get-current-user ()
+  "https://developer.atlassian.com/cloud/confluence/rest/api-group-users/#api-api-user-current-get"
+  (let (ret)
+    (my-confluence--request
+     (format "%s/rest/api/user/current" my-confluence-url)
+     :parser 'json-read
+     :success (cl-function
+ 	       (lambda (&key data &allow-other-keys)
+		 (if (string= (let-alist data .type) "anonymous") ; check token is expired shows type "anonymouse"
+		     (progn
+		       (setq my-confluence--session nil)
+		       (my-confluence--get-current-user))
+ 		   (setq ret data)))))
+    ret))
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
 ;; function jk-org-kwd gets the propertie specifed by args.
