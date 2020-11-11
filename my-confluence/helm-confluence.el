@@ -30,9 +30,10 @@
   (let ((results (let-alist ret .results)))
     (mapcar
      (lambda (result)
-       (let* ((id    (let-alist result .id))
-	      (title (let-alist result .title)))
-	 `(,(format "%-10s: %s" id title) . ,result)))
+       (let ((id    (let-alist result .id))
+	     (space (file-name-nondirectory (let-alist result ._expandable.space)))
+	     (title (let-alist result .title)))
+	 `(,(format "%-10s %-10s %s" id space title) . ,result)))
      results)))
 
 (defun helm-confluence--action-open-page (page-info)

@@ -79,6 +79,9 @@ Probably you can get the auth url after login JIRA, and replace base url \"www.t
   :type  'string)
 
 (defvar my-confluence--session nil
+  "Contains the session information.")
+
+(defvar my-confluence--cookie nil
   "Contains the cookie of the active session.")
 
 (defun my-confluence-get-cookie (&optional username password)
@@ -96,7 +99,8 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 			  (read-string "Confluence Username: ")))
 	   (xpassword (or password
 			  (read-passwd (format "Confluence Password for %s: " xusername)))))
-      (setq my-confluence--session nil) ; clear the last cookie
+      (setq my-confluence--session nil) ; clear the last session infromation
+      (setq my-confluence--cookie  nil) ; clear the last cookie
       (request
 	my-confluence-auth-url
 	:sync t
@@ -108,11 +112,12 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 	:parser 'json-read ; parse-error occurs without json-encode at ":data" part
 	:success (cl-function
 		  (lambda (&key data &allow-other-keys)
-		    (setq my-confluence--session
+		    (setq my-confluence--session data)
+		    (setq my-confluence--cookie
 			  ;; https://developer.atlassian.com/server/jira/platform/cookie-based-authentication/#step-1--create-a-new-session-using-the-jira-rest-api
 			  ;; shows cookie like JSESSIONID=6E3487971234567896704A9EB4AE501F
 			  (format "%s=%s" (let-alist data .session.name) (let-alist data .session.value)))
-		    (message "[my-confluence] -get-cookie cookie: %s" my-confluence--session)))
+		    (message "[my-confluence] -get-cookie cookie: %s" my-confluence--cookie)))
 	:error (cl-function
 		(lambda (&rest ret &key data symbol-status error-thrown &allow-other-keys)
 		  (message "[my-confluence] -get-cookie error: %s" error-thrown)))))))
@@ -120,14 +125,14 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 (defun my-confluence-get-content-body-storage-by-id (pageId)
   "Get Confluence content specified pageId"
   (interactive "spageId: ")
-  (unless my-confluence--session
+  (unless my-confluence--cookie
     (my-confluence-get-cookie))
   (my-confluence--get-content-body-storage-by-id pageId))
 
 (defun my-confluence-delete-content (pageId)
   "Delete Confluence page specified pageId"
   (interactive "spageId: ")
-  (unless my-confluence--session
+  (unless my-confluence--cookie
     (my-confluence-get-cookie))
   (my-confluence--delete-content pageId))
 
@@ -192,7 +197,7 @@ if pageId is not specified in org file, prompt to ask pageId."
 
   (interactive "fconfluence wiki format file: ")
 
-  (unless my-confluence--session
+  (unless my-confluence--cookie
     (my-confluence-get-cookie))
 
   (let ((body (with-temp-buffer
@@ -230,7 +235,7 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
 
   (unless (my-confluence--is-token-available)
-    (setq my-confluence--session nil)) ; to query password for next-my-confluence-request)
+    (setq my-confluence--cookie nil)) ; to query password for next-my-confluence-request)
 
   (let (content-info)
     (my-confluence--request
@@ -247,7 +252,7 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
      :status-code '(;; Even if token is expired, confluence doesn't return 401. this part is for safety.
 		    (401 . (lambda (&rest _)
 			     (message "[my-confluence][debug] --get-content-info-by-id status-code: 401")
-			     (setq my-confluence--session nil)
+			     (setq my-confluence--cookie nil)
 			     (my-confluence--get-content-info-by-id content-id))) ; try again
 		    ;; Even if the page specified content-id exists, when token is expired, get respond 404
 		    ;; On the other hand, there is no content specified content-id, respond 404
@@ -272,7 +277,7 @@ https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#
     (format "%s/rest/api/content/%s?expand=body.storage" my-confluence-url pageId)
     :sync t
     :type "GET"
-    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
+    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie))
     :parser 'json-read
     :success (cl-function
 	      (lambda (&key data &allow-other-keys)
@@ -326,7 +331,7 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-delete
     (format "%s/rest/api/content/%s" my-confluence-url pageId)
     :sync t
     :type "DELETE"
-    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
+    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie))
     :parser 'json-read
     :success (cl-function
 	      (lambda (&key data &allow-other-keys)
@@ -345,7 +350,7 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-contentbody-conve
       (format "%s/rest/api/contentbody/convert/storage" my-confluence-url)
       :sync t
       :type "POST"
-      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
+      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie))
       :data (json-encode `(("value" . ,wiki-content)
 			   ("representation" . "wiki")))
       :parser 'json-read
@@ -375,7 +380,7 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
       (format "%s/rest/tinymce/1/markdownxhtmlconverter" my-confluence-url)
       :sync t
       :type "POST"
-      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--session))
+      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie))
       :data (json-encode `(("wiki" . ,markdown-content)))
       ;;:parser 'json-read ;; !no need to parse
       :success (cl-function
@@ -390,7 +395,7 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
   "Add attachments the files which are marked in Dired in confluence content id you specified"
   (interactive)
 
-  (unless my-confluence--session
+  (unless my-confluence--cookie
     (my-confluence-get-cookie))
 
   (let* ((files (when (> (string-to-number (dired-number-of-marked-files)) 0) (dired-get-marked-files)))
@@ -423,16 +428,18 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 
 (defun my-confluence--request (&rest args)
   "the common request for confluence rest api"
-  (unless my-confluence--session
-    (call-interactively #'my-confluence-get-cookie))
+  (unless my-confluence--cookie
+    (call-interactively #'my-confluence-get-cookie)
+    (sleep-for 2)) ; to wait my-confluence--get-current-user return type "known".
+
   ;; once get cookie, even if cookie is modified, request will success. wonder!
-  (if my-confluence--session ; check after execute my-confluence-get-cookie function
+  (if my-confluence--cookie ; check after execute my-confluence-get-cookie function
       (apply 'request
 	     (append args
-		     `(:headers (("Content-Type" . "application/json") ("cookie" . ,my-confluence--session)))
+		     `(:headers (("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie)))
 		     '(:sync t)
 		     `(:error ,(cl-function
-  				(lambda (&rest response &key data error-thrown &allow-other-keys)
+				(lambda (&rest response &key data error-thrown &allow-other-keys)
    				  (let ((statusCode (let-alist data .statusCode))
 					(message    (let-alist data .message)))
 				    (message "[my-confluence][error] statusCode:%s %s" statusCode message)))))))
@@ -450,9 +457,10 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
     ;; 403 https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
     ;; The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
     ;; assume 403 is that token is expired for search method
-    :status-code '(403 . (lambda (&rest _)
-			   (setq my-confluence--session nil)
-			   (my-confluence--search-content-by-cql cql callback)))))
+    :status-code '((403 . (lambda (&rest _)
+  			    (message "[my-confluence][error] --search-content-by-cql: 403")
+     			    (setq my-confluence--cookie nil)
+     			    (my-confluence--search-content-by-cql cql callback))))))
 
 (defun my-confluence--get-spaces (callback)
   "The backend of getting Confluence page by pageId
@@ -465,7 +473,7 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
  	     (lambda (&key data &allow-other-keys)
 	       (if (<= (let-alist data .size) 0) ; assume size is 0, session is expired.
 		   (progn
-		     (setq my-confluence--session nil) ; to get new session, then call again
+		     (setq my-confluence--cookie nil) ; to get new session, then call again
 		     (my-confluence--get-spaces callback))
 		 (funcall callback data))))))
 
@@ -483,6 +491,7 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
      :success (cl-function
  	       (lambda (&key data &allow-other-keys)
  		 (setq ret data))))
+    (message "[my-confluence][debug] --get-current-user: %s" ret)
     ret))
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
