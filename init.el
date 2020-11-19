@@ -153,6 +153,7 @@
 ;;(my-load "~/.emacs.d/.all-the-icons-dired.el")
 ;;(my-load "~/.emacs.d/.password-cache.el")
 (my-load "~/.emacs.d/.beacon.el")
+(my-load "~/.emacs.d/.dired-narrow.el")
 
 ;;
 ;; useful packages are not registerd in elpa ...
