@@ -134,7 +134,8 @@
 (my-load "~/.emacs.d/.dumb-jump.el")
 (my-load "~/.emacs.d/.dired-posframe.el")
 (my-load "~/.emacs.d/.frog-jump-buffer.el")
-(my-load "~/.emacs.d/.tabbar.el")
+;;(my-load "~/.emacs.d/.tabbar.el")
+(my-load "~/.emacs.d/.centaur-tabs.el")
 (my-load "~/.emacs.d/.request.el") ; curl for anki/jira/confluence
 (my-load "~/.emacs.d/.macrostep.el")
 (my-load "~/.emacs.d/.flycheck.el")
@@ -154,6 +155,7 @@
 ;;(my-load "~/.emacs.d/.password-cache.el")
 (my-load "~/.emacs.d/.beacon.el")
 (my-load "~/.emacs.d/.dired-narrow.el")
+(my-load "~/.emacs.d/.selectrum.el")
 
 ;;
 ;; useful packages are not registerd in elpa ...
