@@ -5,17 +5,18 @@
 ;; it doesn't effect and helm-jira.elc is prior to load.
 ;; So need to delete helm-jira.elc and require cl,request explicitly.
 
+;; use my modified helm-jira in ~/.emacs.d/helm-jira
+
 (use-package helm-jira
 
-  ;; since original helm-jira function* is defined in cl.el which is in obsolete directory on Emacs 28.0.50
-  ;;:load-path "c:/winbin/emacs-28.0.50/x86_64/share/emacs/28.0.50/lisp/obsolete/"
+  :if (file-directory-p (format "%s/helm-jira" user-emacs-directory))
 
-  :load-path "helm-jira" ; load my helm-jira under ~/.emacs.d
+  :load-path "helm-jira"
 
   :custom
   (helm-jira-url       company-jira-url) ; URL of your JIRA instance (should not end in a slash)
-  (helm-jira-username  "0000910700") ; The username to use to log in to JIRA
-  (helm-jira-project   "BISYAMON3G") ; The JIRA-project you want to interact with
+  (helm-jira-username  "0000910700")     ; The username to use to log in to JIRA
+  (helm-jira-project   "BISYAMON3G")     ; The JIRA-project you want to interact with
 
   ;; the following are not used for my environment
   (helm-jira-board-id  153) ; The ID of the board you want to interact with
@@ -28,7 +29,7 @@
   ;; (require 'request) ; to suppress "Symbol’s function definition is void: request"
   ;; finally add the above in helm-jira.el
 
-  ;;(define-key dired-mode-map "b" #'helm-jira-add-atachment)
+  ;;(define-key dired-mode-map "b" #'helm-jira-add-atachment) ; movie :bind part
 
   :demand t
   ;; from https://github.com/jwiegley/use-package#notes-about-lazy-loading

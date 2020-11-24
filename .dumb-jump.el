@@ -1,5 +1,11 @@
 (use-package dumb-jump
   :ensure t
+
+  :init
+  ;; https://github.com/jacktasia/dumb-jump#basic
+  ;; how to write :hook in use-package ?
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+
   :custom
   ;; https://github.com/jacktasia/dumb-jump/blob/master/README.md#debugging-a-jump
   ;;(dumb-jump-debug t) ; to put out debug message of dumb-jump
