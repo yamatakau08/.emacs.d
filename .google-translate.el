@@ -9,10 +9,6 @@
   ;; window (buffer with translation) gets focus in google-translate-core-ui.el
   (google-translate-pop-up-buffer-set-focus t)
 
-  ;; defualt 'emacs, since error occurs ad-Advice-search-forward: Search failed: ",tkk:'" on Windows 10 environment
-  ;; change to use curl
-  (google-translate-backend-method 'curl)
-
   :bind
   (;;("C-c t" . google-translate-at-point)
    ;;("C-c T" . google-translate-query-translate)
@@ -22,6 +18,13 @@
    ("C-c R" . google-translate-query-translate-reverse))
 
   :config
+  ;; defualt 'emacs, since error occurs ad-Advice-search-forward: Search failed: ",tkk:'"
+  ;; https://github.com/atykhonov/google-translate/issues/137#issuecomment-723938431
+  ;; workaround
+  (defun google-translate--search-tkk ()
+  "Search TKK."
+  (list 430675 2721866130))
+
   (defun my-google-translate-at-point ()
     (interactive)
     (if (string-match "\\cj" (thing-at-point 'word)) ; utilize '\\cj' is used in "sdic"
