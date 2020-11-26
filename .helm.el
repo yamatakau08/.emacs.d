@@ -9,7 +9,9 @@
   (helm-follow-mode-persistent t)
 
   :config
-  (helm-migemo-mode t) ; enable migemo
+  (if (featurep 'migemo)
+      ;; enable migemo
+      (helm-migemo-mode t))
 
   ;; found define another function is useful
   ;;(defun advice-around:helm-mini (orig-func &rest args)

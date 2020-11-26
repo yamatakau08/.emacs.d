@@ -6,6 +6,7 @@
 
   :config ; https://libraries.io/emacs/selectrum#getting-started
   (selectrum-mode +1)
-  (selectrum-prescient-mode +1)
-  (prescient-persist-mode +1)
+
+  ;; with selectrum-prescient completion is better.
+  ;; see .selectrum-prescient.el
   )

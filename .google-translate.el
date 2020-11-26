@@ -9,6 +9,10 @@
   ;; window (buffer with translation) gets focus in google-translate-core-ui.el
   (google-translate-pop-up-buffer-set-focus t)
 
+  ;; defualt 'emacs, since error occurs ad-Advice-search-forward: Search failed: ",tkk:'" on Windows 10 environment
+  ;; change to use curl
+  (google-translate-backend-method 'curl)
+
   :bind
   (;;("C-c t" . google-translate-at-point)
    ;;("C-c T" . google-translate-query-translate)

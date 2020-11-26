@@ -1,4 +1,6 @@
 (use-package centaur-tabs
+  :ensure t
+
   :demand
 
   :config
