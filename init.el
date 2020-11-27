@@ -156,6 +156,7 @@
 (my-load "~/.emacs.d/.beacon.el")
 (my-load "~/.emacs.d/.dired-narrow.el")
 (my-load "~/.emacs.d/.selectrum.el")
+(my-load "~/.emacs.d/.selectrum-prescient.el")
 
 ;;
 ;; useful packages are not registerd in elpa ...
