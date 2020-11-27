@@ -18,6 +18,13 @@
    ("C-c R" . google-translate-query-translate-reverse))
 
   :config
+  ;; defualt 'emacs, since error occurs ad-Advice-search-forward: Search failed: ",tkk:'"
+  ;; https://github.com/atykhonov/google-translate/issues/137#issuecomment-723938431
+  ;; workaround
+  (defun google-translate--search-tkk ()
+  "Search TKK."
+  (list 430675 2721866130))
+
   (defun my-google-translate-at-point ()
     (interactive)
     (if (string-match "\\cj" (thing-at-point 'word)) ; utilize '\\cj' is used in "sdic"
