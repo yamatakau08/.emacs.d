@@ -100,6 +100,7 @@
 (my-load "~/.emacs.d/.calendar.el")
 (my-load "~/.emacs.d/.cc-mode.el")
 (my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be loaded after company-network-p,use-package is active
+(my-load "~/.emacs.d/.webjump.el")
 
 ;;
 ;; package
@@ -161,7 +162,7 @@
 ;;
 ;; useful packages are not registerd in elpa ...
 ;;
-(my-load "~/.emacs.d/google.el")
+;;(my-load "~/.emacs.d/google.el") ; replace with new function defined in .webjump.el
 (my-load "~/.emacs.d/.instant-maximized-window.el")
 (my-load "~/.emacs.d/.run-assoc.el")
 
