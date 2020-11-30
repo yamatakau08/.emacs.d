@@ -101,6 +101,7 @@
 (my-load "~/.emacs.d/.cc-mode.el")
 (my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be loaded after company-network-p,use-package is active
 (my-load "~/.emacs.d/.webjump.el")
+(my-load "~/.emacs.d/.saveplace.el")
 
 ;;
 ;; package
