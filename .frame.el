@@ -29,15 +29,18 @@
   ;; almost the same but, height will be shorter than Windows'one
 
   ;; font setting, Myrica font https://myrica.estable.jp/
-  (let ((font "Myrica M")
-	;;(font "MyricaM M")
-	)
-    (if (member font (font-family-list))
-	(cond ((eq system-type 'darwin)
-	       ;; -16 is the almost same as on Windows Myrica M font -10
-	       (add-to-list 'default-frame-alist `(font . ,(concat font "-16"))))
-	      ((equal (system-name) "JPC20165182")
-	       (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))))
+  (catch 'font-added
+    (dolist (font '("Myrica M" "MyricaM M"))
+      (if (member font (font-family-list))
+	  (progn
+	    (cond ((eq system-type 'darwin)
+		   ;; -16 is the almost same as on Windows Myrica M font -10
+		   (add-to-list 'default-frame-alist `(font . ,(concat font "-16"))))
+		  ((eq system-type 'windows-nt)
+		   (add-to-list 'default-frame-alist `(font . ,(concat font "-10"))))
+		  (t
+		   (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))
+	    (throw 'font-added font)))))
 
   ;; alpha
   ;; http://th.nao.ac.jp/MEMBER/zenitani/elisp-j.html#alpha
