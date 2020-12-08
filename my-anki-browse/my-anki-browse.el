@@ -150,7 +150,8 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
 		  :data (json-encode
 			 `((:action  . "addNote")
 			   (:version . ,my-anki-browse--anki-connect-version)
-			   (:params (:note . (:deckName ,deckName :modelName ,modelName :fields (:Front ,Front :Back ,Back))))))))
+			   ;; add :tags [] ,because have error on Anki 2.0.52 old version + anki-connect installed on 2020/12/08 on Windows 8.1
+			   (:params (:note . (:deckName ,deckName :modelName ,modelName :fields (:Front ,Front :Back ,Back) :tags [])))))))
     (if result
 	(message "[my-anki-browse] -addNote: added id: %s" result))))
 
