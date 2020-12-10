@@ -33,10 +33,9 @@
 
   :demand t
   ;; from https://github.com/jwiegley/use-package#notes-about-lazy-loading
-  ;; Since :bind block doesn't require package,
-  ;; it's not possible to call other interactive functions which have (interactive)
-  ;; need to specify :demand t
+  ;; Since :bind block doesn't require the package and it's impossible to call other interactive functions,
+  ;; Need to specify :demand t
 
   :bind (:map dired-mode-map
-              ("b" . helm-jira-add-atachment))
+              ("b" . helm-jira-add-ataachment))
 )
