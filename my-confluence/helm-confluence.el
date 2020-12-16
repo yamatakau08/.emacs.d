@@ -94,6 +94,9 @@
 	       :action (helm-make-actions
                         "content for space" #'helm-confluence--action-get-contet-for-space)
 	       :candidate-number-limit 10000
+	       ;; :persistent-help "Get contents"
+	       ;; persisetent-action https://github.com/h8d9123/emacs.d/blob/3429c3b01274ad795af6be5614b65eeaa3690f07/elpa/helm/helm-elisp.el#L752
+	       :persistent-action #'ignore
 	       :migemo t)))
        (helm :sources helm-src)))))
 
