@@ -6,14 +6,18 @@
 #+link: link_files https://raw.githubusercontent.com/yamatakau08/link_files/master/
 
 #+begin_comment
-Confluence, width and heigh for rectangle is golden ratio
+* Confluence
+** ページ中のAttachment指定方法
+[confluence:attachment_file_name] の様に記述する
+
+** Confluence image, width and heigh for rectangle is golden ratio
 #+ATTR_HTML: :align left :width "650px" :height "400px" :title "hoge"
 url of image
 #+begin_export html
  <br style="clear:both;" />
 #+end_export
 
-on Confluence
+** その他
 *--opting* *--date=2020/10/06* の様に、強調命令を2つ連続記述すると、
 Confluence側で、HTML変換時にエラーになり、HTTP 400 Error になる
 #+end_comment
