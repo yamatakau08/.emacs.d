@@ -5,6 +5,9 @@
   (magit-refresh-verbose t) ; put out the process time in Message buffer.
   (magit-clone-set-remote.pushDefault t)
 
+  ;; https://github.com/shunonymous/.emacs.d/blob/0ff890c34156885e2009d44f4883c2e8cba029e5/inits/10_edit.el#L23
+  (magit-diff-refine-hunk 'all)
+
   :config
   ;; to disable auto fill mode in commit buffer, delete git-commit-turn-on-auto-fill
   (delq 'git-commit-turn-on-auto-fill git-commit-setup-hook)
