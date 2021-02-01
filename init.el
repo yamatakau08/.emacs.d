@@ -121,6 +121,7 @@
 (my-load "~/.emacs.d/.helm-ag.el")
 (my-load "~/.emacs.d/.helm-posframe.el")
 ;;(my-load "~/.emacs.d/.helm-google.el")
+(my-load "~/.emacs.d/.helm-chrome.el")
 
 (my-load "~/.emacs.d/.magit.el")
 (my-load "~/.emacs.d/.wl.el")

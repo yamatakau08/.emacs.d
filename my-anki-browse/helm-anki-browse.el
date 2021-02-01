@@ -154,7 +154,7 @@
       (add-to-list 'candidates `(,FrontBackvalue . (:deckName ,(my-anki-browse-current-deck) :noteId ,noteId :cardId ,cardId :Front ,Frontvalue :Back ,Backvalue)) t))
     candidates))
 
-(defsubst helm-anki-browse-func-to-keys (func map)
+(defsubst helm-anki-browse--func-to-keys (func map)
   (key-description (car-safe (where-is-internal func map))))
 
 ;; update note
@@ -163,9 +163,9 @@
     (with-current-buffer (get-buffer-create buffer-name)
       (setq header-line-format
 	    (format "%s: Commit, %s: Abort, %s: Delete"
-		    (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-commit helm-anki-browse--updateNoteFields-map)
-		    (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-abort  helm-anki-browse--updateNoteFields-map)
-		    (helm-anki-browse-func-to-keys #'helm-anki-browse--updateNoteFields-delete helm-anki-browse--updateNoteFields-map)))
+		    (helm-anki-browse--func-to-keys #'helm-anki-browse--updateNoteFields-commit helm-anki-browse--updateNoteFields-map)
+		    (helm-anki-browse--func-to-keys #'helm-anki-browse--updateNoteFields-abort  helm-anki-browse--updateNoteFields-map)
+		    (helm-anki-browse--func-to-keys #'helm-anki-browse--updateNoteFields-delete helm-anki-browse--updateNoteFields-map)))
       ;; https://meech.hatenadiary.org/entry/20100414/1271197161
       ;; refer "read-only と sticky"
       ;; but the followin is incomplete.
@@ -220,8 +220,8 @@
   (with-current-buffer (get-buffer-create helm-anki-browse--addNote-buffer-name)
     (setq header-line-format
 	  (format "%s: Add, %s: Abort"
-		  (helm-anki-browse-func-to-keys #'helm-anki-browse--addNote-commit helm-anki-browse--addNote-map)
-		  (helm-anki-browse-func-to-keys #'helm-anki-browse--addNote-abort  helm-anki-browse--addNote-map)))
+		  (helm-anki-browse--func-to-keys #'helm-anki-browse--addNote-commit helm-anki-browse--addNote-map)
+		  (helm-anki-browse--func-to-keys #'helm-anki-browse--addNote-abort  helm-anki-browse--addNote-map)))
     (let ((inhibit-read-only t))
       (erase-buffer)
       (insert (format "deck  : %s\n" (plist-get candidate :deckName))

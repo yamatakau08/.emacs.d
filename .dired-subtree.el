@@ -6,8 +6,7 @@
 
   :bind
   (:map dired-mode-map
-	("i" . dired-subtree-insert)
-	("I" . dired-subtree-remove))
+	("i" . dired-subtree-toggle))
 
   :custom-face
   (dired-subtree-depth-1-face

@@ -393,6 +393,8 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 
 (defun my-confluence-create-or-update-attachment ()
   "Add attachments the files which are marked in Dired in confluence content id you specified"
+  ;; Todo non-ascii filename upload
+
   (interactive)
 
   (unless my-confluence--cookie
