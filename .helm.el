@@ -27,7 +27,8 @@
     (helm-posframe-disable))
 
   :bind (("C-x b" . helm-mini) ; not to assign for frog-jump-buffer
-	 ("C-x f" . helm-find-files)
+	 ;;("C-x f" . helm-find-files)
+	 ("C-x f" . helm-multi-files)
 	 ;;("C-x o" . helm-buffers-list))
 	 ;;("C-s" . helm-occur) ; Since simple C-s and C-r is useful, don't use helm-occur
 	 ;;("C-r" . helm-occur) ;
