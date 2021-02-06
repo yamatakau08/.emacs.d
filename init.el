@@ -160,6 +160,7 @@
 (my-load "~/.emacs.d/.dired-subtree.el")
 (my-load "~/.emacs.d/.selectrum.el")
 (my-load "~/.emacs.d/.selectrum-prescient.el")
+(my-load "~/.emacs.d/.helm-chrome.el")
 
 ;;
 ;; useful packages are not registerd in elpa ...
