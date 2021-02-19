@@ -13,6 +13,6 @@
   :custom
   (url-proxy-services `(("http" . ,(when (eq (my-network-type) 'company)
 				     (format "%s:%s" wl-proxy-server wl-proxy-port)))
-			("https". ,(when (eq (my-network-type) 'company)
+			("https" . ,(when (eq (my-network-type) 'company)
 				     (format "%s:%s" wl-proxy-server wl-proxy-port)))))
   )
