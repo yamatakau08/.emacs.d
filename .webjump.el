@@ -16,17 +16,8 @@
   :config
   (defun google ()
     (interactive)
-    (let (site
-	  (name "Google")
-	  expr)
-      (setq site (car
-		  (mapcar (lambda (site)
-			    (if (string-equal (car site) name)
-				(print site)))
-			  webjump-sites)))
-      (if site
-	  (let ((name (car site))
-		(expr (cdr site)))
-	    (browse-url-default-browser (webjump-url-fix (webjump-builtin expr name))))
-	(message "%s entry is not found in webjump-sites" name))))
+    (let* ((site (assoc "Google" webjump-sample-sites))
+	   (name (car site))
+	   (expr (cdr site)))
+      (browse-url-default-browser (webjump-url-fix (webjump-builtin expr name)))))
   )

@@ -3,8 +3,8 @@
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
 (setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
 
-;; Since default directory is set / when launching Emacs on Mac dock,
-;; set it to under HOME directory.
+;; Since default directory is set / when launching Emacs on Mac from dock,
+;; set it HOME directory.
 (setq default-directory (getenv "HOME"))
 ;; https://qiita.com/t2psyto/items/05776f010792ba967152
 (setq command-line-default-directory (format "%s/" (getenv "HOME")))
@@ -159,9 +159,12 @@
 (my-load "~/.emacs.d/.beacon.el")
 (my-load "~/.emacs.d/.dired-narrow.el")
 (my-load "~/.emacs.d/.dired-subtree.el")
-(my-load "~/.emacs.d/.selectrum.el")
-(my-load "~/.emacs.d/.selectrum-prescient.el")
 (my-load "~/.emacs.d/.helm-chrome.el")
+;;(my-load "~/.emacs.d/.selectrum.el")
+;;(my-load "~/.emacs.d/.selectrum-prescient.el")
+
+(my-load "~/.emacs.d/.ppp.el")
+(my-load "~/.emacs.d/.seml.el")
 
 ;;
 ;; useful packages are not registerd in elpa ...
@@ -176,9 +179,7 @@
 ;;(my-load "~/.emacs.d/my-app-open-file.el") ; to open file associated application
 (my-load "~/.emacs.d/my-skips.el")
 ;;(my-load "~/.emacs.d/.my-anki-connect.el")
-
-;; english conversation expression dictionary
-(my-load "~/.emacs.d/.eced.el")
+(my-load "~/.emacs.d/.eced.el") ; english conversation expression dictionary
 (my-load "~/.emacs.d/.my-confluence.el")
 (my-load "~/.emacs.d/.helm-confluence.el")
 (my-load "~/.emacs.d/.my-anki-browse.el")
