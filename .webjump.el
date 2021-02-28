@@ -14,6 +14,11 @@
      ))
 
   :config
+  ;; redefine original function to utilize thing-at-point 'word for google
+  (defun webjump-read-string (prompt)
+    (let ((input (read-string (concat prompt ": ") (thing-at-point 'word))))
+      (if (webjump-null-or-blank-string-p input) nil input)))
+
   (defun google ()
     (interactive)
     (let* ((site (assoc "Google" webjump-sample-sites))
