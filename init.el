@@ -159,6 +159,7 @@
 (my-load "~/.emacs.d/.beacon.el")
 (my-load "~/.emacs.d/.dired-narrow.el")
 (my-load "~/.emacs.d/.dired-subtree.el")
+(my-load "~/.emacs.d/.helm-chrome.el")
 ;;(my-load "~/.emacs.d/.selectrum.el")
 ;;(my-load "~/.emacs.d/.selectrum-prescient.el")
 
