@@ -29,7 +29,8 @@
 (defun amazon-overseas-movie-ranking-50 ()
   "scraping amazon overseas movie ranking 50 using pcase to extract the value."
   (interactive)
-  (let* ((url "https://www.amazon.co.jp/gp/bestsellers/dvd/519877011/ref=zg_bs_pg_1?ie=UTF8&pg=1")
+  (let* (;(url "https://www.amazon.co.jp/gp/bestsellers/dvd/519877011/ref=zg_bs_pg_1?ie=UTF8&pg=1")
+	 (url "https://www.amazon.co.jp/%E6%97%A5%E6%9C%AC%E6%98%A0%E7%94%BB-%E6%98%9F4%E3%81%A4%E4%BB%A5%E4%B8%8A-%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC%E5%88%A5/s?rh=n%3A2478493051%2Cp_72%3A2761627051")
 	 (scraping-name "amazon-overseas-movie-ranking-50")
 	 (buffer-html   (format "%s.html"   scraping-name))
 	 (buffer-output (format "%s.output" scraping-name)))

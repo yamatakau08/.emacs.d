@@ -46,7 +46,7 @@
   :custom
   ;; add "INPROGRESS" in to-do-keywordsin
   ;; refer http://aaronbedra.com/emacs.d/#org29f8f0d Org Settings
-  (org-todo-keywords '((sequence "TODO" "INPROGRESS" "DONE")))
+  (org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "DONE(d)")))
 
   ;; align source block at the left, original 2 space added as indent
   (org-edit-src-content-indentation 0) ; is defined org-src.el
