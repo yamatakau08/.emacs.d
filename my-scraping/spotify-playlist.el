@@ -35,7 +35,8 @@
 		   :candidate-number-limit 10000
 		   :migemo t
 		   :action (helm-make-actions
-			    "playlist" #'spotify-playlist--titles))))
+			    "playlist" #'spotify-playlist--titles)
+		   :persistent-action #'ignore)))
 
 (defun spotify-playlist--toppage-playlist ()
   "get playlist of spotify toppage https://open.spotify.com"
@@ -43,19 +44,20 @@
     (setq entity (nth 2 (nth 2 (seml-xpath '(html body script)
 				 (seml-encode-string-from-html
 				  (with-temp-buffer
-				    (url-insert-file-contents "https://open.spotify.com/")
+				    (url-insert-file-contents "https://open.spotify.com")
 				    (buffer-string)))))))
     (string-match "Spotify.Entity = \\(.*\\)" entity)
     (setq items (let-alist (aref (let-alist (json-read-from-string (match-string 1 entity)) .content.items) 0) .content.items))
     (mapcar (lambda (item)
 	      ;; remove "" , one playlist has control code character in description
-	      `(,(replace-regexp-in-string "" "" (let-alist item .description)) . ,item)) items)))
+	      ;;`(,(replace-regexp-in-string "" "" (let-alist item .description)) . ,item) ; list description
+	      `(,(let-alist item .name) . ,item)) items)))
 
 (defun spotify-playlist--titles (playlist)
   "list titles of the candidate playlist"
-  (let ((description  (let-alist playlist .description))
-	(playlist-url (let-alist playlist .external_urls.spotify)))
-    (helm :sources (helm-build-sync-source description ;"titles"
+  (let ((playlist-name (let-alist playlist .name))
+	(playlist-url  (let-alist playlist .external_urls.spotify)))
+    (helm :sources (helm-build-sync-source playlist-name
 		     :candidates (spotify-playlist--list-titles playlist-url)
 		     :candidate-number-limit 10000
 		     :migemo t
@@ -87,7 +89,7 @@
 			    track-name
 			    " --- "
 			    (mapconcat (lambda (artists)
-					 (let-alist artists .name)) (let-alist item .track.artists) " ")))
+					 (let-alist artists .name)) (let-alist item .track.artists) ",")))
 		       item))) items))))
 
 ;; sample function for scraping
