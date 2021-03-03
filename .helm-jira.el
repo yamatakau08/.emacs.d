@@ -37,5 +37,5 @@
   ;; Need to specify :demand t
 
   :bind (:map dired-mode-map
-              ("b" . helm-jira-add-ataachment))
+              ("b" . helm-jira-add-attachment))
 )

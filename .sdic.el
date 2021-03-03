@@ -3,7 +3,7 @@
 
   :init
   ;; work arround for sdic doesn't work
-  ;; face the error "eval-buffer: Symbol’s value as variable is void: default-fill-column"
+  ;; "eval-buffer: Symbol’s value as variable is void: default-fill-column"
   ;; refer http://suzuki.tdiary.net/20161226.html
   (setq default-fill-column (default-value 'fill-column))
 
@@ -11,7 +11,7 @@
   (("C-c W" . sdic-describe-word)
    ("C-c w" . sdic-describe-word-at-point)
    :map sdic-mode-map
-   ;;("r" . my-sdic-register-item) ; 'r' is not invalid after sdic-descibe-wodr, assing C-r
+   ;;("r" . my-sdic-register-item) ; 'r' is not invalid after sdic-descibe-word, assing C-r
    ("C-r" . my-sdic-register-item)
    )
 
@@ -41,5 +41,5 @@
 				      (buffer-substring (region-beginning) (region-end))
 				    (thing-at-point 'word))))
 	      (back  (read-string "Back : " )))
-	  (my-anki-connect-push-note "英語" front back))))
+	  (my-anki-browse-addNote "英語" front back))))
   )
