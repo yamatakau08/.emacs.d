@@ -393,6 +393,8 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 
 (defun my-confluence-create-or-update-attachment ()
   "Add attachments the files which are marked in Dired in confluence content id you specified"
+  ;; Todo non-ascii filename upload
+
   (interactive)
 
   (unless my-confluence--cookie
@@ -412,17 +414,22 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 	(if uploadfiles
 	    (progn
 	      (setq content-id (read-string "Content Id: ")) ;; need to check if inputed string is nil
+	      (message "[my-confluence] uploading in id %s ..." content-id)
 	      (request
+		;; refer https://developer.atlassian.com/cloud/confluence/rest/api-group-content---attachments/#api-api-content-id-child-attachment-put
 		(format "%s/rest/api/content/%s/child/attachment" my-confluence-url content-id)
 		:sync t
 		:type "POST"  ; for create, success if the file is not already uploaded.
 		;;:type "PUT" ; for create or update, always return http error 405
 		:headers '(("X-Atlassian-Token" . "no-check"))
 		:files (mapcar (lambda (file) `("file" . ,file)) uploadfiles)
-		:success (cl-function (lambda (&key data &allow-other-keys)
-					(message "[my-confluence] I sent: %S" (assoc-default 'args data))))
-		:error   (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
-					(message "[my-confluence] Got error: %S" error-thrown)))))
+		:success (cl-function
+			  (lambda (&key data &allow-other-keys)
+			    (message "[my-confluence] uploaded in id %s" content-id)))
+		:error   (cl-function
+			  (lambda (&rest args &key error-thrown &allow-other-keys)
+			    ;; if the attachment already existed, have 404 error
+			    (message "[my-confluence] Got error: %S" error-thrown)))))
 	  (message "[my-confluence] No upload files!"))
       (message "[my-confluence] No marked files!"))))
 

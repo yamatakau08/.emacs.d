@@ -5,7 +5,8 @@
   ;; (dired-subtree-use-background nil) ; not effect
 
   :bind
-  (:map dired-mode-map ("i" . dired-subtree-toggle))
+  (:map dired-mode-map
+	("i" . dired-subtree-toggle))
 
   :custom-face
   (dired-subtree-depth-1-face

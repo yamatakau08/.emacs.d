@@ -18,7 +18,7 @@ See Link,Images"
 	   twidth theight tags)
 
       (if (and fname-extension
-	       (string-match "png\\|PNG\\|jpg\\|JPG" fname-extension))
+	       (string-match "png\\|PNG\\|jpg\\|JPG\\|gif\\|GIF" fname-extension))
 	  ;; image
 	  (progn
 	    ;; confluence support only px width,height
