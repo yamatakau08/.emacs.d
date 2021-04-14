@@ -1,10 +1,9 @@
 (use-package helm-ag
   :ensure t
 
-  :if (if (executable-find "ag") ; should set ag path in exec-path which is set in init.el
-	  t
-	(message "[debug] .helm-ag.el, Install ag and add path in exec-path in init.el")
-	nil)
+  :if (if (or (executable-find "ag")
+	      (executable-find "rg"))
+	  t nil)
 
   :after helm
 
@@ -27,15 +26,19 @@
   ;; ("C-r" . helm-ag-this-file))
 
   :config
-  (if (executable-find "rg")
+  (cond
+   ((executable-find "ag") ; since ag can specify file type e.g. --elisp, prior to ag
+    (unless (string-match "--hidden" helm-ag-base-command)
       (custom-set-variables
-       ;; http://emacs.rubikitch.com/helm-ag/ <2016-10-05 Wed>ripgrep対応
+       ;; add --hidden for targetting .??* files, "--hidden" may be duplicated due to custom.el
        '(helm-ag-base-command
-	 "rg --vimgrep --no-heading")) ; to follow the search pattern in other window, need "--vimgrep"
+	 (mapconcat #'identity `(,helm-ag-base-command "--hidden") " ")))))
+   ((executable-find "rg")
     (custom-set-variables
-     '(helm-ag-base-command
-       (mapconcat #'identity `(,helm-ag-base-command "--hidden") " ") ; add --hidden for targetting .??* files
-       )))
+     ;; refer https://github.com/emacsorphanage/helm-ag#helm-agel-with-other-searching-tools
+     ;; ripgrep
+     '(helm-ag-base-command "rg --vimgrep --no-heading") ; to follow the search pattern in other window, need "--vimgrep"
+     '(helm-ag-success-exit-status '(0 2)))))
 
   ;; to suppress "File XXX changed on disk. Read from disk?" dialog
   ;; while helm-ag-this file XXX file is updating, likely log file
@@ -79,6 +82,8 @@
 
   )
 
+;; note
+;; ag
 ;; To pass ag option, such as: --elisp --depth 0 in helm-ag
 ;; refer https://github.com/syohex/emacs-helm-ag/blob/master/README.md#use-long-option
 ;; --ignore=pattern is pass, --ignore pattern is fail
@@ -99,3 +104,6 @@
 ;;      .rb  .rhtml  .rjs  .rxml  .erb  .rake  .spec
 ;;  --shell
 ;;      .sh  .bash  .csh  .tcsh  .ksh  .zsh  .fish
+
+;; ripgrep
+;; --max-depth=1
