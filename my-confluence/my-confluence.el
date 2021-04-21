@@ -133,15 +133,11 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 (defun my-confluence-get-content-body-storage-by-id (pageId)
   "Get Confluence content specified pageId"
   (interactive "spageId: ")
-  (unless my-confluence--cookie
-    (my-confluence-get-cookie))
   (my-confluence--get-content-body-storage-by-id pageId))
 
 (defun my-confluence-delete-content (pageId)
   "Delete Confluence page specified pageId"
   (interactive "spageId: ")
-  (unless my-confluence--cookie
-    (my-confluence-get-cookie))
   (my-confluence--delete-content pageId))
 
 (defun my-confluence-get-content-info-by-id (pageId)
@@ -152,7 +148,6 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 
 (defun my-confluence-update-content-with-org-buffer ()
   "Update Confluence content with org buffer."
-  (interactive)
   (let ((org-buffer-file-name (buffer-file-name)))
     (my-confluence-update-content org-buffer-file-name)))
 
@@ -202,12 +197,6 @@ if pageId is not specified in org file, prompt to ask pageId."
 
 (defun my-confluence-convert-content-body (wiki-file)
   "Convert confluence-wiki file format to html format is inside body"
-
-  (interactive "fconfluence wiki format file: ")
-
-  (unless my-confluence--cookie
-    (my-confluence-get-cookie))
-
   (let ((body (with-temp-buffer
 		(insert-file-contents wiki-file)
 		(buffer-substring-no-properties (point-min) (point-max)))))
@@ -241,9 +230,6 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
 (defun my-confluence--get-content-info-by-id (content-id)
   "The backend of getting Confluence content info specified content-id
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
-
-  (unless (my-confluence--is-token-available)
-    (setq my-confluence--cookie nil)) ; to query password for next-my-confluence-request)
 
   (let (content-info)
     (my-confluence--request
@@ -334,18 +320,12 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
 (defun my-confluence--delete-content (pageId)
   "The backend of deleting Confluence page
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-delete"
-
-  (request
-    (format "%s/rest/api/content/%s" my-confluence-url pageId)
-    :sync t
-    :type "DELETE"
-    :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie))
-    :parser 'json-read
-    :success (cl-function
-	      (lambda (&key data &allow-other-keys)
-		(switch-to-buffer "*request-result*")
-		(erase-buffer)
-		(insert (format "%s" data))))))
+  (my-confluence--request
+   (format "%s/rest/api/content/%s" my-confluence-url pageId)
+   :type "DELETE"
+   :success (cl-function
+	     (lambda (&key data &allow-other-keys)
+	       (message "[my-confluence] deleted pageId: %s" pageId)))))
 
 (defun my-confluence--convert-content-body (wiki-content)
   "Convert arg is wiki-content to storage format
@@ -354,11 +334,9 @@ https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#
 https://developer.atlassian.com/cloud/confluence/rest/#api-api-contentbody-convert-to-post"
 
   (let (converted)
-    (request
+    (my-confluence--request
       (format "%s/rest/api/contentbody/convert/storage" my-confluence-url)
-      :sync t
       :type "POST"
-      :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie))
       :data (json-encode `(("value" . ,wiki-content)
 			   ("representation" . "wiki")))
       :parser 'json-read
@@ -405,9 +383,6 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 
   (interactive)
 
-  (unless my-confluence--cookie
-    (my-confluence-get-cookie))
-
   (let* ((files (when (> (string-to-number (dired-number-of-marked-files)) 0) (dired-get-marked-files)))
 	 (limitsize 40000000) ; upload limit size
 	 (uploadfiles
@@ -423,10 +398,9 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 	    (progn
 	      (setq content-id (read-string "Content Id: ")) ;; need to check if inputed string is nil
 	      (message "[my-confluence] uploading in id %s ..." content-id)
-	      (request
+	      (my-confluence--request
 		;; refer https://developer.atlassian.com/cloud/confluence/rest/api-group-content---attachments/#api-api-content-id-child-attachment-put
 		(format "%s/rest/api/content/%s/child/attachment" my-confluence-url content-id)
-		:sync t
 		:type "POST"  ; for create, success if the file is not already uploaded.
 		;;:type "PUT" ; for create or update, always return http error 405
 		:headers '(("X-Atlassian-Token" . "no-check"))
