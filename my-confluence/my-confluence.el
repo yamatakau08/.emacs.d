@@ -213,11 +213,7 @@ Confluence Wiki markup rules: https://confluence.atlassian.com/confcloud/conflue
   (let ((body (with-temp-buffer
 		(insert-file-contents markdown-file)
 		(buffer-substring-no-properties (point-min) (point-max)))))
-    (my-confluence--markdownxhtmlconverter body))
-
-;  (let ((body (my-confluence--markdownxhtmlconverter " * one\n * two")))
-;    (message "[my-confluence] -markdownxhtmlconvert converted: %s" (format "%s" body)))
-  )
+    (my-confluence--markdownxhtmlconverter body)))
 
 (defun my-confluence-browse ()
   "browse confluence page specified #+PAGEID in org file"
@@ -353,7 +349,7 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-contentbody-conve
 (defun my-confluence--markdownxhtmlconverter (markdown-content)
   "Convert markdown to xhtml
 This is not documented.
-I found this api in the ATTASSIAN Communitythe follwoing.
+Found this api in the ATTASSIAN Communitythe follwoing.
 https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-markdown-using-confluences-rest-API/qaq-p/492056"
 
 ;; curl -XPOST -u <user>:<password> \
