@@ -78,11 +78,19 @@ Probably you can get the auth url after login JIRA, and replace base url \"www.t
   :group 'my-confluence
   :type  'string)
 
+(defcustom my-confluence-password nil
+  "Password to use when logging in to JIRA. Not recommended to set this for security."
+  :type 'string)
+
 (defvar my-confluence--session nil
   "Contains the session information.")
 
 (defvar my-confluence--cookie nil
   "Contains the cookie of the active session.")
+
+(defun my-confluence--build-basic-auth-token ()
+  "Build the base64-encoded auth token from `helm-jira-username' and `helm-jira-password'."
+  (base64-encode-string (format "%s:%s" my-confluence-username my-confluence-password)))
 
 (defun my-confluence-get-cookie (&optional username password)
   "Get a session cookie from Jira
@@ -433,8 +441,8 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 	  (message "[my-confluence] No upload files!"))
       (message "[my-confluence] No marked files!"))))
 
-(defun my-confluence--request (&rest args)
-  "the common request for confluence rest api"
+(defun my-confluence--request-cookie (&rest args)
+  "the common request for confluence rest api using cookie"
   (unless my-confluence--cookie
     (call-interactively #'my-confluence-get-cookie)
     (sleep-for 2)) ; to wait my-confluence--get-current-user return type "known".
@@ -447,27 +455,41 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 		     '(:sync t)
 		     `(:error ,(cl-function
 				(lambda (&rest response &key data error-thrown &allow-other-keys)
-   				  (let ((statusCode (let-alist data .statusCode))
+				  (let ((statusCode (let-alist data .statusCode))
 					(message    (let-alist data .message)))
 				    (message "[my-confluence][error] statusCode:%s %s" statusCode message)))))))
     (message "[my-confluence][error] password incorrect!")))
 
+(defun my-confluence--request (&rest args)
+  "the common request for confluence rest api using Basic Authentication"
+  (my-confluence--ensure-password)
+  (apply 'request
+	 (append args
+		 `(:headers (("Content-Type" . "application/json") ("Authorization" . ,(my-confluence--build-auth-header))))
+		 '(:sync t)
+		 `(:error ,(cl-function
+			    (lambda (&rest response &key data error-thrown &allow-other-keys)
+			      (let ((statusCode (let-alist data .statusCode))
+				    (message    (let-alist data .message)))
+				(message "[my-confluence][error] statusCode:%s %s" statusCode message))))))))
+
 (defun my-confluence--search-content-by-cql (cql callback)
   "https://developer.atlassian.com/cloud/confluence/rest/api-group-content/#api-api-content-search-get"
   (my-confluence--request
-    (format "%s/rest/api/content/search" my-confluence-url)
-    :parser 'json-read
-    :params `(("cql" . ,cql) ("limit" . 1000)) ; add limit=1000 is from result data, default is 25
-    :success (cl-function
-	      (lambda (&key data &allow-other-keys)
-		(funcall callback data)))
-    ;; 403 https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-    ;; The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
-    ;; assume 403 is that token is expired for search method
-    :status-code '((403 . (lambda (&rest _)
-  			    (message "[my-confluence][error] --search-content-by-cql: 403")
-     			    (setq my-confluence--cookie nil)
-     			    (my-confluence--search-content-by-cql cql callback))))))
+   (format "%s/rest/api/content/search" my-confluence-url)
+   :parser 'json-read
+   :params `(("cql" . ,cql) ("limit" . 1000)) ; add limit=1000 is from result data, default is 25
+   :success (cl-function
+	     (lambda (&key data &allow-other-keys)
+	       (funcall callback data)))
+   ;; 403 https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+   ;; The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
+   ;; assume 403 is that token is expired for search method
+   ;; :status-code '((403 . (lambda (&rest _)
+   ;; 			   (message "[my-confluence][error] --search-content-by-cql: 403")
+   ;; 			   (setq my-confluence--cookie nil)
+   ;; 			   (my-confluence--search-content-by-cql cql callback)))))
+   ))
 
 (defun my-confluence--get-spaces (callback)
   "The backend of getting Confluence page by pageId
@@ -477,11 +499,9 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
    :parser 'json-read
    :params '(("limit" . 500)) ; add limit=500 is from result data, default is 25
    :success (cl-function
- 	     (lambda (&key data &allow-other-keys)
+	     (lambda (&key data &allow-other-keys)
 	       (if (<= (let-alist data .size) 0) ; assume size is 0, session is expired.
-		   (progn
-		     (setq my-confluence--cookie nil) ; to get new session, then call again
-		     (my-confluence--get-spaces callback))
+		   (message "[my-confluence] No confluence spaces.")
 		 (funcall callback data))))))
 
 ;; user
@@ -496,10 +516,28 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
      (format "%s/rest/api/user/current" my-confluence-url)
      :parser 'json-read
      :success (cl-function
- 	       (lambda (&key data &allow-other-keys)
- 		 (setq ret data))))
+	       (lambda (&key data &allow-other-keys)
+		 (setq ret data))))
     (message "[my-confluence][debug] --get-current-user: %s" ret)
     ret))
+
+(defun my-confluence--build-auth-header ()
+  "Build the Authorization-Header for Confluence requests."
+  (format "Basic %s" (my-confluence--build-basic-auth-token)))
+
+(defun my-confluence--build-basic-auth-token ()
+  "Build the base64-encoded auth token from `my-confluence-username' and `my-confluence-password'."
+  (base64-encode-string (format "%s:%s" my-confluence-username my-confluence-password)))
+
+(defun my-confluence--read-password ()
+  "Read a new value for `my-confouence-password'."
+  (setq my-confluence-password (read-passwd (format "Confluence-Password for %s: " my-confluence-username)))
+  nil)
+
+(defun my-confluence--ensure-password ()
+  "Ensures that `my-confluence-password' is set."
+  (when (not my-confluence-password)
+    (my-confluence--read-password)))
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
 ;; function jk-org-kwd gets the propertie specifed by args.
