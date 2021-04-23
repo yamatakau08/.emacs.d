@@ -5,8 +5,8 @@
 #+OPTIONS: \n:t
 #+link: link_files https://raw.githubusercontent.com/yamatakau08/link_files/master/
 
-#+begin_comment
-* Confluence Upload 時の org file 記述注意点
+* COMMENT
+Confluence Upload 時の org file 記述注意点
 ** 1. 2. 連番がリセットされ、1. からになる対処
 数字項目内の最終行は、空行を挟まないようにする。
 ソースブロックは、数字項目直下ではなく、字下げする
@@ -29,4 +29,4 @@ url of image
 ** その他
 \*--opting* \*--date=2020/10/06* の様に、強調命令を2つ連続記述すると、
 Confluence側で、HTML変換時にエラーになり、HTTP 400 Error になる
-#+end_comment
+

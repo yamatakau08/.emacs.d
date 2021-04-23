@@ -148,6 +148,7 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 
 (defun my-confluence-update-content-with-org-buffer ()
   "Update Confluence content with org buffer."
+  (interactive)
   (let ((org-buffer-file-name (buffer-file-name)))
     (my-confluence-update-content org-buffer-file-name)))
 
