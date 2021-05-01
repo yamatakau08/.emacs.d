@@ -1,3 +1,5 @@
+;;; config.el -*- lexical-binding: t; -*-
+
 ;;; for emergency debug
 (setq debug-on-error  nil) ; enable enter debugger if an error is signaled
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
