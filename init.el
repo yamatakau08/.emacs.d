@@ -186,6 +186,7 @@
 (my-load "~/.emacs.d/.helm-anki-browse.el")
 (my-load "~/.emacs.d/.my-plantuml.el")
 (my-load "~/.emacs.d/.my-say.el")
+(my-load "~/.emacs.d/.helm-qiita.el")
 
 ;; developing
 ;;(my-load "~/.emacs.d/.yahoo-weather-mode.el")
