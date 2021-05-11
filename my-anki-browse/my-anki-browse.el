@@ -285,14 +285,17 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
 				 (my-anki-browse--debug-message "[my-anki-browse][debug] -request: %s" data)))
 		     args)) ; args are ":type",":data" ... , and should be the last
 	(setq data (request-response-data response))
-	(setq result (let-alist data .result))
-	(setq error  (let-alist data .error))
-	(if error
-	    (cond ((equal error "'<=' not supported between instances of 'str' and 'int'") nil) ; When update note, have this error but succeed to update on emacs of mingw32.exe
-		  ;;((equal error "semaphore never called"                                 ) nil) ; somtimes have this error on emacs of mingw32.exe
-		  (t (message "[my-anki-browse] --anki-connect-request error: %s" error))))
-	(my-anki-browse--debug-message "[my-anki-browse][debug] --anki-connect-request result: %s" result)
-	result) ; return the data
+	(if (listp data)
+	    (progn
+	      (setq result (let-alist data .result))
+	      (setq error  (let-alist data .error))
+	      (if error
+		  (cond ((equal error "'<=' not supported between instances of 'str' and 'int'") nil) ; When update note, have this error but succeed to update on emacs of mingw32.exe
+			;;((equal error "semaphore never called"                                 ) nil) ; somtimes have this error on emacs of mingw32.exe
+			(t (message "[my-anki-browse] --anki-connect-request error: %s" error))))
+	      (my-anki-browse--debug-message "[my-anki-browse][debug] --anki-connect-request result: %s" result)
+	      result)
+	  data))
     (message "[my-anki-browse] get-version error!")
     (message "[my-anki-browse] anki doesn't seem to be launched!")))
 
