@@ -30,7 +30,8 @@
 ;;(setq request-message-level 'debug)
 
 (defgroup helm-qiita nil
-  :group 'application)
+  "helm-qiita customization group."
+  :group 'applications)
 
 (defvar helm-qiita--api-base-url "https://qiita.com/api/v2")
 
@@ -68,7 +69,7 @@
   (let (datas
 	(per_page 100))
     (cl-loop
-     for page from 1 to 3 do ; page 1 to n
+     for page from 1 to 4 do ; page 1 to n
      (helm-qiita--request
       (format "%s/items" helm-qiita--api-base-url)
       :params `(("page" . ,page) ("per_page" . ,per_page) ("query" . ,(format "title:%s" queryword)))
