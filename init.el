@@ -104,6 +104,7 @@
 (my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be loaded after company-network-p,use-package is active
 (my-load "~/.emacs.d/.webjump.el")
 (my-load "~/.emacs.d/.saveplace.el")
+(my-load "~/.emacs.d/.hl-line.el")
 
 ;;
 ;; package
@@ -203,3 +204,9 @@
 ;;  (load custom-file))
 ;; don't use custom-file and put the contents into nul-device
 (setq custom-file null-device)
+;; in case of custom-file is set to null-device, the folloing message happens, when also executes M-x list-package.
+;; File exists, but cannot be read
+;; Saving file c:/yama/NUL...
+;; Wrote c:/yama/NUL
+;; helm-M-x-execute-command: Renaming: Invalid argument, c:/yama/tmp1JWWLO, c:/yama/NUL
+;; Package refresh done
