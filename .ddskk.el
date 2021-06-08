@@ -20,4 +20,7 @@
 
   ;; this is more advantage than the above settings
   (skk-show-inline 'vertical) ;;  available in terminal, no need to configuration for color
+
+  ;;(skk-cursor-hiragana-color "white")
+  (skk-indicator-use-cursor-color nil) ; not color indicator on mode line
   )
