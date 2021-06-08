@@ -49,6 +49,11 @@
     	       :migemo t)))
        (helm :sources helm-src)))))
 
+(defun my-qiita-pages-title-url (queryword)
+  "Get the list of Qiita pages specified queryword"
+  (interactive "sQiita Query: ")
+  (helm-qiita--get-page-titles queryword #'my-qiita--build-candidate-pages-title-url))
+
 ;; private
 (defun helm-qiita--action-open-page (page-info)
   "Open the given `page' in the browser."
@@ -65,11 +70,19 @@
 	    (updated_at_hhmmss   (truncate-string-to-width updated_at 19 11)))
        `(,(format "%s %s %s" updated_at_yyyymmdd updated_at_hhmmss title) . ,result))) results))
 
+(defun my-qiita--build-candidate-pages-title-url (results)
+  "make the list of Qiita pages tile url"
+  (mapcar
+   (lambda (result)
+     (let ((title (let-alist result .title))
+	   (url   (let-alist result .url)))
+       (message "\"%s\",%s" title url))) results))
+
 (defun helm-qiita--get-page-titles (queryword callback)
   (let (datas
 	(per_page 100))
     (cl-loop
-     for page from 1 to 4 do ; page 1 to n
+     for page from 1 to 5 do ; page 1 to n
      (helm-qiita--request
       (format "%s/items" helm-qiita--api-base-url)
       :params `(("page" . ,page) ("per_page" . ,per_page) ("query" . ,(format "title:%s" queryword)))
