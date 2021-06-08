@@ -135,6 +135,7 @@
 (my-load "~/.emacs.d/.org.el")
 (my-load "~/.emacs.d/.ox-html.el")
 (my-load "~/.emacs.d/.ox-confluence.el")
+(my-load "~/.emacs.d/.company-org-block.el")
 
 (my-load "~/.emacs.d/.visual-regexp.el")
 (my-load "~/.emacs.d/.dumb-jump.el")
@@ -199,11 +200,12 @@
 ;; when that function uses variables are executed.
 ;; To avoid to that, use the following settings
 ;; https://ymotongpoo.hatenablog.com/entry/2017/11/07/000921
-;;(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-;;(when (file-exists-p custom-file)
-;;  (load custom-file))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
 ;; don't use custom-file and put the contents into nul-device
-(setq custom-file null-device)
+;;(setq custom-file null-device)
 ;; in case of custom-file is set to null-device, the folloing message happens, when also executes M-x list-package.
 ;; File exists, but cannot be read
 ;; Saving file c:/yama/NUL...
