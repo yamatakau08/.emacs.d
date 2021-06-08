@@ -66,6 +66,12 @@
   ;; to Daily report descending when :step day is set on org-clock-reprot
   (my-load "~/.emacs.d/ad_org-clock-report.el")
 
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (ruby . t)))
+
   :mode
   ;; http://nobunaga.hatenablog.jp/entry/2015/10/25/161305
   ;; "設定" より file suffix が howm の時、org-mode 有効
