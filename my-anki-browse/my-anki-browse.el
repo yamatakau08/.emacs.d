@@ -237,7 +237,7 @@ cardids: [1,2] or '(1 2)
 (defun my-anki-browse-version ()
   "Gets the version of the API exposed by this plugin. Currently versions 1 through 6 are defined.
 https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
-  (interactive)
+  ;;(interactive)
   (request
     my-anki-browse--anki-connect-url
     :sync t
