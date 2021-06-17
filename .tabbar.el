@@ -6,11 +6,19 @@
   (tabbar-use-images nil)
   (tabbar-buffer-groups-function nil) ; the variable defined defvar var custom-set-variable is available
 
-  :bind* (("C-." . tabbar-forward-tab)
-	  ;; When buffer is in org-mode, "C-," is assinged org-cycle-agenda-files
-	  ;; prior the key as in org-mode, not tabbar
-	  ;; should use :bind* not :bind
-	  ("C-," . tabbar-backward-tab))
+  ;; :bind* (;;("C-." . tabbar-forward-tab) ; comment because C-. is assigned embark-act
+  ;; 	  ;; When buffer is in org-mode, "C-," is assinged org-cycle-agenda-files
+  ;; 	  ;; prior the key as in org-mode, not tabbar
+  ;; 	  ;; should use :bind* not :bind
+  ;;         ("C-," . tabbar-backward-tab))
+
+  ;; changed to :bind from :bind* to test
+  :bind (:map tabbar-mode-map
+         ;; ("C-." . tabbar-forward-tab) ; comment because C-. is assigned embark-act
+         ;; When buffer is in org-mode, "C-," is assinged org-cycle-agenda-files
+	 ;; prior the key as in org-mode, not tabbar
+	 ;; should use :bind* not :bind
+	 ("C-," . tabbar-backward-tab))
 
   :config
   ;; http://hico-horiuchi.hateblo.jp/entry/20121208/1354975316

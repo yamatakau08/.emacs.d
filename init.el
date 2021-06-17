@@ -170,6 +170,14 @@
 (my-load "~/.emacs.d/.ppp.el")
 (my-load "~/.emacs.d/.seml.el")
 
+(my-load "~/.emacs.d/.vertico.el")
+(my-load "~/.emacs.d/.orderless.el")
+(my-load "~/.emacs.d/.consult.el")
+(my-load "~/.emacs.d/.marginalia.el")
+(my-load "~/.emacs.d/.embark.el")
+
+(my-load "~/.emacs.d/.fish-mode.el")
+
 ;;
 ;; useful packages are not registerd in elpa ...
 ;;
