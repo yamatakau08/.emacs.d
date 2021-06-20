@@ -26,13 +26,12 @@
     (helm-mini)
     (helm-posframe-disable))
 
-  :bind (;;("C-x b" . helm-mini) ; comment this bind, because use consult-buffer
-	 ("C-x f" . helm-find-files)
-	 ;;("C-x f" . helm-multi-files)
-	 ;;("C-x f" . helm-mini)
-	 ;;("M-x"   . helm-M-x) ; comment, because use "vertico" alternatively.
-	 ;;("C-x o" . helm-buffers-list))
-	 ;;("C-s" . helm-occur) ; Since simple C-s and C-r is useful, don't use helm-occur
-	 ;;("C-r" . helm-occur) ;
-	 )
+  ;; :bind (;;("C-x b" . helm-mini) ; comment this bind, because use consult-buffer
+  ;; 	 ("C-x f" . helm-find-files)
+  ;; 	 ;;("C-x f" . helm-multi-files)
+  ;; 	 ;;("C-x f" . helm-mini)
+  ;; 	 ;;("M-x"   . helm-M-x) ; comment, because use "vertico" alternatively.
+  ;; 	 ;;("C-x o" . helm-buffers-list))
+  ;; 	 ;;("C-s" . helm-occur) ; Since simple C-s and C-r is useful, don't use helm-occur
+  ;; 	 ;;("C-r" . helm-occur))
   )

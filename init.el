@@ -178,6 +178,9 @@
 
 (my-load "~/.emacs.d/.fish-mode.el")
 
+(my-load "~/.emacs.d/.ag.el")
+(my-load "~/.emacs.d/.wgrep-ag.el")
+
 ;;
 ;; useful packages are not registerd in elpa ...
 ;;
