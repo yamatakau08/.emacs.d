@@ -2,6 +2,9 @@
   ;; About migemo itself, refer http://0xcc.net/migemo/
   :ensure t
 
+  :init
+  (add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+
   :if
   ;; cmigemo
   ;; on Windows, https://www.kaoriya.net/software/cmigemo/
