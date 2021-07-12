@@ -16,6 +16,12 @@
 
   (consult-customize
    ;;:preview-key '(:debounce 3 any) ; after 3s
-   :preview-key nil
-   )
+   :preview-key nil)
+
+  (defun consult-ripgrep1 (&optional dir initial)
+    "Search for regexp with rg in the files in DIR with INITIAL input.
+See `consult-grep' for more details."
+    (interactive "P")
+    ;;(consult--grep "Ripgrep" consult-ripgrep-command dir initial)
+    (consult--grep "Ripgrep" consult-ripgrep-command dir "search_word -- --max-depth 1"))
   )
