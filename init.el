@@ -175,6 +175,7 @@
 (my-load "~/.emacs.d/.consult.el")
 (my-load "~/.emacs.d/.marginalia.el")
 (my-load "~/.emacs.d/.embark.el")
+(my-load "~/.emacs.d/.affe.el")
 
 (my-load "~/.emacs.d/.fish-mode.el")
 
