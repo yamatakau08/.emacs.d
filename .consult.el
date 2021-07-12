@@ -3,8 +3,8 @@
 
   :custom
   (consult-ripgrep-command
-   "rg -i --null --line-buffered --color=ansi --max-columns=1000\
-   --no-heading --line-number . -e ARG OPTS")
+   "rg --ignore-case --null --line-buffered --color=ansi --max-columns=1000\
+   --no-heading --line-number --hidden . -e ARG OPTS")
 
   :bind (("M-g g" . consult-goto-line)
 	 ("C-x b" . consult-buffer)
