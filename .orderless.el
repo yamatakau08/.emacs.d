@@ -6,6 +6,8 @@
         completion-category-defaults nil
         completion-category-overrides '((file (styles . (partial-completion)))))
 
+  :after migemo
+
   :custom
   (completion-styles '(orderless))
   (orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
