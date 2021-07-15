@@ -13,7 +13,10 @@
    ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
    :map minibuffer-local-map ;; supported emacs-jp slack
    ("C-." . embark-act)         ;; pick some comfortable binding, no effect!
-   ("C-c C-e" . embark-export))
+   ("C-c C-e" . embark-export)
+   :map occur-mode-map
+   ("C-c C-p" . occur-edit-mode) ;; to use the same binding C-c C-p on grep mode for editing
+   )
 
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -36,3 +39,4 @@
   ;; auto-updating embark collect buffer
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
