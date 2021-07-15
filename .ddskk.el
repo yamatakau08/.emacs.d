@@ -23,4 +23,8 @@
 
   ;;(skk-cursor-hiragana-color "white")
   (skk-indicator-use-cursor-color nil) ; not color indicator on mode line
+
+  ;; dynamic completion
+  (skk-dcomp-do-completion t)
+  (skk-dcomp-multiple-activate t)
   )
