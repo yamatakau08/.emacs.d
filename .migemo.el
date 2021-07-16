@@ -3,7 +3,7 @@
   :ensure t
 
   :init
-  (add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+  ;;(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
 
   :if
   ;; cmigemo

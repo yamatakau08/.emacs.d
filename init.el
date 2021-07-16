@@ -45,7 +45,8 @@
 ;
 ;(set-exec-path-from-shell-PATH)
 
-;;(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+;; without this, migemo doesn't work and orderless using migemo also doesn't work.
+(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
 (add-to-list 'exec-path "/usr/local/bin")
 
 ;;
