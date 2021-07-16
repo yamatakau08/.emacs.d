@@ -45,7 +45,7 @@
 ;
 ;(set-exec-path-from-shell-PATH)
 
-(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+;;(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
 (add-to-list 'exec-path "/usr/local/bin")
 
 ;;
@@ -176,11 +176,12 @@
 (my-load "~/.emacs.d/.marginalia.el")
 (my-load "~/.emacs.d/.embark.el")
 (my-load "~/.emacs.d/.affe.el")
+(my-load "~/.emacs.d/.wgrep.el")
 
 (my-load "~/.emacs.d/.fish-mode.el")
 
-(my-load "~/.emacs.d/.ag.el")
-(my-load "~/.emacs.d/.wgrep-ag.el")
+;;(my-load "~/.emacs.d/.ag.el")
+;;(my-load "~/.emacs.d/.wgrep-ag.el")
 
 ;;
 ;; useful packages are not registerd in elpa ...
