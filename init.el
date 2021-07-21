@@ -213,9 +213,11 @@
 ;; when that function uses variables are executed.
 ;; To avoid to that, use the following settings
 ;; https://ymotongpoo.hatenablog.com/entry/2017/11/07/000921
+(auto-insert-mode nil) ; to avoid autoinsert not to work when creating custom.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+(auto-insert-mode t)
 
 ;; don't use custom-file and put the contents into nul-device
 ;;(setq custom-file null-device)
