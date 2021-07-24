@@ -48,3 +48,5 @@
   (use-package-compute-statistics t)
   (package-quickstart t)
   )
+
+(provide '.package)

@@ -21,3 +21,6 @@
   (advice-add 'google-translate-buffer-insert-translation :before
 	      #'google-translate-buffer-insert-translation-advice)
   )
+
+(provide '.my-anki-browse)
+

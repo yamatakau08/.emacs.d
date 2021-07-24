@@ -11,3 +11,6 @@
   :bind (:map dired-mode-map ; demand t is needed
               ("e" . my-confluence-create-or-update-attachment))
   )
+
+(provide '.my-confluence)
+

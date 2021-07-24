@@ -7,4 +7,5 @@
   :init
   (vertico-mode))
 
-(provie '.vertico)
+(provide '.vertico)
+

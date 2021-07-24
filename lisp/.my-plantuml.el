@@ -5,4 +5,7 @@
   ;; Windows 10 /C/Program Files/Java/jdk-12.0.1/bin/java.exe
   ;; Windows 8  /C/Program Files/Android/Android Studio/jre/bin/java.exe
   (my-plantuml-java "/C/Program Files/Android/Android Studio/jre/bin/java.exe")
-)
+  )
+
+(provide '.my-plantuml)
+

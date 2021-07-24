@@ -21,10 +21,10 @@
     (y-or-n-p (message "%s is not found,proceed?" file))))
 
 ;;; load private settings
-(my-load "~/.emacs.d/private.el")
+(require private)
 
 ;; check if ip-address is company's network
-(my-load "~/.emacs.d/my-network-type.el")
+(require my-network-type)
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zone が日本になっていないので、実時間と mode-line 時間表示が異なるので設定
@@ -55,7 +55,7 @@
 ;;
 ;; for package, use-package
 ;;
-(my-load "~/.emacs.d/.package.el")
+(require '.package)
 
 ;; emacs
 (use-package emacs
@@ -193,17 +193,18 @@
 ;;
 ;; my-own function, utility etc...
 ;;
-;;(my-load "~/.emacs.d/my-app-open-file.el") ; to open file associated application
-(my-load "~/.emacs.d/my-skips.el")
-;;(my-load "~/.emacs.d/.my-anki-connect.el")
-(my-load "~/.emacs.d/.eced.el") ; english conversation expression dictionary
-(my-load "~/.emacs.d/.my-confluence.el")
-(my-load "~/.emacs.d/.helm-confluence.el")
-(my-load "~/.emacs.d/.my-anki-browse.el")
-(my-load "~/.emacs.d/.helm-anki-browse.el")
-(my-load "~/.emacs.d/.my-plantuml.el")
-(my-load "~/.emacs.d/.my-say.el")
-(my-load "~/.emacs.d/.helm-qiita.el")
+;;(require 'my-app-open-file) ; to open file associated application
+;;(require 'my-skips)
+;;(require '.my-anki-connect)
+(require '.eced-menu) ; english conversation expression dictionary
+(require '.my-confluence)
+(require '.helm-confluence)
+(require '.my-anki-browse)
+(require '.helm-anki-browse)
+(require '.helm-qiita)
+
+(require '.my-plantuml)
+(require '.my-say)
 
 ;; developing
 ;;(my-load "~/.emacs.d/.yahoo-weather-mode.el")

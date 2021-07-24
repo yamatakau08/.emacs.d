@@ -17,3 +17,5 @@
 					 (mapc #'browse-url (helm-marked-candidates))))
 		    ("Show URL" . message))
 	  :migemo t)))
+
+(provide '.helm-chrome)

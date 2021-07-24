@@ -16,3 +16,7 @@
     (my-anki-connect-push-notex deck front back)))
 
 (global-set-key "\C-cr" 'my-anki-add-note-english)
+
+(provide '.my-anki-connect)
+
+

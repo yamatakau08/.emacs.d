@@ -23,5 +23,5 @@
   :bind (;;("C-x b" . frog-jump-buffer)
 	 ("C-x c" . frog-jump-buffer-other-window)))
 
-(provie '.frog-jump-buffer)
+(provide '.frog-jump-buffer)
 

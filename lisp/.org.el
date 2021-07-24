@@ -1,5 +1,5 @@
 ;;; Since pre-installed org version is 9.1.9,
-;;; install org version 9.2.X by package to use some functions provied by its version.
+;;; install org version 9.2.X by package to use some functions provided by its version.
 (use-package org
   ;; :ensure t
   ;; https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
