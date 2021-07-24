@@ -78,122 +78,117 @@
 ;;
 ;; library
 ;;
-(my-load "~/.emacs.d/.vc.el") ; (custom-set-variables '(vc-handled-backends nil)) to suppress Emacs file open is extremly slow
-(my-load "~/.emacs.d/.files.el") ; no backup
-(my-load "~/.emacs.d/.simple.el") ; line-number,column-number in mode line
-(my-load "~/.emacs.d/.time.el")
-;;(my-load "~/.emacs.d/.mode-line.el")
-(my-load "~/.emacs.d/.frame.el")
+(require '.vc) ; (custom-set-variables '(vc-handled-backends nil)) to suppress Emacs file open is extremly slow
+(require '.files) ; no backup
+(require '.simple) ; line-number,column-number in mode line
+(require '.time)
+(require '.frame)
 
-(my-load "~/.emacs.d/.url-vars.el")
-(my-load "~/.emacs.d/.info.el")
-(my-load "~/.emacs.d/.paren.el")
-;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
-(my-load "~/.emacs.d/.dired-x.el") ; only disable key assign
-;;(my-load "~/.emacs.d/.thingatpt.el")
+(require '.url-vars) ;; set proxy, should be loaded after company-network-p,use-package is active
+(require '.info)
+(require '.paren)
+;;(require '.dired) ; replace .openwith.el in dired-mode
+(require '.dired-x) ; only disable key assign
 (require '.thingatpt)
-(my-load "~/.emacs.d/.ffap.el")
-(my-load "~/.emacs.d/.windmove.el")
-(my-load "~/.emacs.d/.ansi-color.el")
-(my-load "~/.emacs.d/.whitespace.el")
-(my-load "~/.emacs.d/.autoinsert.el")
-(my-load "~/.emacs.d/.quickurl.el")
-(my-load "~/.emacs.d/.shell.el")
-(my-load "~/.emacs.d/.ruby-mode.el")
-(my-load "~/.emacs.d/.nxml-mode.el")
-(my-load "~/.emacs.d/.sgml-mode.el")
-(my-load "~/.emacs.d/.hideshow.el")
-(my-load "~/.emacs.d/.flyspell.el")
-(my-load "~/.emacs.d/.calendar.el")
-(my-load "~/.emacs.d/.cc-mode.el")
-(my-load "~/.emacs.d/.url-vars.el") ;; set proxy, should be loaded after company-network-p,use-package is active
-(my-load "~/.emacs.d/.webjump.el")
-(my-load "~/.emacs.d/.saveplace.el")
-(my-load "~/.emacs.d/.hl-line.el")
+(require '.ffap)
+(require '.windmove)
+(require '.ansi-color)
+(require '.whitespace)
+(require '.autoinsert)
+(require '.quickurl)
+(require '.shell)
+(require '.ruby-mode)
+(require '.nxml-mode)
+(require '.sgml-mode)
+(require '.hideshow)
+(require '.flyspell)
+(require '.calendar)
+(require '.cc-mode)
+(require '.webjump)
+(require '.saveplace)
+(require '.hl-line)
 
 ;;
 ;; package
 ;;
-(my-load "~/.emacs.d/.ddskk.el")
-(my-load "~/.emacs.d/.howm.el")
-(my-load "~/.emacs.d/.request.el")
-(my-load "~/.emacs.d/.google-translate.el")
-(my-load "~/.emacs.d/.esqlite.el") ; for my own tool eced
-(my-load "~/.emacs.d/.migemo.el")
-;;(my-load "~/.emacs.d/.origami.el")
-;;(my-load "~/.emacs.d/.search-web.el")
+(require '.ddskk)
+(require '.howm)
+(require '.request)  ; curl for anki/jira/confluence
+(require '.google-translate)
+(require '.esqlite) ; for my own tool eced
+(require '.migemo)
+;;(require '.origami)
+;;(require '.search-web)
 
 ;; helm
-(my-load "~/.emacs.d/.helm.el")
-(my-load "~/.emacs.d/.helm-swoop.el")
-(my-load "~/.emacs.d/.helm-ag.el")
-(my-load "~/.emacs.d/.helm-posframe.el")
-;;(my-load "~/.emacs.d/.helm-google.el")
-(my-load "~/.emacs.d/.helm-chrome.el")
+(require '.helm)
+(require '.helm-swoop)
+(require '.helm-ag)
+(require '.helm-posframe)
+;;(require '.helm-google)
+(require '.helm-chrome)
 
-(my-load "~/.emacs.d/.magit.el")
-(my-load "~/.emacs.d/.wl.el")
-(my-load "~/.emacs.d/.sdic.el")
-(my-load "~/.emacs.d/.company.el")
+(require '.magit)
+(require '.wl)
+(require '.sdic)
+(require '.company)
 
 ;; org-mode
-(my-load "~/.emacs.d/.org.el")
-(my-load "~/.emacs.d/.ox-html.el")
-(my-load "~/.emacs.d/.ox-confluence.el")
-(my-load "~/.emacs.d/.company-org-block.el")
+(require '.org)
+(require '.ox-html)
+(require '.ox-confluence)
+(require '.company-org-block)
 
-(my-load "~/.emacs.d/.visual-regexp.el")
-(my-load "~/.emacs.d/.dumb-jump.el")
-(my-load "~/.emacs.d/.dired-posframe.el")
-(my-load "~/.emacs.d/.frog-jump-buffer.el")
-(my-load "~/.emacs.d/.tabbar.el")
-;;(my-load "~/.emacs.d/.centaur-tabs.el")
-(my-load "~/.emacs.d/.request.el") ; curl for anki/jira/confluence
-(my-load "~/.emacs.d/.macrostep.el")
-(my-load "~/.emacs.d/.flycheck.el")
-(my-load "~/.emacs.d/.ruby-refactor.el")
-(my-load "~/.emacs.d/.emr.el")
-(my-load "~/.emacs.d/.japanese-holidays.el")
+(require '.visual-regexp)
+(require '.dumb-jump)
+(require '.dired-posframe)
+(require '.frog-jump-buffer)
+(require '.tabbar)
+;;(require '.centaur-tabs)
+(require '.macrostep)
+(require '.flycheck)
+(require '.ruby-refactor)
+(require '.emr)
+(require '.japanese-holidays)
 
-;;(my-load "~/.emacs.d/.jiralib2.el")
-(my-load "~/.emacs.d/.helm-jira.el")
-;;(my-load "~/.emacs.d/.org-drill.el")
-;;(my-load "~/.emacs.d/.anki-editor.el")
-;;(my-load "~/.emacs.d/.ivy.el")
-;;(my-load "~/.emacs.d/.counsel.el")
-;;(my-load "~/.emacs.d/.openwith.el")
-;;(my-load "~/.emacs.d/.all-the-icons.el")
-;;(my-load "~/.emacs.d/.all-the-icons-dired.el")
-;;(my-load "~/.emacs.d/.password-cache.el")
-(my-load "~/.emacs.d/.beacon.el")
-(my-load "~/.emacs.d/.dired-narrow.el")
-(my-load "~/.emacs.d/.dired-subtree.el")
-(my-load "~/.emacs.d/.helm-chrome.el")
-;;(my-load "~/.emacs.d/.selectrum.el")
-;;(my-load "~/.emacs.d/.selectrum-prescient.el")
+;;(require '.jiralib2)
+(require '.helm-jira)
+;;(require '.org-drill)
+;;(require '.anki-editor)
+;;(require '.ivy)
+;;(require '.counsel)
+;;(require '.openwith)
+;;(require '.all-the-icons)
+;;(require '.all-the-icons-dired)
+;;(require '.password-cache)
+(require '.beacon)
+(require '.dired-narrow)
+(require '.dired-subtree)
+;;(require '.selectrum)
+;;(require '.selectrum-prescient)
 
-(my-load "~/.emacs.d/.ppp.el")
-(my-load "~/.emacs.d/.seml.el")
+(require '.ppp)
+(require '.seml-mode)
 
-(my-load "~/.emacs.d/.vertico.el")
-(my-load "~/.emacs.d/.orderless.el")
-(my-load "~/.emacs.d/.consult.el")
-(my-load "~/.emacs.d/.marginalia.el")
-(my-load "~/.emacs.d/.embark.el")
-(my-load "~/.emacs.d/.affe.el")
-(my-load "~/.emacs.d/.wgrep.el")
+(require '.vertico)
+(require '.orderless)
+(require '.consult)
+(require '.marginalia)
+(require '.embark)
+(require '.affe)
+(require '.wgrep)
 
-(my-load "~/.emacs.d/.fish-mode.el")
+(require '.fish-mode)
 
-;;(my-load "~/.emacs.d/.ag.el")
-;;(my-load "~/.emacs.d/.wgrep-ag.el")
+;;(require '.ag)
+;;(require '.wgrep-ag)
 
 ;;
 ;; useful packages are not registerd in elpa ...
 ;;
-;;(my-load "~/.emacs.d/google.el") ; replace with new function defined in .webjump.el
-(my-load "~/.emacs.d/.instant-maximized-window.el")
-(my-load "~/.emacs.d/.run-assoc.el")
+;;(require 'google) ; replace with new function defined in .webjump.el
+(require '.instant-maximized-window)
+(require '.run-assoc)
 
 ;;
 ;; my-own function, utility etc...
