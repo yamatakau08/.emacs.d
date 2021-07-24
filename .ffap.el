@@ -3,7 +3,7 @@
   ;; modify ffap-string-at-point-mode-alist 'file
   ;; ffap treats ' ' and '　' zenkaku space as a part of the file path
   ;; to enalbe helm-find-files (C-x f) to open the above files
-  (concat (cadr (assoc 'file ffap-string-at-point-mode-alist)) " 　")
+  (concat (car (alist-get 'file ffap-string-at-point-mode-alist)) " 　")
 )
 
 ;; test file path pattern
@@ -22,3 +22,5 @@
 ;;
 ;; on Mac
 ;; "~/Documents/QRチケット印刷 _ スワチケ2入口41段181番.pdf"
+
+(provide '.ffap)

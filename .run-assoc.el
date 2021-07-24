@@ -11,13 +11,14 @@
        "https://github.com/yamatakau08/run-assoc.git"    ; my fork
        )))
 
+(load "~/.emacs.d/run-assoc/run-assoc.el")
+
 (use-package run-assoc
   :load-path "run-assoc"
 
-  :bind (("C-x C-f" . run-associated-program)
+  :bind (("C-x f" . my-run-associated-program)
 	 :map dired-mode-map
-	 ("RET" . dired-run-associated-program)
-	 )
+	 ("RET" . dired-run-associated-program))
 
   :config
   (custom-set-variables
@@ -76,3 +77,10 @@
   (advice-add 'helm-execute-selection-action :around #'helm-find-files-maybe-run-assoc)
 
   )
+
+(defun my-run-associated-program ()
+  (interactive)
+  (let ((file-name-arg (thing-at-point 'filename t))) ; t: return value without property
+    (if file-name-arg
+	(run-associated-program file-name-arg)
+      (call-interactively #'run-associated-program))))

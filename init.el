@@ -11,6 +11,9 @@
 ;; https://qiita.com/t2psyto/items/05776f010792ba967152
 (setq command-line-default-directory (format "%s/" (getenv "HOME")))
 
+;; for my setting files
+(add-to-list 'load-path "~/.emacs.d/lisp")
+
 ;;; my-load
 (defun my-load (file)
   (if (file-exists-p file)
@@ -86,7 +89,8 @@
 (my-load "~/.emacs.d/.paren.el")
 ;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
 (my-load "~/.emacs.d/.dired-x.el") ; only disable key assign
-(my-load "~/.emacs.d/.thingatpt.el")
+;;(my-load "~/.emacs.d/.thingatpt.el")
+(require '.thingatpt)
 (my-load "~/.emacs.d/.ffap.el")
 (my-load "~/.emacs.d/.windmove.el")
 (my-load "~/.emacs.d/.ansi-color.el")
