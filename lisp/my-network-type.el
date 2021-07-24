@@ -25,9 +25,10 @@
 ;;; Code:
 (defun my-network-type ()
   (let ((folist (my-network-type--interface-list)))
-    (cond ((memq company-ip-first-octet folist)  'company)
+    ;; conditon order is import, first check company, next private.
+    (cond ((memq company-ip-first-octet  folist) 'company)
 	  ((memq company-ip-first-octet2 folist) 'company)
-	  ((memq 192                    folist) 'private)
+	  ((memq 192                     folist) 'private)
 	  (t                                     nil))))
 
 ;; private

@@ -36,10 +36,22 @@
 
 ;; install "use-package"
 ;; https://emacs.stackexchange.com/questions/39250/error-package-use-package-is-unavailable
-(when (my-network-type)
+(cond
+ ((eq (my-network-type) 'company)
+  (setenv "HTTP_PROXY"  wl-proxy-server)
+  (setenv "HTTPS_PROXY" wl-proxy-server)
+
   (package-refresh-contents) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
   (unless (package-installed-p 'use-package)
     (package-install 'use-package)))
+
+ ((eq (my-network-type) 'private)
+  ;; set to nil to avoid miss match shell environment
+  (setenv "HTTP_PROXY"  nil)
+  (setenv "HTTPS_PROXY" nil)
+  (package-refresh-contents) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))))
 
 ;; use-package
 (use-package use-package
