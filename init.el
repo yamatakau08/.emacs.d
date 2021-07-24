@@ -11,6 +11,9 @@
 ;; https://qiita.com/t2psyto/items/05776f010792ba967152
 (setq command-line-default-directory (format "%s/" (getenv "HOME")))
 
+;; for my setting files
+(add-to-list 'load-path "~/.emacs.d/lisp")
+
 ;;; my-load
 (defun my-load (file)
   (if (file-exists-p file)
@@ -87,7 +90,8 @@
 (my-load "~/.emacs.d/.paren.el")
 ;;(my-load "~/.emacs.d/.dired.el") ; replace .openwith.el in dired-mode
 (my-load "~/.emacs.d/.dired-x.el") ; only disable key assign
-(my-load "~/.emacs.d/.thingatpt.el")
+;;(my-load "~/.emacs.d/.thingatpt.el")
+(require '.thingatpt)
 (my-load "~/.emacs.d/.ffap.el")
 (my-load "~/.emacs.d/.windmove.el")
 (my-load "~/.emacs.d/.ansi-color.el")
@@ -214,9 +218,11 @@
 ;; when that function uses variables are executed.
 ;; To avoid to that, use the following settings
 ;; https://ymotongpoo.hatenablog.com/entry/2017/11/07/000921
+(auto-insert-mode nil) ; to avoid autoinsert not to work when creating custom.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+(auto-insert-mode t)
 
 ;; don't use custom-file and put the contents into nul-device
 ;;(setq custom-file null-device)
