@@ -10,7 +10,8 @@
    '(("org"   . "https://orgmode.org/elpa/")
      ("melpa" . "https://melpa.org/packages/")
      ("gnu"   . "https://elpa.gnu.org/packages/")
-     ("celpa" . "https://celpa.conao3.com/packages/"))))
+     ;;("celpa" . "https://celpa.conao3.com/packages/")
+     )))
 
 ;; in case, M-x list-packages with the above settings
 ;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1547100014738900

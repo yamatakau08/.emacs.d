@@ -21,10 +21,10 @@
     (y-or-n-p (message "%s is not found,proceed?" file))))
 
 ;;; load private settings
-(require private)
+(require 'private)
 
 ;; check if ip-address is company's network
-(require my-network-type)
+(require 'my-network-type)
 
 (set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zone が日本になっていないので、実時間と mode-line 時間表示が異なるので設定
