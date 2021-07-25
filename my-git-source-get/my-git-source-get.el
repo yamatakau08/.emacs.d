@@ -24,4 +24,11 @@
       (message "done cloning %s into %s" repository-name destdir)
       )))
 
+(defun my-git-source1-get (srcurl destfile)
+  (interactive)
+  (shell-command-to-string
+   (mapconcat #'shell-quote-argument
+	      (list "curl" "--silent" srcurl "-o" (expand-file-name destfile)) " ")) ; need expand-file-name, without it curl failed
+  )
+
 (provide 'my-git-source-get)

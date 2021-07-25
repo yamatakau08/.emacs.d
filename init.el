@@ -52,6 +52,10 @@
 (add-to-list 'exec-path "~/bin/cmigemo-default-win64")
 (add-to-list 'exec-path "/usr/local/bin")
 
+;; for "git clone" or one file get which is not get by package system
+(add-to-list 'load-path "~/.emacs.d/my-git-source-get")
+(require 'my-git-source-get)
+
 ;;
 ;; for package, use-package
 ;;
