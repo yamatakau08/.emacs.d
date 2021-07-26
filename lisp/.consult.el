@@ -8,8 +8,8 @@
 
   :bind (("M-g g" . consult-goto-line)
 	 ("C-x b" . consult-buffer)
-	 ("C-s"   . consult-line)
-	 ("C-r"   . consult-line))
+	 ("C-s"   . consult-isearch)
+	 ("C-r"   . consult-isearch))
 
   :config
   (recentf-mode) ; enable for consult-recetf-file command, refere https://github.com/minad/consult#virtual-buffers
