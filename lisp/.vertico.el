@@ -6,7 +6,24 @@
   (vertico-cycle nil)
 
   :init
-  (vertico-mode))
+  (vertico-mode)
+
+  ;; :bind
+  ;; (:map vertico-map
+  ;; 	("C-z" . grugrut/up-dir))
+
+  ;; :config
+  ;; (defun grugrut/up-dir ()
+  ;;     "一つ上の `/' まで辿って削除する."
+  ;;     (interactive)
+  ;;     (let* ((orig (minibuffer-contents))
+  ;;            (orig-dir (file-name-directory orig))
+  ;;            (up-dir (if orig-dir (file-name-directory (directory-file-name orig-dir))))
+  ;;            (target (if (and up-dir orig-dir) up-dir orig)))
+  ;; 	(message "orig: %s" orig)
+  ;;       (delete-minibuffer-contents)
+  ;;       (insert target)))
+  )
 
 ;; https://github.com/minad/vertico#extensions
 ;; put vertico-directory.el in ~/.emacs.d/lisp/
