@@ -18,3 +18,5 @@ image-dired
 request
 helm-jira
 straight
+package-quickstart.el
+places

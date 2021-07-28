@@ -1,5 +1,9 @@
 ;;; Since pre-installed org version is 9.1.9,
 ;;; install org version 9.2.X by package to use some functions provided by its version.
+
+;; to Daily report descending when :step day is set on org-clock-reprot
+(require 'ad_org-clock-report)
+
 (use-package org
   ;; :ensure t
   ;; https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
@@ -62,9 +66,6 @@
   ;; because org-mode loads org-gnus even though I don't use gnus.... makes movemail
   ;; emacs-jp slack teach me how to not to load org-gnus
   (delq 'org-gnus org-modules)
-
-  ;; to Daily report descending when :step day is set on org-clock-reprot
-  (my-load "~/.emacs.d/ad_org-clock-report.el")
 
   (org-babel-do-load-languages
    'org-babel-load-languages

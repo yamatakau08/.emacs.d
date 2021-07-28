@@ -104,3 +104,6 @@ a number of clock tables."
           (setq start next))
         (end-of-line 0))))
   (advice-add 'org-clocktable-steps :override #'ad:org-clocktable-steps))
+
+(provide 'ad_org-clock-report)
+
