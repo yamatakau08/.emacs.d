@@ -1,5 +1,16 @@
 (use-package vertico
-  :ensure t
+  ;;:ensure t ; use straight to install extensions is not registerd in elpa
+  ;; :straight (:files (:defaults "extensions/*")
+  ;;                       :includes (vertico-buffer
+  ;;                                  vertico-directory
+  ;;                                  vertico-flat
+  ;;                                  vertico-indexed
+  ;;                                  vertico-mouse
+  ;;                                  vertico-quick
+  ;;                                  vertico-repeat
+  ;;                                  vertico-reverse))
+
+  :straight (:files (:defaults "extensions/*"))
 
   :custom
   (vertico-count 20)
@@ -25,12 +36,18 @@
   ;;       (insert target)))
   )
 
-;; https://github.com/minad/vertico#extensions
-;; put vertico-directory.el in ~/.emacs.d/lisp/
-(let ((srcurl "https://raw.githubusercontent.com/minad/vertico/main/extensions/vertico-directory.el")
-      (file "~/.emacs.d/lisp/vertico-directory.el"))
-  (unless (file-exists-p file)
-    (my-git-source1-get srcurl file)))
+;; install the vertico extensios files which are not registerd in elpa, by straight
+;; https://github.com/raxod502/straight.el/issues/819#issuecomment-882039946
+;; finally move in "(use-package vertico ..." block
+;;(straight-use-package '( vertico :files (:defaults "extensions/*")
+;;                         :includes (vertico-buffer
+;;                                    vertico-directory
+;;                                    vertico-flat
+;;                                    vertico-indexed
+;;                                    vertico-mouse
+;;                                    vertico-quick
+;;                                    vertico-repeat
+;;                                    vertico-reverse)))
 
 (use-package vertico-directory
   :after (vertico)

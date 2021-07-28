@@ -6,10 +6,12 @@
    "rg --ignore-case --null --line-buffered --color=ansi --max-columns=1000\
    --no-heading --line-number --hidden . -e ARG OPTS")
 
-  :bind (("M-g g" . consult-goto-line)
-	 ("C-x b" . consult-buffer)
-	 ("C-s"   . consult-isearch)
-	 ("C-r"   . consult-isearch))
+  :bind
+  (("M-g g" . consult-goto-line)
+   ("C-x b" . consult-buffer)
+   ("C-s"   . consult-line)
+   ("C-r"   . consult-line)
+   )
 
   :config
   (recentf-mode) ; enable for consult-recetf-file command, refere https://github.com/minad/consult#virtual-buffers

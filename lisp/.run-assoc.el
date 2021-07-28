@@ -1,14 +1,7 @@
-;; check if ~/.emacs.d/run-assoc/run-assoc.el exists
-;; if it does not exist, git clone
-(let ((file (expand-file-name "~/.emacs.d/run-assoc/run-assoc.el")))
-  (if (not (file-exists-p file))
-      (my-git-source-get
-       ;; "https://github.com/emacsmirror/run-assoc.git" ; original site
-       "https://github.com/yamatakau08/run-assoc.git"    ; my fork
-       )))
-
 (use-package run-assoc
   :load-path "run-assoc"
+
+  :straight (:host github :repo "yamatakau08/run-assoc")
 
   :bind (("C-x f" . my-run-associated-program)
 	 :map dired-mode-map
