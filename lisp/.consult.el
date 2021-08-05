@@ -11,6 +11,9 @@
    ("C-x b" . consult-buffer)
    ("C-s"   . consult-line)
    ("C-r"   . consult-line)
+   ("C-x f" . my-consult-file-externally)
+   :map dired-mode-map
+   ("C-RET" . my-consult-dired-file-exteranally)
    )
 
   :config
@@ -21,11 +24,44 @@
    :preview-key nil)
 
   (defun consult-ripgrep1 (&optional dir initial)
-    "Search for regexp with rg in the files in DIR with INITIAL input.
-See `consult-grep' for more details."
     (interactive "P")
-    ;;(consult--grep "Ripgrep" consult-ripgrep-command dir initial)
-    (consult--grep "Ripgrep" consult-ripgrep-command dir "search_word -- --max-depth 1"))
+    ;; pass
+    ;; (minibuffer-with-setup-hook
+    ;; 	#'beginning-of-line
+    ;;   (consult--grep "Ripgrep" consult-ripgrep-command dir "searchword -- --max-depth 1"))
+
+    ;; pass
+    ;; (consult--minibuffer-with-setup-hook
+    ;; 	#'beginning-of-line
+    ;;   (consult--grep "Ripgrep" consult-ripgrep-command dir "searchword -- --max-depth 1"))
+
+    ;; pass
+    (consult--minibuffer-with-setup-hook
+	(lambda ()
+	  (beginning-of-line)
+	  (forward-char))
+      (consult--grep "Ripgrep" consult-ripgrep-command dir "searchword -- --max-depth 1"))
+    )
+
+  (defun my-consult-file-externally ()
+    (interactive)
+    (let ((url (thing-at-point 'url))
+	  (file-name (thing-at-point 'filename t))) ; t: return value without property
+      (if url
+	  (browse-url-default-browser url)
+	(if file-name
+	    (consult-file-externally (expand-file-name (thing-at-point 'filename t)))
+	  (call-interactively #'find-file)))))
+
+  (defun my-consult-dired-file-exteranally ()
+    (interactive)
+    (let ((file-name (dired-get-file-for-visit)))
+      (cond ((string= (file-name-extension file-name) "mp4")
+	     ;; for windows 8.1
+	     (shell-command-to-string (format "%s %s" "start" file-name)))
+	    (t
+	     (consult-file-externally file-name)))))
+
   )
 
 (provide '.consult)
