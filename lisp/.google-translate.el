@@ -59,7 +59,7 @@
 	(progn
 	  (goto-line 5)
 	  ;; use 'sentence to get line content without \n
-	  (thing-at-point 'sentence))))
+	  (thing-at-point 'sentence t))))
   )
 
 (provide '.google-translate)

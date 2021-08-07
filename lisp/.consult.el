@@ -46,11 +46,11 @@
   (defun my-consult-file-externally ()
     (interactive)
     (let ((url (thing-at-point 'url))
-	  (file-name (thing-at-point 'filename t))) ; t: return value without property
+	  (file-name (my-thing-at-point-filename)))
       (if url
 	  (browse-url-default-browser url)
 	(if file-name
-	    (consult-file-externally (expand-file-name (thing-at-point 'filename t)))
+	    (consult-file-externally (expand-file-name file-name))
 	  (call-interactively #'find-file)))))
 
   (defun my-consult-dired-file-exteranally ()

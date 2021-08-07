@@ -3,9 +3,10 @@
 
   :straight (:host github :repo "yamatakau08/run-assoc")
 
-  :bind (("C-x f" . my-run-associated-program)
-	 :map dired-mode-map
-	 ("RET" . dired-run-associated-program))
+  ;; replaced with consult
+  ;; :bind (("C-x f" . my-run-associated-program)
+  ;; 	 :map dired-mode-map
+  ;; 	 ("RET" . dired-run-associated-program))
 
   :config
   (custom-set-variables
@@ -73,6 +74,7 @@
 	(if file-name-arg
 	    (run-associated-program file-name-arg)
 	  (call-interactively #'run-associated-program)))))
+
   )
 
 (provide '.run-assoc)

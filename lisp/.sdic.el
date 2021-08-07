@@ -39,7 +39,7 @@
 	      (front (read-string "Front: "
 				  (if (region-active-p)
 				      (buffer-substring (region-beginning) (region-end))
-				    (thing-at-point 'word))))
+				    (thing-at-point 'word t))))
 	      (back  (read-string "Back : " )))
 	  (my-anki-browse-addNote "英語" front back))))
   )
