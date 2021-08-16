@@ -5,13 +5,10 @@
 ;; it doesn't effect and helm-jira.elc is prior to load.
 ;; So need to delete helm-jira.elc and require cl,request explicitly.
 
-;; use my modified helm-jira in ~/.emacs.d/helm-jira
-
 (use-package helm-jira
 
-  :if (file-directory-p (format "%s/helm-jira" user-emacs-directory))
-
-  :load-path "helm-jira"
+  ;; use my modified helm-jira
+  :straight (helm-jira :type git :flavor melpa :host github :repo "yamatakau08/helm-jira")
 
   :custom
   (helm-jira-url       company-jira-url) ; URL of your JIRA instance (should not end in a slash)
