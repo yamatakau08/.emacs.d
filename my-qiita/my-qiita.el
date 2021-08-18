@@ -1,9 +1,9 @@
-;;; helm-qiita.el --- Get list from Qiita            -*- lexical-binding: t; -*-
+;;; my-qiita.el --- Get Qiita pages with query word  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021
 
 ;; Author:  <yamatakau08@gmail.com>
-;; Keywords:
+;; Keywords: applications
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,47 +20,24 @@
 
 ;;; Commentary:
 
-;; refer Qiita page https://qiita.com/kou_pg_0131/items/57f86a1abc332ed2185d
+;;
 
 ;;; Code:
 (require 'request)
-(require 'helm)
 
-;; for debug
-;;(setq request-message-level 'debug)
-
-(defgroup helm-qiita nil
-  "helm-qiita customization group."
+(defgroup my-qiita nil
+  "my-qiita customization group."
   :group 'applications)
 
-(defvar helm-qiita--api-base-url "https://qiita.com/api/v2")
+(defvar my-qiita--api-base-url "https://qiita.com/api/v2")
 
-(defun helm-qiita-page-titles (queryword)
-  "Get the list of Qiita pages specified queryword in helm"
-  (interactive "sQiita Query: ")
-  (helm-qiita--get-page-titles queryword
-   (lambda (ret)
-     (let* ((helm-src
-    	     (helm-build-sync-source "Qiita-pages"
-    	       :candidates (helm-qiita--build-candidate-page-titles ret)
-    	       :action (helm-make-actions
-                        "Open page n browser" #'helm-qiita--action-open-page)
-    	       :candidate-number-limit 10000
-    	       :migemo t)))
-       (helm :sources helm-src)))))
-
+;; public
 (defun my-qiita-pages-title-url (queryword)
   "Get the list of Qiita pages specified queryword"
   (interactive "sQiita Query: ")
-  (helm-qiita--get-page-titles queryword #'my-qiita--build-candidate-pages-title-url))
+  (my-qiita--get-page-titles queryword #'my-qiita--build-candidate-pages-title-url))
 
-;; private
-(defun helm-qiita--action-open-page (page-info)
-  "Open the given `page' in the browser."
-  (let ((url (let-alist page-info .url)))
-    (browse-url-default-browser url)))
-
-(defun helm-qiita--build-candidate-page-titles (results)
+(defun my-qiita--build-candidate-page-titles (results)
   "make the list of Qiita pages with updated date and title"
   (mapcar
    (lambda (result)
@@ -70,6 +47,12 @@
 	    (updated_at_hhmmss   (truncate-string-to-width updated_at 19 11)))
        `(,(format "%s %s %s" updated_at_yyyymmdd updated_at_hhmmss title) . ,result))) results))
 
+(defun my-qiita--action-open-page (page-info)
+  "Open the given `page' in the browser."
+  (let ((url (let-alist page-info .url)))
+    (browse-url-default-browser url)))
+
+;; private
 (defun my-qiita--build-candidate-pages-title-url (results)
   "make the list of Qiita pages tile url"
   (mapcar
@@ -78,21 +61,23 @@
 	   (url   (let-alist result .url)))
        (message "\"%s\",%s" title url))) results))
 
-(defun helm-qiita--get-page-titles (queryword callback)
+(defun my-qiita--get-page-titles (queryword callback)
   (let (datas
 	(per_page 100))
     (cl-loop
      for page from 1 to 5 do ; page 1 to n
-     (helm-qiita--request
-      (format "%s/items" helm-qiita--api-base-url)
+     (my-qiita--request
+      (format "%s/items" my-qiita--api-base-url)
       :params `(("page" . ,page) ("per_page" . ,per_page) ("query" . ,(format "title:%s" queryword)))
       :parser 'json-read
       :success (cl-function
 		(lambda (&key data &allow-other-keys)
 		  (setq datas (vconcat datas data))))))
-    (funcall callback datas)))
+    (if callback
+	(funcall callback datas)
+      datas)))
 
-(defun helm-qiita--request (&rest args)
+(defun my-qiita--request (&rest args)
   (apply #'request
 	 (append args
 		 ;; https://qiita.com/kou_pg_0131/items/57f86a1abc332ed2185d#api%E3%82%92%E5%8F%A9%E3%81%84%E3%81%A6%E3%81%BF%E3%82%8B
@@ -103,7 +88,7 @@
 			    (lambda (&rest response &key data error-thrown &allow-other-keys)
 			      (let ((statusCode (let-alist data .statusCode))
 				    (message    (let-alist data .message)))
-				(message "[helm-qiita--request][error] statusCode:%s %s" statusCode message))))))))
+				(message "[my-qiita--request][error] statusCode:%s %s" statusCode message))))))))
 
-(provide 'helm-qiita)
-;;; helm-qiita.el ends here
+(provide 'my-qiita)
+;;; my-qiita.el ends here

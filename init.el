@@ -207,7 +207,7 @@
 (require '.helm-confluence)
 (require '.my-anki-browse)
 (require '.helm-anki-browse)
-(require '.helm-qiita)
+(require '.my-qiita)
 
 ;;(require '.my-plantuml)
 (require '.my-say)
