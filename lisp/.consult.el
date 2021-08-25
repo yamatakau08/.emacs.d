@@ -129,4 +129,29 @@
 ;; 	 (consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" files)))
 ;;     (consult--grep "Grep" #'consult--grep-builder nil "CMD_")))
 
+;; https://github.com/minad/consult/issues/407#issuecomment-905342672
+;; works
+(defun consult-grep-one-file ()
+  "Call `consult-grep' for the current buffer (a single file)."
+  (interactive)
+  (let ((consult-grep-args
+         (concat "grep "
+                 "--line-buffered "
+                 "--color=never "
+                 "--line-number "
+                 "-I "
+                 "-e ARG OPTS "
+                 (shell-quote-argument buffer-file-name))))
+    (consult-grep)))
+
+(defun my-consult-grep-logc ()
+  "in testing"
+  (interactive)
+  (let* (;;(file "/Users/yama/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 1
+	 (file "~/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 2
+	 ;;(consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" file)) ; 1,2 fail
+	 (consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s" (expand-file-name file))) ;; 1 pass
+	)
+    (consult-grep)))
+
 (provide '.consult)
