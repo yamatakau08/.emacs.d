@@ -30,6 +30,19 @@
   "consult-qiita customization group."
   :group 'applications)
 
+(defvar consult-qiita-page-titles-map
+  (let ((map (make-sparse-keymap)))
+    ;;(define-key map "C-c C-z" #'consult-qiita-dummy) ; fail
+    ;;(define-key map "\C-c\C-z" #'consult-qiita-dummy) ; pass
+    (define-key map (kbd "C-c C-z") #'consult-qiita-dummy) ; pass
+    map)
+  "in testing, Additional keymap used by `consult-qiita-page-titles'.")
+
+(defun consult-qiita-dummy ()
+  "in testing"
+  (interactive)
+  (message "tako"))
+
 (defun consult-qiita-page-titles (queryword)
   "Get the titles of Qiita pages in whcih inculude the queryword, then open the selected title on browser"
   (interactive "sQiita Query: ")
@@ -40,7 +53,10 @@
        (let ((candidates (my-qiita--build-candidate-page-titles page-titles))
 	     selected
 	     page-info)
-	 (setq selected (consult--read candidates :sort nil))
+	 (setq selected (consult--read candidates
+				       :sort nil
+   				       :keymap consult-qiita-page-titles-map ; in testing
+				       ))
 	 (setq page-info (cdr (assoc selected candidates)))
 	 (my-qiita--action-open-page page-info))))))
 

@@ -82,8 +82,8 @@
   ("\\.howm\\'" . org-mode)
   ("\\.txt\\'"  . org-mode)
 
-  :bind*
-  (("C-c c" . 'org-capture))
+  ;; :bind*
+  ;; (("C-c c" . 'org-capture))
   )
 
 ;;; to suppress not to put the annotation whichi is link text in org capture buffer

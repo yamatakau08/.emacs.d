@@ -1,7 +1,7 @@
 ;;; config.el -*- lexical-binding: t; -*-
 
 ;;; for emergency debug
-(setq debug-on-error  t) ; enable enter debugger if an error is signaled
+(setq debug-on-error  nil) ; enable enter debugger if an error is signaled
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
 (setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
 
@@ -181,6 +181,9 @@
 (require '.consult)
 (require '.marginalia)
 (require '.embark)
+
+(require '.consult-dir)
+
 (require '.affe)
 (require '.wgrep)
 
@@ -188,6 +191,9 @@
 
 ;;(require '.ag)
 ;;(require '.wgrep-ag)
+
+(require '.plantuml-mode)
+
 
 ;;
 ;; useful packages are not registerd in elpa ...
@@ -209,7 +215,7 @@
 (require '.helm-anki-browse)
 (require '.my-qiita)
 
-;;(require '.my-plantuml)
+(require '.my-plantuml)
 (require '.my-say)
 
 ;; developing

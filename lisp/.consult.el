@@ -2,9 +2,13 @@
   :ensure t
 
   :custom
-  (consult-ripgrep-command
-   "rg --ignore-case --null --line-buffered --color=ansi --max-columns=1000\
-   --no-heading --line-number --hidden . -e ARG OPTS")
+  (consult-ripgrep-args
+   "rg --ignore-case --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
+   --smart-case --no-heading --line-number .")
+
+  ;;"rg --ignore-case --null --line-buffered --color=ansi --max-columns=1000\
+  ;; --no-heading --line-number --hidden . -e ARG OPTS")
+
 
   :bind
   (("M-g g" . consult-goto-line)
@@ -63,5 +67,66 @@
 	     (consult-file-externally file-name)))))
 
   )
+
+
+;; sample for using consult under studying
+;; not yet open the url in highlight.
+(defvar my-consult-sample-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-l") #'my-consult-sample-dummy)
+    map)
+  "Additional keymap used by `my-consult-sample'.")
+
+(defun my-consult-sample-dummy ()
+  "dummy function for checking  when type C-l in my-consult-sample session"
+  (interactive)
+  (message "my-consult-sample-dummy"))
+
+(defun my-consult-sample ()
+  "sample function using consult"
+  (interactive)
+  (let* ((cands '(("google" . "http://google.com/")
+   		  ("yahoo"  . "http://yahoo.com/")))
+   	 selected
+   	 url)
+    (setq selected (consult--read cands
+				  :keymap my-consult-sample-map))
+    (setq url (cdr (assoc selected cands)))
+    (browse-url-default-browser url)))
+
+;; rg <PATTERN> <FILE>...
+;; dired-shell-cmd
+;; dired-run-shell-command
+;;(shell-command-to-string cmd) ; M-: output is in mini buffer, M-x where is it output?
+;;(dired-shell-command cmd) ; where is it output?
+(defun consult-ripgrep-dired-marked-files (pattern)
+  "refer https://github.com/minad/consult/wiki#counsel-grep-or-swiper-equivalent"
+  (interactive "sPattern: ")
+  (let* ((marked-files (dired-get-marked-files))
+	 (files (format "rg %s %s" pattern (string-join marked-files " ")))
+	 (cmd (format "rg %s %s" pattern files)))
+    (shell-command-to-string cmd)))
+
+;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -r ."
+;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I "c:/Temp/SC3/Log/BISYAMON3G-2575/halog_20210820_103646_+0900_fw2.28.0_SC/log/logc20"
+;; (defun consult--grep-sample-builder (input)
+;;   "Build command line given INPUT."
+;;   (pcase-let* ((cmd (split-string-and-unquote consult-grep-args))
+;;                (type (consult--grep-regexp-type (car cmd)))
+;;                (`(,arg . ,opts) (consult--command-split input))
+;;                (`(,re . ,hl) (funcall consult--regexp-compiler arg type)))
+;;     (when re
+;;       (list :command
+;;             (append cmd
+;;                     (list (if (eq type 'pcre) "--perl-regexp" "--extended-regexp")
+;;                           "-e" (consult--join-regexps re type))
+;;                     opts)
+;;             :highlight hl))))
+
+;; (defun consult-grep-sample ()
+;;   (interactive)
+;;   (let* ((files "c:/Temp/Log/logc20 c:/Temp/Log/logc21")
+;; 	 (consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" files)))
+;;     (consult--grep "Grep" #'consult--grep-builder nil "CMD_")))
 
 (provide '.consult)

@@ -49,8 +49,14 @@
 
 (defun my-qiita--action-open-page (page-info)
   "Open the given `page' in the browser."
+  (interactive)
   (let ((url (let-alist page-info .url)))
     (browse-url-default-browser url)))
+
+(defun xmy-qiita--action-open-page ()
+  "Open the given `page' in the browser."
+  (interactive)
+  (browse-url-default-browser "http://www.yahoo.com"))
 
 ;; private
 (defun my-qiita--build-candidate-pages-title-url (results)
