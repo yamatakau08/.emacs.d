@@ -1,5 +1,18 @@
 (use-package consult
-  :ensure t
+
+  ;;:ensure t
+  ;;:load-path "consult-0.9"
+
+  ;;:straight t
+
+  ;; pass ,  but have Warning (straight): Could not check out branch "0.9" of repository "consult" Disable showing Disable logging
+  ;;:straight (:branch "0.9")
+  ;;:straight (:commit "ee58941308d83a717728f056ea753e80f68cfbc0")
+
+  ;; fail, don't get all files
+  ;;:straight (:branch "async-fix") ; probably equivalent tag 0.9
+
+  :straight (:ref "0.9")
 
   :custom
   (consult-ripgrep-args
@@ -123,15 +136,16 @@
 ;;                     opts)
 ;;             :highlight hl))))
 
-;; (defun consult-grep-sample ()
-;;   (interactive)
-;;   (let* ((files "c:/Temp/Log/logc20 c:/Temp/Log/logc21")
-;; 	 (consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" files)))
-;;     (consult--grep "Grep" #'consult--grep-builder nil "CMD_")))
+(defun consult-grep-sample ()
+   (interactive)
+  (let* ((files "c:/Temp/Log/log1")
+	 (consult-grep-args (format "grep --line-buffered --color=never --with-filename %s" files)))
+    ;;(consult--grep "Grep" consult-grep-command nil nil)))
+    (consult-grep)))
 
 ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
-;; works
-(defun consult-grep-one-file ()
+;; works only Mac, not Windows
+(defun consult-grep-one-file0 ()
   "Call `consult-grep' for the current buffer (a single file)."
   (interactive)
   (let ((consult-grep-args
@@ -142,16 +156,63 @@
                  "-I "
                  "-e ARG OPTS "
                  (shell-quote-argument buffer-file-name))))
+    (message "[consult-grep-one-file] consult-grep-args: %s" consult-grep-args)
     (consult-grep)))
 
-(defun my-consult-grep-logc ()
-  "in testing"
+;; https://github.com/minad/consult/issues/407#issuecomment-906427582
+;; Not work on Windows
+(defun consult-grep-one-file ()
+  "Call `consult-grep' for the current buffer (a single file)."
   (interactive)
-  (let* (;;(file "/Users/yama/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 1
-	 (file "~/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 2
-	 ;;(consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" file)) ; 1,2 fail
+  (let ((consult-grep-args
+         (concat "grep "
+                 "--line-buffered "
+                 "--color=never "
+                 "--line-number "
+                 "--with-filename "
+                 (shell-quote-argument buffer-file-name))))
+    (message "[consult-grep-one-file] consult-grep-args: %s" consult-grep-args)
+    (consult-grep)))
+
+(defun consult-ripgrep-one-file ()
+  "Call `consult-ripgrep' for the current buffer (a single file)."
+  (interactive)
+  (let ((consult-ripgrep-args
+         (concat "rg "
+                 "--line-buffered "
+                 "--color=never "
+                 "--line-number "
+                 "--smart-case "
+                 "--no-heading "
+                 "--max-columns=250 "
+                 "--max-columns-preview "
+                 "--with-filename "
+                 (shell-quote-argument buffer-file-name))))
+    (consult-ripgrep)))
+
+(defun my-consult-grep-logc-on-mac ()
+  "in testing on Mac works"
+  (interactive)
+  (let* ((file "/Users/yama/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 1
+	 ;;(file "~/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 2
+	 ;;(consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" file)) ; 1,2 fail, need "-e ARG OPTS" as option
 	 (consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s" (expand-file-name file))) ;; 1 pass
-	)
+	 )
+    (consult-grep)))
+
+(defun consult-grep-tako ()
+  "Call `consult-grep' for the current buffer (a single file)."
+  (interactive)
+  (let ((consult-grep-args
+         (concat "grep "
+                 "--line-buffered "
+                 "--color=never "
+                 "--line-number "
+                 "--with-filename "
+                 ;;(shell-quote-argument buffer-file-name) ; sample
+		 (shell-quote-argument "c:/Temp/SC3/Log/BISYAMON3G-2575/halog_20210820_103646_+0900_fw2.28.0_SC/log/logc1") ; don't work
+		 )))
+    (message "[consult-grep-one-file] consult-grep-args: %s" consult-grep-args)
     (consult-grep)))
 
 (provide '.consult)

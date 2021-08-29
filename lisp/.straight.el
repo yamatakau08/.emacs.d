@@ -14,4 +14,7 @@
 
 (straight-use-package 'use-package)
 
+;; to create straight-profiles under ~/.emacs.d/lisp
+(custom-set-variables '(straight-profiles `((nil . ,(concat user-emacs-directory "lisp/straight-default.el")))))
+
 (provide '.straight)
