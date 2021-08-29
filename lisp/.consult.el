@@ -3,7 +3,7 @@
   ;;:ensure t
   ;;:load-path "consult-0.9"
 
-  ;;:straight t
+  :straight t ; installed tag 0.9 with straight version lock function
 
   ;; pass ,  but have Warning (straight): Could not check out branch "0.9" of repository "consult" Disable showing Disable logging
   ;;:straight (:branch "0.9")
@@ -12,7 +12,8 @@
   ;; fail, don't get all files
   ;;:straight (:branch "async-fix") ; probably equivalent tag 0.9
 
-  :straight (:ref "0.9")
+  ;; staright not support :ref
+  ;;:straight (:ref "0.9")
 
   :custom
   (consult-ripgrep-args
