@@ -16,13 +16,9 @@
   ;;:straight (:ref "0.9")
 
   :custom
-  (consult-ripgrep-args
-   "rg --ignore-case --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
+  (consult-ripgrep-args ; add "--hidden"
+   "rg --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
    --smart-case --no-heading --line-number .")
-
-  ;;"rg --ignore-case --null --line-buffered --color=ansi --max-columns=1000\
-  ;; --no-heading --line-number --hidden . -e ARG OPTS")
-
 
   :bind
   (("M-g g" . consult-goto-line)
@@ -43,23 +39,9 @@
 
   (defun consult-ripgrep1 (&optional dir initial)
     (interactive "P")
-    ;; pass
-    ;; (minibuffer-with-setup-hook
-    ;; 	#'beginning-of-line
-    ;;   (consult--grep "Ripgrep" consult-ripgrep-command dir "searchword -- --max-depth 1"))
-
-    ;; pass
-    ;; (consult--minibuffer-with-setup-hook
-    ;; 	#'beginning-of-line
-    ;;   (consult--grep "Ripgrep" consult-ripgrep-command dir "searchword -- --max-depth 1"))
-
-    ;; pass
-    (consult--minibuffer-with-setup-hook
-	(lambda ()
-	  (beginning-of-line)
-	  (forward-char))
-      (consult--grep "Ripgrep" consult-ripgrep-command dir "searchword -- --max-depth 1"))
-    )
+    ;; --max-depth 1 works, 0 doesn't work
+    ;; see rg manual --max-depth <NUM> ... For example
+    (consult--grep "Ripgrep" #'my-consult--ripgrep-builder dir "searchword -- --max-depth 1"))
 
   (defun my-consult-file-externally ()
     (interactive)
@@ -81,7 +63,6 @@
 	     (consult-file-externally file-name)))))
 
   )
-
 
 ;; sample for using consult under studying
 ;; not yet open the url in highlight.
@@ -215,5 +196,22 @@
 		 )))
     (message "[consult-grep-one-file] consult-grep-args: %s" consult-grep-args)
     (consult-grep)))
+
+;; in testing
+(defun my-consult--ripgrep-builder (input)
+  "Build command line given INPUT."
+  (pcase-let* ((cmd (split-string-and-unquote consult-ripgrep-args))
+               (type (consult--ripgrep-regexp-type (car cmd)))
+               (`(,arg . ,opts) (consult--command-split input))
+               (`(,re . ,hl) (funcall consult--regexp-compiler arg type)))
+    (when re
+      (list :command
+            (append cmd
+		    ;;'("--hidden") ; pass
+                    (and (eq type 'pcre) '("-P"))
+                    (list  "-e" (consult--join-regexps re type))
+                    opts)
+            :highlight hl))))
+
 
 (provide '.consult)
