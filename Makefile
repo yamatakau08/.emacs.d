@@ -1,9 +1,9 @@
-.PHONY: all clean-elpa clean-straight clean-custom clean-consult
+.PHONY: all clean-all clean-elpa clean-straight clean-custom clean-consult
 
 all: ;
 
 clean-custom:
-	rm custom.el
+	rm -f custom.el
 
 clean-elpa:
 	rm -rf elpa
@@ -16,3 +16,5 @@ clean-consult:
 	rm -rf straight/repos/consult
 	rm -rf straight/build/consult
 	rm -rf straight/links/consult
+
+clean-all: clean-custom clean-elpa clean-straight ;

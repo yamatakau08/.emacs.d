@@ -182,8 +182,8 @@
 	 )
     (consult-grep)))
 
-(defun consult-grep-tako ()
-  "Call `consult-grep' for the current buffer (a single file)."
+(defun consult-grep-work-on-mac ()
+  "Call `consult-grep' for the multiple file works on Mac, not on Windows"
   (interactive)
   (let ((consult-grep-args
          (concat "grep "
@@ -191,11 +191,29 @@
                  "--color=never "
                  "--line-number "
                  "--with-filename "
-                 ;;(shell-quote-argument buffer-file-name) ; sample
-		 (shell-quote-argument "c:/Temp/SC3/Log/BISYAMON3G-2575/halog_20210820_103646_+0900_fw2.28.0_SC/log/logc1") ; don't work
-		 )))
+		 (shell-quote-argument "/tmp/log1")
+		 " "
+		 (shell-quote-argument "/tmp/log2"))))
     (message "[consult-grep-one-file] consult-grep-args: %s" consult-grep-args)
     (consult-grep)))
+
+(defun consult-ripgrep-work-on-mac ()
+  "Call `consult-ripgrep' for the multiple file works on Mac, not on Windows"
+  (interactive)
+  (let ((consult-ripgrep-args
+         (concat "rg "
+                 "--line-buffered "
+                 "--color=never "
+                 "--line-number "
+                 "--smart-case "
+                 "--no-heading "
+                 "--max-columns=250 "
+                 "--max-columns-preview "
+                 "--with-filename "
+                 (shell-quote-argument "/tmp/log1")
+		 " "
+                 (shell-quote-argument "/tmp/log2"))))
+    (consult-ripgrep)))
 
 ;; in testing
 (defun my-consult--ripgrep-builder (input)
@@ -212,6 +230,5 @@
                     (list  "-e" (consult--join-regexps re type))
                     opts)
             :highlight hl))))
-
 
 (provide '.consult)
