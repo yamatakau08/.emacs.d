@@ -56,6 +56,12 @@
 (add-to-list 'load-path "~/.emacs.d/my-git-source-get")
 (require 'my-git-source-get)
 
+;;
+;; for package manage
+;;
+(require '.package)
+(require '.straight)
+
 ;; emacs
 (use-package emacs
   :no-require t
@@ -73,12 +79,6 @@
 ;  :config (exec-path-from-shell-initialize)
 ;  )
 ;(message "[debug] after exec-path: %s" exec-path)
-
-;;
-;; for package manage
-;;
-(require '.package)
-(require '.straight)
 
 ;;
 ;; library
