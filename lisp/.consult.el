@@ -41,7 +41,7 @@
     (interactive "P")
     ;; --max-depth 1 works, 0 doesn't work
     ;; see rg manual --max-depth <NUM> ... For example
-    (consult--grep "Ripgrep" #'my-consult--ripgrep-builder dir "searchword -- --max-depth 1"))
+    (consult--grep "Ripgrep" #'consult--ripgrep-builder dir "searchword -- --max-depth 1"))
 
   (defun my-consult-file-externally ()
     (interactive)
@@ -98,9 +98,11 @@
   "refer https://github.com/minad/consult/wiki#counsel-grep-or-swiper-equivalent"
   (interactive "sPattern: ")
   (let* ((marked-files (dired-get-marked-files))
-	 (files (format "rg %s %s" pattern (string-join marked-files " ")))
-	 (cmd (format "rg %s %s" pattern files)))
-    (shell-command-to-string cmd)))
+	 (files (string-join marked-files " "))
+	 ;;(cmd (format "rg --line-number --with-filename --crlf --color always %s %s" pattern files)))
+	 (cmd (format "rg --line-number --with-filename --crlf %s %s" pattern files)))
+    (message "%s" (shell-command-to-string cmd))
+    ))
 
 ;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -r ."
 ;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I "c:/Temp/SC3/Log/BISYAMON3G-2575/halog_20210820_103646_+0900_fw2.28.0_SC/log/logc20"
@@ -178,6 +180,7 @@
   (let* ((file "/Users/yama/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 1
 	 ;;(file "~/bin/ptools/mylogcat/SC3/Log/BISYAMON3G-2575/var/logc1") ; 2
 	 ;;(consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" file)) ; 1,2 fail, need "-e ARG OPTS" as option
+
 	 (consult-grep-args (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s" (expand-file-name file))) ;; 1 pass
 	 )
     (consult-grep)))
@@ -185,6 +188,7 @@
 (defun consult-grep-tako ()
   "Call `consult-grep' for the current buffer (a single file)."
   (interactive)
+  ;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -r ."
   (let ((consult-grep-args
          (concat "grep "
                  "--line-buffered "
@@ -197,7 +201,12 @@
     (message "[consult-grep-one-file] consult-grep-args: %s" consult-grep-args)
     (consult-grep)))
 
-;; in testing
+(defun consult-ripgrep-invert-match (&optional dir initial)
+  (interactive "P")
+  (let ((consult-ripgrep-args "rg --hidden --invert-match --line-buffered --color=never --max-columns=1000 --path-separator /\
+   --smart-case --no-heading --line-number ."))
+    (consult--grep "Ripgrep" #'consult--ripgrep-builder dir initial)))
+
 (defun my-consult--ripgrep-builder (input)
   "Build command line given INPUT."
   (pcase-let* ((cmd (split-string-and-unquote consult-ripgrep-args))
@@ -205,13 +214,19 @@
                (`(,arg . ,opts) (consult--command-split input))
                (`(,re . ,hl) (funcall consult--regexp-compiler arg type)))
     (when re
-      (list :command
-            (append cmd
-		    ;;'("--hidden") ; pass
-                    (and (eq type 'pcre) '("-P"))
-                    (list  "-e" (consult--join-regexps re type))
-                    opts)
-            :highlight hl))))
+      (let ((ret (list :command
+		       (append cmd
+			       (and (eq type 'pcre) '("-P"))
+			       (list  "-e" (consult--join-regexps re type))
+			       (shell-quote-argument "c:/Temp/SC3/Log/BISYAMON3G-2575/halog_20210820_103646_+0900_fw2.28.0_SC/log/logc1")
+			       opts
+			       )
+		       :highlight hl)))
+	(message "%s" ret)
+	ret))))
 
+(defun consult-ripgrep-tako (&optional dir initial)
+  (interactive "P")
+  (consult--grep "Ripgrep" #'my-consult--ripgrep-builder dir initial))
 
 (provide '.consult)
