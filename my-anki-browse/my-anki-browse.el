@@ -160,7 +160,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
 You can also include audio files which will be added to the note with an optional audio property.
 Please see the documentation for addNote for an explanation of objects in the audio array.
 Gets the complete list of deck names and their respective IDs for the current user.
-https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
+https://github.com/FooSoft/anki-connect \"updateNoteFields\""
   (my-anki-browse--anki-connect-request
    :type "POST"
    :data (json-encode
