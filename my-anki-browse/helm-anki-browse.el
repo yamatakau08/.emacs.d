@@ -183,7 +183,7 @@
 
 (defun helm-anki-browse--updateNoteFields-commit ()
   (interactive)
-  (let ((noteid (helm-anki-browse--updateNoteFields-get-field "noteId"))
+  (let ((noteid (string-to-number (helm-anki-browse--updateNoteFields-get-field "noteId")))
 	(front  (helm-anki-browse--updateNoteFields-get-field "Front"))
 	(back   (helm-anki-browse--updateNoteFields-get-field "Back")))
     (my-anki-browse-updateNoteFields noteid front back)
