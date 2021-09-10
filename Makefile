@@ -17,4 +17,8 @@ clean-consult:
 	rm -rf straight/build/consult
 	rm -rf straight/links/consult
 
-clean-all: clean-custom clean-elpa clean-straight ;
+clean-transient:
+	rm -rf transient
+
+
+clean-all: clean-custom clean-elpa clean-straight clean-transient;
