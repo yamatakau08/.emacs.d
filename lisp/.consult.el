@@ -41,13 +41,28 @@
    ;;:preview-key '(:debounce 3 any) ; after 3s
    :preview-key nil)
 
-  (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory
+  (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory on Version 0.10 above
     "Format PROMPT, expand directory DIR and return them as a pair."
     (let ((edir (file-name-as-directory (expand-file-name dir)))
           (ddir (file-name-as-directory (expand-file-name default-directory))))
       (cons
        (format "%s (%s): " prompt (consult--abbreviate-directory dir))
        edir)))
+
+  (defun consult--format-directory-prompt (prompt dir) ; redefine to show directory on Version 0.9
+    "Format PROMPT, expand directory DIR and return them as a pair."
+    (save-match-data
+      (let ((edir (file-name-as-directory (expand-file-name dir)))
+            (ddir (file-name-as-directory (expand-file-name default-directory))))
+	(cons
+	 (if (string= ddir edir)
+             (concat prompt (format " (%s): " dir))
+           (let ((adir (abbreviate-file-name edir)))
+             (if (string-match "/\\([^/]+\\)/\\([^/]+\\)/\\'" adir)
+		 (format "%s in …/%s/%s/: " prompt
+			 (match-string 1 adir) (match-string 2 adir))
+               (format "%s in %s: " prompt adir))))
+	 edir))))
 
   (defun my-consult-file-externally ()
     (interactive)
@@ -77,7 +92,7 @@
     (interactive "P")
     ;; --max-depth 1 works, 0 doesn't work
     ;; see rg manual --max-depth <NUM>
-    (consult-ripgrep dir "searchword -- --max-depth 1"))
+    (consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1"))
 
   (defun my-consult-dired-grep ()
     "Search for regexp in files marked dired mode, this works on only mac"
