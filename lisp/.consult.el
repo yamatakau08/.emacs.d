@@ -3,11 +3,13 @@
   ;;:ensure t
   ;;:load-path "consult-0.9"
 
-  :straight t ; installed tag 0.9 with straight version lock function
+  ;;; straight
+  ;; use consult Version 0.9 for consult-grep,ripgrep Ver 0.10 doesn't work well on Mac
+  ;; Windows environment, worse
+  :straight t ; check straight version lock function ~/.emacs.d/lisp/straight-default.el
 
-  ;; pass ,  but have Warning (straight): Could not check out branch "0.9" of repository "consult" Disable showing Disable logging
-  ;;:straight (:branch "0.9")
-  ;;:straight (:commit "ee58941308d83a717728f056ea753e80f68cfbc0")
+  ;;:straight (:branch "0.9") ; pass ,  but have Warning (straight): Could not check out branch "0.9" of repository "consult" Disable showing Disable logging
+  ;;:straight (:commit "ee58941308d83a717728f056ea753e80f68cfbc0") ; pass
 
   ;; fail, don't get all files
   ;;:straight (:branch "async-fix") ; probably equivalent tag 0.9
@@ -16,7 +18,7 @@
   ;;:straight (:ref "0.9")
 
   :custom
-  (consult-ripgrep-args ; add "--hidden"
+  (consult-ripgrep-args ; this variable since Version 0.10 add "--hidden"
    "rg --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
    --smart-case --no-heading --line-number .")
 
@@ -39,7 +41,7 @@
    ;;:preview-key '(:debounce 3 any) ; after 3s
    :preview-key nil)
 
-  (defun consult--directory-prompt-1 (prompt dir) ; redefine
+  (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory
     "Format PROMPT, expand directory DIR and return them as a pair."
     (let ((edir (file-name-as-directory (expand-file-name dir)))
           (ddir (file-name-as-directory (expand-file-name default-directory))))
@@ -66,28 +68,52 @@
 	    (t
 	     (consult-file-externally file-name)))))
 
-  (defun my-consult-dired-grep ()
-    "Search for regexp in files marked dired mode, this works for only mac"
-    ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
-    (interactive)
-    (let ((consult-grep-args
-	   ;;(format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I %s" ; removed "-r ." and add files by from original
-	   ;;  (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")) ; if marked file is only one file, doesn't work well.
-	   (format   "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s"
-		     (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")) ; this works, even if marked file is only one file.
-	   ))
-      (consult-grep)))
-
   ;; :preface Symbol's function definitons is void: consult--grep when M-x consult-ripgrep1 just after launching Emacs, called consult--grep is conslut's internal function from consult-ripgrep1
   ;; revise to call consult-ripgrep
   ;; :demand consult-ripgrep1 is not found when M-x just after launching Emacs
   :preface
 
-  (defun consult-ripgrep1 (&optional dir)
+  (defun my-consult-ripgrep1 (&optional dir)
     (interactive "P")
     ;; --max-depth 1 works, 0 doesn't work
     ;; see rg manual --max-depth <NUM>
     (consult-ripgrep dir "searchword -- --max-depth 1"))
+
+  (defun my-consult-dired-grep ()
+    "Search for regexp in files marked dired mode, this works on only mac"
+    ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
+    (interactive)
+    (let ((consult-grep-args ; above Version 0.10 works but show the line not match the pattern in my log dir files
+	   ;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -r ." ; original
+	   ;; replace "-r ." with "-e ARG OPTS %s" (files)
+	   (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s"
+		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " "))); this works, even if marked file is only one file. need "-e ARG OPTS"
+	  (consult-grep-command ; Version 0.9 works
+	   ;; "grep --null --line-buffered --color=always --extended-regexp --exclude-dir=.git --line-number -I -r . -e ARG OPTS" ; original
+	   ;; replace "-r ." and "%s" (files)
+	   (format "grep --null --line-buffered --color=always --extended-regexp --exclude-dir=.git --line-number -I -e ARG OPTS %s"
+		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")))
+	   )
+      (consult-grep nil "pattern -- --ignore-case")))
+
+  (defun my-consult-dired-ripgrep ()
+    "Search for regexp in files marked dired mode, this works on only mac"
+    ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
+    ;; https://github.com/minad/consult/issues/384#issue-962479625
+    (interactive)
+    (let ((consult-ripgrep-args ; above Version 0.10 doesn't work at all
+	   ;; "rg --line-buffered --color=never --max-columns=1000 --path-separator --smart-case --no-heading --line-number ." ; original
+	   ;; replace '.' with "%s" (files) and add "-e ARG OPTS"
+	   (format "rg --line-buffered --color=never --max-columns=1000 --path-separator --smart-case --no-heading --line-number %s -e ARG OPTS"
+		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")))
+	  (consult-ripgrep-command ; Version 0.9 works
+	   ;; "rg --null --line-buffered --color=ansi --max-columns=1000 --no-heading --line-number . -e ARG OPTS" ; original
+	   ;; replace '.' with "%s" (files)
+	   (format "rg --null --line-buffered --color=ansi --max-columns=1000 --no-heading --line-number %s -e ARG OPTS"
+		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " "))
+	   ))
+      (consult-ripgrep nil "pattern -- --ignore-case --hidden")))
+
   )
 
 ;; sample for using consult under studying
@@ -115,12 +141,13 @@
     (setq url (cdr (assoc selected cands)))
     (browse-url-default-browser url)))
 
+;; in testing
 ;; rg <PATTERN> <FILE>...
 ;; dired-shell-cmd
 ;; dired-run-shell-command
 ;;(shell-command-to-string cmd) ; M-: output is in mini buffer, M-x where is it output?
 ;;(dired-shell-command cmd) ; where is it output?
-(defun consult-ripgrep-dired-marked-files (pattern)
+(defun my-consult-ripgrep-dired-marked-files (pattern)
   "refer https://github.com/minad/consult/wiki#counsel-grep-or-swiper-equivalent"
   (interactive "sPattern: ")
   (let* ((marked-files (dired-get-marked-files))
@@ -129,52 +156,5 @@
 	 (cmd (format "rg --line-number --with-filename --crlf %s %s" pattern files)))
     (message "%s" (shell-command-to-string cmd))
     ))
-
-(defun consult-ripgrep-one-file ()
-  "Call `consult-ripgrep' for the current buffer (a single file)."
-  (interactive)
-  (let ((consult-ripgrep-args
-         (concat "rg "
-                 "--line-buffered "
-                 "--color=never "
-                 "--line-number "
-                 "--smart-case "
-                 "--no-heading "
-                 "--max-columns=250 "
-                 "--max-columns-preview "
-                 "--with-filename "
-                 (shell-quote-argument buffer-file-name))))
-    (consult-ripgrep)))
-
-(defun consult-ripgrep-work-on-mac ()
-  "Call `consult-ripgrep' for the multiple file works on Mac, not on Windows"
-  (interactive)
-  (let ((consult-ripgrep-args
-         (concat "rg "
-                 "--line-buffered "
-                 "--color=never "
-                 "--line-number "
-                 "--smart-case "
-                 "--no-heading "
-                 "--max-columns=250 "
-                 "--max-columns-preview "
-                 "--with-filename "
-                 ;;(shell-quote-argument "/User/yama/tmp/log1")
-                 (shell-quote-argument "/tmp/log1")
-		 " "
-                 ;;(shell-quote-argument "/User/yama/tmp/log2"))))
-                 (shell-quote-argument "/tmp/log2"))))
-    (consult-ripgrep)))
-
-(defun my-consult-dired-ripgrep ()
-    "Search for regexp in files marked dired mode, this works for only mac"
-    ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
-    (interactive)
-    (let ((consult-ripgrep-args
-	   ;;(format "rg --line-buffered --color=never --max-columns=1000 --path-separator --smart-case --no-heading --line-number --with-filename "
-	   (format "rg --line-buffered --color=never --line-number --smart-case --no-heading --max-columns=250 --max-columns-preview --with-filename "
-		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " "))
-	   ))
-      (consult-ripgrep)))
 
 (provide '.consult)
