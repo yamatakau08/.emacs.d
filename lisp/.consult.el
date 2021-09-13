@@ -98,7 +98,7 @@
     "Search for regexp in files marked dired mode, this works on only mac"
     ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
     (interactive)
-    (let ((consult-grep-args ; above Version 0.10 works but show the line not match the pattern in my log dir files
+    (let ((consult-grep-args ; Version 0.10 or above works but sometimes show the lines not match the pattern in my log dir files
 	   ;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -r ." ; original
 	   ;; replace "-r ." with "-e ARG OPTS %s" (files)
 	   (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s"
@@ -116,7 +116,7 @@
     ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
     ;; https://github.com/minad/consult/issues/384#issue-962479625
     (interactive)
-    (let ((consult-ripgrep-args ; above Version 0.10 doesn't work at all
+    (let ((consult-ripgrep-args ; Version 0.10 or above doesn't work at all
 	   ;; "rg --line-buffered --color=never --max-columns=1000 --path-separator --smart-case --no-heading --line-number ." ; original
 	   ;; replace '.' with "%s" (files) and add "-e ARG OPTS"
 	   (format "rg --line-buffered --color=never --max-columns=1000 --path-separator --smart-case --no-heading --line-number %s -e ARG OPTS"
