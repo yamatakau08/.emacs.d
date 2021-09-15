@@ -41,13 +41,28 @@
    ;;:preview-key '(:debounce 3 any) ; after 3s
    :preview-key nil)
 
-  (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory
+  (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory on Version 0.10 above
     "Format PROMPT, expand directory DIR and return them as a pair."
     (let ((edir (file-name-as-directory (expand-file-name dir)))
           (ddir (file-name-as-directory (expand-file-name default-directory))))
       (cons
        (format "%s (%s): " prompt (consult--abbreviate-directory dir))
        edir)))
+
+  (defun consult--format-directory-prompt (prompt dir) ; redefine to show directory on Version 0.9
+    "Format PROMPT, expand directory DIR and return them as a pair."
+    (save-match-data
+      (let ((edir (file-name-as-directory (expand-file-name dir)))
+            (ddir (file-name-as-directory (expand-file-name default-directory))))
+	(cons
+	 (if (string= ddir edir)
+             (concat prompt (format " (%s): " dir))
+           (let ((adir (abbreviate-file-name edir)))
+             (if (string-match "/\\([^/]+\\)/\\([^/]+\\)/\\'" adir)
+		 (format "%s in …/%s/%s/: " prompt
+			 (match-string 1 adir) (match-string 2 adir))
+               (format "%s in %s: " prompt adir))))
+	 edir))))
 
   (defun my-consult-file-externally ()
     (interactive)
@@ -78,13 +93,13 @@
     (interactive "P")
     ;; --max-depth 1 works, 0 doesn't work
     ;; see rg manual --max-depth <NUM>
-    (consult-ripgrep dir "pattern -- --max-depth 1"))
+    (consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1"))
 
   (defun my-consult-dired-grep ()
     "Search for regexp in files marked dired mode, this works on other than Windows"
     ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
     (interactive)
-    (let ((consult-grep-args ; above Version 0.10 or above works but show the line not match the pattern in my log dir files
+    (let ((consult-grep-args ; Version 0.10 or above works but sometimes show the lines not match the pattern in my log dir files
 	   ;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -r ." ; original
 	   ;; replace "-r ." with "-e ARG OPTS %s" (files)
 	   (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s"
@@ -95,7 +110,7 @@
 	   (format "grep --null --line-buffered --color=always --extended-regexp --exclude-dir=.git --line-number -I -e ARG OPTS %s"
 		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")))
 	   )
-      (consult-grep nil "pattern -- --ignore-case")))
+      (consult-grep nil "pattern -- --ignore-case --hidden")))
 
   (defun my-consult-dired-ripgrep ()
     "Search for regexp in files marked dired mode, this works on other than Windows"
