@@ -125,8 +125,8 @@
 	   ;; "rg --null --line-buffered --color=ansi --max-columns=1000 --no-heading --line-number . -e ARG OPTS" ; original
 	   ;; replace '.' with "%s" (files)
 	   (format "rg --null --line-buffered --color=ansi --max-columns=1000 --no-heading --line-number %s -e ARG OPTS"
-		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " "))
-	   ))
+		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")))
+	   )
       (consult-ripgrep nil "pattern -- --ignore-case --hidden")))
 
   )
