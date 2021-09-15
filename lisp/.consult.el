@@ -68,8 +68,9 @@
 	    (t
 	     (consult-file-externally file-name)))))
 
-  ;; :preface Symbol's function definitons is void: consult--grep when M-x consult-ripgrep1 just after launching Emacs, called consult--grep is conslut's internal function from consult-ripgrep1
-  ;; revise to call consult-ripgrep
+  ;; :preface Symbol's function definitons is void: consult--grep
+  ;; When M-x consult-ripgrep1 just after launching Emacs, consult--grep called from consult-ripgrep1 is internal function.
+  ;; So revise to call consult-ripgrep public function
   ;; :demand consult-ripgrep1 is not found when M-x just after launching Emacs
   :preface
 
@@ -77,13 +78,13 @@
     (interactive "P")
     ;; --max-depth 1 works, 0 doesn't work
     ;; see rg manual --max-depth <NUM>
-    (consult-ripgrep dir "searchword -- --max-depth 1"))
+    (consult-ripgrep dir "pattern -- --max-depth 1"))
 
   (defun my-consult-dired-grep ()
-    "Search for regexp in files marked dired mode, this works on only mac"
+    "Search for regexp in files marked dired mode, this works on other than Windows"
     ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
     (interactive)
-    (let ((consult-grep-args ; above Version 0.10 works but show the line not match the pattern in my log dir files
+    (let ((consult-grep-args ; above Version 0.10 or above works but show the line not match the pattern in my log dir files
 	   ;; "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -r ." ; original
 	   ;; replace "-r ." with "-e ARG OPTS %s" (files)
 	   (format "grep --line-buffered --color=never --ignore-case --exclude-dir=.git --line-number -I -e ARG OPTS %s"
@@ -97,16 +98,15 @@
       (consult-grep nil "pattern -- --ignore-case")))
 
   (defun my-consult-dired-ripgrep ()
-    "Search for regexp in files marked dired mode, this works on only mac"
-    ;; https://github.com/minad/consult/issues/407#issuecomment-905342672
-    ;; https://github.com/minad/consult/issues/384#issue-962479625
+    "Search for regexp in files marked dired mode, this works on other than Windows"
+    ;; https://github.com/minad/consult/issues/421
     (interactive)
-    (let ((consult-ripgrep-args ; above Version 0.10 doesn't work at all
-	   ;; "rg --line-buffered --color=never --max-columns=1000 --path-separator --smart-case --no-heading --line-number ." ; original
+    (let ((consult-ripgrep-args ; Version 0.10 or above
+	   ;; "rg --line-buffered --color=never --max-columns=1000 --path-separator / --smart-case --no-heading --line-number ." ; original
 	   ;; replace '.' with "%s" (files) and add "-e ARG OPTS"
-	   (format "rg --line-buffered --color=never --max-columns=1000 --path-separator --smart-case --no-heading --line-number %s -e ARG OPTS"
+	   (format "rg --line-buffered --color=never --max-columns=1000 --path-separator / --smart-case --no-heading --line-number %s -e ARG OPTS"
 		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")))
-	  (consult-ripgrep-command ; Version 0.9 works
+	  (consult-ripgrep-command ; up to Version 0.9
 	   ;; "rg --null --line-buffered --color=ansi --max-columns=1000 --no-heading --line-number . -e ARG OPTS" ; original
 	   ;; replace '.' with "%s" (files)
 	   (format "rg --null --line-buffered --color=ansi --max-columns=1000 --no-heading --line-number %s -e ARG OPTS"
