@@ -8,10 +8,6 @@
   )
 
 (use-package consult-qiita
-  :init
-  (defun tako ()
-    (message "tako"))
-
   :after
   (my-qiita consult)
 
