@@ -15,12 +15,23 @@
 ;     1125899907103619     2k -rw-rw-rw-  1 0000910700 Domain Users   1.6k 12-23 17:10 window-setting.el
 
 (use-package dired
+  :bind
+  (:map dired-mode-map
+	("C-j" . my-dired-explore-open))
+
   :config
   ;; original dired-get-marked-files function returns the file under the point when there is no marked files.
   (defun my-dired-get-marked-files ()
     (when (> (string-to-number (dired-number-of-marked-files)) 0)
       (dired-get-marked-files)))
   )
+
+(defun my-dired-explore-open ()
+  "open directory with Windows explore"
+  (interactive)
+  (if (eq (window-system) 'w32)
+      (w32-shell-execute "explore" (dired-current-directory) "/e,/select,")))
+
 
 ;; dired にて、windows に関連付けられたファイルを起動する。
 ;; original https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"

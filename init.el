@@ -113,6 +113,7 @@
 (require '.saveplace)
 (require '.hl-line)
 ;;(require '.warnings)
+(require '.bookmark)
 
 ;;
 ;; package

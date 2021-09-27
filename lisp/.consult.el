@@ -28,6 +28,7 @@
    ("C-s"   . consult-line)
    ("C-r"   . consult-line)
    ("C-x f" . my-consult-file-externally)
+   ("C-c b" . consult-bookmark)
    ;; M-s bindings (search-map)
    ;;("M-s r" . consult-ripgrep1)
    :map dired-mode-map
@@ -171,5 +172,19 @@
 	 (cmd (format "rg --line-number --with-filename --crlf %s %s" pattern files)))
     (message "%s" (shell-command-to-string cmd))
     ))
+
+(defun my-consult-dired-ripgrep-on-windows ()
+  ;; https://github.com/minad/consult/issues/419
+  (interactive)
+  (let ((consult-ripgrep-args ; Version 0.10 or above
+	 ;; "rg --line-buffered --color=never --max-columns=1000 --path-separator / --smart-case --no-heading --line-number ." ; original
+	 ;; replace '.' with "%s" (files) and add "-e ARG OPTS"
+	 (format "rg --line-buffered --color=never --max-columns=1000 --path-separator \\\ --smart-case --no-heading --line-number %s -e ARG OPTS"
+		 (mapconcat #'shell-quote-argument (dired-get-marked-files) " "))))
+    (message "%S" consult-ripgrep-args)
+    (consult-ripgrep nil "pattern -- --ignore-case --hidden")))
+
+;; (when (eq (window-system) 'w32)
+;;   (setq consult-find-args "find . -not ( -wholename \\*/.\\* -prune)"))
 
 (provide '.consult)
