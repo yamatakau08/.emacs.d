@@ -24,14 +24,13 @@
   (defun my-dired-get-marked-files ()
     (when (> (string-to-number (dired-number-of-marked-files)) 0)
       (dired-get-marked-files)))
+
+  (defun my-dired-explore-open ()
+    "open directory with Windows explore"
+    (interactive)
+    (if (eq (window-system) 'w32)
+	(w32-shell-execute "explore" (dired-current-directory) "/e,/select,")))
   )
-
-(defun my-dired-explore-open ()
-  "open directory with Windows explore"
-  (interactive)
-  (if (eq (window-system) 'w32)
-      (w32-shell-execute "explore" (dired-current-directory) "/e,/select,")))
-
 
 ;; dired にて、windows に関連付けられたファイルを起動する。
 ;; original https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"

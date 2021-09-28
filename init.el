@@ -92,7 +92,7 @@
 (require '.url-vars) ;; set proxy, should be loaded after company-network-p,use-package is active
 (require '.info)
 (require '.paren)
-;;(require '.dired) ; replace .openwith.el in dired-mode
+(require '.dired)
 (require '.dired-x) ; only disable key assign
 (require '.thingatpt)
 (require '.ffap)
