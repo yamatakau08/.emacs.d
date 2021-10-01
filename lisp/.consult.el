@@ -32,7 +32,7 @@
    ;; M-s bindings (search-map)
    ;;("M-s r" . consult-ripgrep1)
    :map dired-mode-map
-   ("C-RET" . my-consult-dired-file-exteranally)
+   ("C-<return>" . my-consult-dired-file-exteranally)
    )
 
   :config
@@ -130,6 +130,12 @@
 	   )
       (consult-ripgrep nil "pattern -- --ignore-case --hidden")))
 
+  ;; consult-find
+  ;; https://github.com/minad/consult/issues/317#issuecomment-849635051
+  ;; apply consult-find-args, but that doesn't work!
+  ;; (when (eq (window-system) 'w32)
+  ;;   (setq consult-find-args
+  ;;         (replace-regexp-in-string "\\*" "\\\\*" consult-find-args)))
   )
 
 ;; sample for using consult under studying
@@ -186,5 +192,44 @@
 
 ;; (when (eq (window-system) 'w32)
 ;;   (setq consult-find-args "find . -not ( -wholename \\*/.\\* -prune)"))
+
+
+;; my-consult-bookmark
+(defvar my-consult--bookmark-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-j") #'my-consult--bookmark-dummy)
+    map)
+  "Additional keymap used by `my-consult-bookmark'.")
+
+(defun my-consult--bookmark-dummy (&optional cand)
+  (interactive)
+  (message "my-consult-bookmark-dummy: %s" cand))
+
+(defun my-consult-bookmark (name)
+  "If bookmark NAME exists, open it, otherwise create a new bookmark with NAME.
+
+The command supports preview of file bookmarks and narrowing. See the
+variable `consult-bookmark-narrow' for the narrowing configuration."
+  (interactive
+   (list
+    (let ((narrow (mapcar (pcase-lambda (`(,x ,y ,_)) (cons x y))
+                          consult-bookmark-narrow)))
+      (consult--read
+       (consult--bookmark-candidates)
+       :prompt "Bookmark: "
+       :state (consult--bookmark-preview)
+       :category 'bookmark
+       :history 'bookmark-history
+       ;; Add default names to future history.
+       ;; Ignore errors such that `consult-bookmark' can be used in
+       ;; buffers which are not backed by a file.
+       :add-history (ignore-errors (bookmark-prop-get (bookmark-make-record) 'defaults))
+       :group (consult--type-group narrow)
+       :narrow (consult--type-narrow narrow)
+       :keymap my-consult--bookmark-map))))
+  (bookmark-maybe-load-default-file)
+  (if (assoc name bookmark-alist)
+      (bookmark-jump name)
+    (bookmark-set name)))
 
 (provide '.consult)
