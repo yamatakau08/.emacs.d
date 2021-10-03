@@ -1,8 +1,7 @@
 (use-package bookmark
   :bind
   (:map bookmark-bmenu-mode-map
-	("C-j" . my-bookmark-jump)
-	("J"   . my-bookmark-jump))
+	("C-j" . my-bookmark-jump))
 
   :config
   (defun my-bookmark-jump ()
@@ -33,7 +32,6 @@
   ;;once comment this adevice, because this make always use explore to open directory.
   ;;need to use separately manually.
   ;;(advice-add 'bookmark-jump :filter-args 'advice:bookmark-jump-filter-args)
-
   )
 
 (provide '.bookmark)
