@@ -16,13 +16,8 @@
       (cond ((eq (window-system) 'w32)
 	     (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
 		    (bmkp-jump-url-browse bookmark))
-		   ((file-directory-p filename)
-		    (w32-shell-execute "explore" filename "/e,/select,"))
-		   ((string= (file-name-extension filename) "mp4")
-		    ;;(w32-shell-execute "open" filename)) ; not available on  Windows 8.1
-		    (shell-command-to-string (format "%s %s" "start" filename)))
 		   (t
-		    (w32-shell-execute "open" filename))))
+		    (my-w32-open-file filename))))
 	    (t (bookmark-jump (bookmark-bmenu-bookmark))))))
 
   )

@@ -207,7 +207,6 @@
 
 (defun my-consult-bookmark (name)
   "If bookmark NAME exists, open it, otherwise create a new bookmark with NAME.
-
 The command supports preview of file bookmarks and narrowing. See the
 variable `consult-bookmark-narrow' for the narrowing configuration."
   (interactive
@@ -228,8 +227,18 @@ variable `consult-bookmark-narrow' for the narrowing configuration."
        :narrow (consult--type-narrow narrow)
        :keymap my-consult--bookmark-map))))
   (bookmark-maybe-load-default-file)
+  ;; original
+  ;; (if (assoc name bookmark-alist)
+  ;;     (bookmark-jump name)
+  ;;   (bookmark-set name))
   (if (assoc name bookmark-alist)
-      (bookmark-jump name)
-    (bookmark-set name)))
+      (let* ((bookmark (bmkp-get-bookmark name 'NOERROR))
+	     (filename (bookmark-get-filename bookmark)))
+	(cond ((eq (window-system) 'w32)
+	       (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
+		      (bmkp-jump-url-browse bookmark))
+		     (t
+		      (my-w32-open-file filename))))
+	      (t (bookmark-jump (bookmark-bmenu-bookmark)))))))
 
 (provide '.consult)

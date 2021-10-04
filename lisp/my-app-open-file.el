@@ -1,10 +1,17 @@
-;;; to open UNC represent file with associated application
-;;; helm-find-files-initial-input can not return the UNC path correctly
-;;; e.g. <\\jps00004944\share_data\SQA1-HA\10_Test_Project_FY17\NewAudio\02_検証計画書\Schedule-NewAudio-Evaluation.pptx>
-;;; if points in side <.*>, it can return correctly
-;;; if points on '<', it can not return correctly, return c:/msys64/
+(defun my-w32-open-file (file-path)
+  "open the file-path with Windows explore or application associated the file suffix"
+  ;; *important* Do not check file-exist-p, because return nil even if actual file exists
+  (interactive "fFile-path: ")
+  (cond ((file-directory-p file-path)
+	 (w32-shell-execute "explore" file-path "/e,/select,"))
+	((string= (file-name-extension file-path) "mp4")
+	 ;;(w32-shell-execute "open" file-path)) ; not available on  Windows 8.1
+	 (shell-command-to-string (string-join `("start" ,file-path) " ")))
+	(t
+	 (w32-shell-execute "open" file-path) ; open by associated program
+	 )))
 
-;;;
+;;; the followings will be deprecated
 (defun my-app-open-file-get-file-name ()
   "to get UNC path from cursor line"
   (interactive)
@@ -30,21 +37,4 @@
 	  file-w32
 	  ))))
 
-;;; supported by slack emacs-jp
-(defun my-app-open-file-w32-shell-execute (file-w32)
-  "actual execution part to open file with associated application"
-  (if (file-directory-p file-w32)
-      (w32-shell-execute "explore" file-w32 "/e,/select,")  ; when dir, open it by Explorer
-    ;; (w32-shell-execute "open" "explorer" (concat "/e,/select," file-w32)) ; when file, select file in Explorer
-    ;; *important* Do not check file-exist-p, because return nil even if actual file exists on UNC path environment.
-    ;; open by default App
-    (w32-shell-execute "open" file-w32)))
-
-;;;
-(defun my-app-open-file (&optional file-w32)
-  "function open the file with associated application arg file-w32 is for testing"
-  (interactive)
-  (if file-w32
-      (my-app-open-file-w32-shell-execute (my-app-open-file-path2explore file-w32))
-    (my-app-open-file-w32-shell-execute
-     (my-app-open-file-path2explore (my-app-open-file-get-file-name)))))
+(provide 'my-app-open-file)

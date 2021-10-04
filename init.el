@@ -207,7 +207,7 @@
 ;;
 ;; my-own function, utility etc...
 ;;
-;;(require 'my-app-open-file) ; to open file associated application
+(require 'my-app-open-file) ; to open file associated application
 ;;(require 'my-skips)
 ;;(require '.my-anki-connect)
 (require '.eced-menu) ; english conversation expression dictionary
