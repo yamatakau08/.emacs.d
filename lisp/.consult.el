@@ -39,8 +39,10 @@
   (recentf-mode) ; enable for consult-recetf-file command, refere https://github.com/minad/consult#virtual-buffers
 
   (consult-customize
+   consult-buffer ; Since consult-buffer on Windows file access is a bit slow, disable preview
    ;;:preview-key '(:debounce 3 any) ; after 3s
-   :preview-key nil)
+   :preview-key (kbd "M-.") ; this doesn't effect?
+   )
 
   (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory on Version 0.10 above
     "Format PROMPT, expand directory DIR and return them as a pair."
@@ -84,6 +86,112 @@
 	    (t
 	     (consult-file-externally file-name)))))
 
+  ;;
+  ;; my-consult-bookmark
+  ;;
+  (defvar my-consult-bookmark--map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-j") #'my-consult-bookmark--jump)
+      (define-key map (kbd "C-l") #'my-consult-bookmark--jump)
+      map)
+    "Additional keymap used by `my-consult-bookmark'.")
+
+  (defun my-consult-bookmark--jump ()
+    (interactive)
+    (let* ((cand (consult-vertico--candidate))
+	   (bmkp-record (get-text-property 0 'bmkp-full-record cand))
+	   (location (let-alist (cdr bmkp-record) .location))
+	   (filename (let-alist (cdr bmkp-record) .filename)))
+      (cond (location
+	     (browse-url-default-browser location))
+	    (filename
+	     (my-w32-open-file filename)))))
+
+  (defun my-consult-bookmark (name)
+    "If bookmark NAME exists, open it, otherwise create a new bookmark with NAME.
+The command supports preview of file bookmarks and narrowing. See the
+variable `consult-bookmark-narrow' for the narrowing configuration."
+    (require 'consult)
+    (interactive
+     (list
+      (let ((narrow (mapcar (pcase-lambda (`(,x ,y ,_)) (cons x y))
+                            consult-bookmark-narrow)))
+	(consult--read
+	 (consult--bookmark-candidates)
+	 :prompt "Bookmark: "
+	 :preview-key nil ;; added
+	 :state (consult--bookmark-preview)
+	 :category 'bookmark
+	 :history 'bookmark-history
+	 ;; Add default names to future history.
+	 ;; Ignore errors such that `consult-bookmark' can be used in
+	 ;; buffers which are not backed by a file.
+	 :add-history (ignore-errors (bookmark-prop-get (bookmark-make-record) 'defaults))
+	 :group (consult--type-group narrow)
+	 :narrow (consult--type-narrow narrow)
+	 :keymap my-consult-bookmark--map))))
+    (bookmark-maybe-load-default-file)
+    ;; original
+    ;; (if (assoc name bookmark-alist)
+    ;;     (bookmark-jump name)
+    ;;   (bookmark-set name))
+    (if (assoc name bookmark-alist)
+	(let* ((bookmark (bmkp-get-bookmark name 'NOERROR))
+	       (filename (bookmark-get-filename bookmark)))
+	  (cond ((eq (window-system) 'w32)
+		 (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
+			(bmkp-jump-url-browse bookmark))
+		       (t
+			(my-w32-open-file filename))))
+		(t (bookmark-jump (bookmark-bmenu-bookmark)))))))
+
+  ;; redefine consult-bookmark
+  (advice-add 'consult-bookmark :override #'my-consult-bookmark)
+
+  ;; my-consult-buffer
+  (defvar my-consult-buffer--map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-l") #'my-consult-buffer--jump)
+      map)
+    "Additional keymap used by `my-consult-buffer'.")
+
+  (defun my-consult-buffer--jump ()
+    (interactive)
+    (let* ((cand (consult-vertico--candidate))
+	   (entry (get-text-property 0 'consult-multi cand))
+	   (kind  (car entry)))
+      (cond ((string= kind "file")
+	     (let ((file (cdr entry)))
+	       (my-w32-open-file file)))
+	    ((string= kind "bookmark")
+	     (my-consult-bookmark--jump)))))
+
+  (defun my-consult-buffer ()
+    "Enhanced `switch-to-buffer' command with support for virtual buffers.
+
+The command supports recent files, bookmarks, views and project files as virtual
+buffers. Buffers are previewed. Furthermore narrowing to buffers (b), files (f),
+bookmarks (m) and project files (p) is supported via the corresponding keys. In
+order to determine the project-specific files and buffers, the
+`consult-project-root-function' is used. See `consult-buffer-sources' and
+`consult--multi' for the configuration of the virtual buffer sources."
+    (interactive)
+    (when-let (buffer (consult--multi consult-buffer-sources
+                                      :require-match
+                                      (confirm-nonexistent-file-or-buffer)
+                                      :prompt "Switch to: "
+				      :keymap my-consult-buffer--map ; add own keymap
+				      :preview-key nil ; add
+                                      :history 'consult--buffer-history
+                                      :sort nil))
+      ;; When the buffer does not belong to a source,
+      ;; create a new buffer with the name.
+      (unless (cdr buffer)
+	(consult--buffer-action (car buffer)))))
+
+  ;; redefine consult-buffer
+  (advice-add 'consult-buffer :override #'my-consult-buffer)
+
   ;; :preface Symbol's function definitons is void: consult--grep
   ;; When M-x consult-ripgrep1 just after launching Emacs, consult--grep called from consult-ripgrep1 is internal function.
   ;; So revise to call consult-ripgrep public function
@@ -110,7 +218,7 @@
 	   ;; replace "-r ." and "%s" (files)
 	   (format "grep --null --line-buffered --color=always --extended-regexp --exclude-dir=.git --line-number -I -e ARG OPTS %s"
 		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")))
-	   )
+	  )
       (consult-grep nil "pattern -- --ignore-case --hidden")))
 
   (defun my-consult-dired-ripgrep ()
@@ -127,7 +235,7 @@
 	   ;; replace '.' with "%s" (files)
 	   (format "rg --null --line-buffered --color=ansi --max-columns=1000 --no-heading --line-number %s -e ARG OPTS"
 		   (mapconcat #'shell-quote-argument (dired-get-marked-files) " ")))
-	   )
+	  )
       (consult-ripgrep nil "pattern -- --ignore-case --hidden")))
 
   ;; consult-find
@@ -138,29 +246,33 @@
   ;;         (replace-regexp-in-string "\\*" "\\\\*" consult-find-args)))
   )
 
-;; sample for using consult under studying
-;; not yet open the url in highlight.
+;; Sample code using consult for studying
 (defvar my-consult-sample-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-l") #'my-consult-sample-dummy)
+    (define-key map (kbd "C-l") #'my-consult-sample--open-browser)
     map)
   "Additional keymap used by `my-consult-sample'.")
 
-(defun my-consult-sample-dummy ()
-  "dummy function for checking  when type C-l in my-consult-sample session"
+(defun my-consult-sample--open-browser ()
+  "Dummy function for checking  when type C-l in my-consult-sample session"
   (interactive)
-  (message "my-consult-sample-dummy"))
+  (let* ((candidate (consult-vertico--candidate))
+	 (url (consult--lookup-cdr nil my-consult-sample--candidates candidate)))
+    (browse-url-default-browser url)))
+
+(defvar my-consult-sample--candidates
+  '(("google" . "http://google.com/")
+    ("yahoo"  . "http://yahoo.com/")))
 
 (defun my-consult-sample ()
-  "sample function using consult"
+  "Sample function using consult"
   (interactive)
-  (let* ((cands '(("google" . "http://google.com/")
-   		  ("yahoo"  . "http://yahoo.com/")))
-   	 selected
-   	 url)
-    (setq selected (consult--read cands
+  (require 'consult)
+  (let (selected
+   	url)
+    (setq selected (consult--read my-consult-sample--candidates
 				  :keymap my-consult-sample-map))
-    (setq url (cdr (assoc selected cands)))
+    (setq url (consult--lookup-cdr nil my-consult-sample--candidates selected))
     (browse-url-default-browser url)))
 
 ;; in testing
@@ -192,53 +304,5 @@
 
 ;; (when (eq (window-system) 'w32)
 ;;   (setq consult-find-args "find . -not ( -wholename \\*/.\\* -prune)"))
-
-
-;; my-consult-bookmark
-(defvar my-consult--bookmark-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-j") #'my-consult--bookmark-dummy)
-    map)
-  "Additional keymap used by `my-consult-bookmark'.")
-
-(defun my-consult--bookmark-dummy (&optional cand)
-  (interactive)
-  (message "my-consult-bookmark-dummy: %s" cand))
-
-(defun my-consult-bookmark (name)
-  "If bookmark NAME exists, open it, otherwise create a new bookmark with NAME.
-The command supports preview of file bookmarks and narrowing. See the
-variable `consult-bookmark-narrow' for the narrowing configuration."
-  (interactive
-   (list
-    (let ((narrow (mapcar (pcase-lambda (`(,x ,y ,_)) (cons x y))
-                          consult-bookmark-narrow)))
-      (consult--read
-       (consult--bookmark-candidates)
-       :prompt "Bookmark: "
-       :state (consult--bookmark-preview)
-       :category 'bookmark
-       :history 'bookmark-history
-       ;; Add default names to future history.
-       ;; Ignore errors such that `consult-bookmark' can be used in
-       ;; buffers which are not backed by a file.
-       :add-history (ignore-errors (bookmark-prop-get (bookmark-make-record) 'defaults))
-       :group (consult--type-group narrow)
-       :narrow (consult--type-narrow narrow)
-       :keymap my-consult--bookmark-map))))
-  (bookmark-maybe-load-default-file)
-  ;; original
-  ;; (if (assoc name bookmark-alist)
-  ;;     (bookmark-jump name)
-  ;;   (bookmark-set name))
-  (if (assoc name bookmark-alist)
-      (let* ((bookmark (bmkp-get-bookmark name 'NOERROR))
-	     (filename (bookmark-get-filename bookmark)))
-	(cond ((eq (window-system) 'w32)
-	       (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
-		      (bmkp-jump-url-browse bookmark))
-		     (t
-		      (my-w32-open-file filename))))
-	      (t (bookmark-jump (bookmark-bmenu-bookmark)))))))
 
 (provide '.consult)
