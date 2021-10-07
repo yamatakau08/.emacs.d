@@ -10,6 +10,8 @@
   (completion-styles '(orderless))
   (completion-category-overrides '((file (styles . (partial-completion)))))
   (orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
+  ;; https://github.com/oantolin/orderless#component-separator-regexp
+  (orderless-component-separator #'orderless-escapable-split-on-space) ; escpae space
 
   :config
   ;; supported emacs-jp slack

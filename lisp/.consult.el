@@ -1,5 +1,8 @@
 (use-package consult
 
+  :init
+  (require 'bookmark+)
+
   ;;:ensure t
   ;;:load-path "consult-0.9"
 
@@ -132,18 +135,18 @@ variable `consult-bookmark-narrow' for the narrowing configuration."
 	 :keymap my-consult-bookmark--map))))
     (bookmark-maybe-load-default-file)
     ;; original
-    ;; (if (assoc name bookmark-alist)
-    ;;     (bookmark-jump name)
-    ;;   (bookmark-set name))
     (if (assoc name bookmark-alist)
-	(let* ((bookmark (bmkp-get-bookmark name 'NOERROR))
-	       (filename (bookmark-get-filename bookmark)))
-	  (cond ((eq (window-system) 'w32)
-		 (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
-			(bmkp-jump-url-browse bookmark))
-		       (t
-			(my-w32-open-file filename))))
-		(t (bookmark-jump (bookmark-bmenu-bookmark)))))))
+        (bookmark-jump name)
+      (bookmark-set name)))
+    ;; (if (assoc name bookmark-alist)
+    ;; 	(let* ((bookmark (bmkp-get-bookmark name 'NOERROR))
+    ;; 	       (filename (bookmark-get-filename bookmark)))
+    ;; 	  (cond ((eq (window-system) 'w32)
+    ;; 		 (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
+    ;; 			(bmkp-jump-url-browse bookmark))
+    ;; 		       (t
+    ;; 			(my-w32-open-file filename))))
+    ;; 		(t (bookmark-jump (bookmark-bmenu-bookmark)))))))
 
   ;; redefine consult-bookmark
   (advice-add 'consult-bookmark :override #'my-consult-bookmark)
@@ -271,6 +274,7 @@ order to determine the project-specific files and buffers, the
   (let (selected
    	url)
     (setq selected (consult--read my-consult-sample--candidates
+				  :initial "yahoo"
 				  :keymap my-consult-sample-map))
     (setq url (consult--lookup-cdr nil my-consult-sample--candidates selected))
     (browse-url-default-browser url)))
