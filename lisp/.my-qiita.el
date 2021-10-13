@@ -4,18 +4,14 @@
 
 (use-package helm-qiita
   :after
-  (my-qiita helm)
+  (my-qiita)
   )
 
 (use-package consult-qiita
   :after
-  (my-qiita consult)
-
-  :bind
-  (:map minibuffer-local-map
-        ("C-c c" . 'my-qiita--action-open-page)  ; fail, argument
-        ("C-c d" . 'xmy-qiita--action-open-page) ; pass, no argument
-	)
+  ;; fail to load consult-qiita-get-pages function just after Emacas launched and consult also not loaded
+  ;;(my-qiita consult)
+  (my-qiita)
   )
 
 (provide '.my-qiita)

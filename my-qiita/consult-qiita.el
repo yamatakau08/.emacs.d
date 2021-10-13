@@ -30,18 +30,19 @@
   "consult-qiita customization group."
   :group 'applications)
 
-(defvar consult-qiita-page-titles-map
+(defvar consult-qiita--page-titles-map
   (let ((map (make-sparse-keymap)))
-    ;;(define-key map "C-c C-z" #'consult-qiita-dummy) ; fail
-    ;;(define-key map "\C-c\C-z" #'consult-qiita-dummy) ; pass
-    (define-key map (kbd "C-c C-z") #'consult-qiita-dummy) ; pass
+    (define-key map (kbd "C-j") #'consult-qiita--open-browser)
     map)
-  "in testing, Additional keymap used by `consult-qiita-page-titles'.")
+  "keymap used by `consult-qiita-page-titles'.")
 
-(defun consult-qiita-dummy ()
-  "in testing"
+(defun consult-qiita--open-browser ()
   (interactive)
-  (message "tako"))
+  (let* ((cand (consult-vertico--candidate))
+	 (page-info (cdr (assoc cand consult-qiita--candidates))))
+    (my-qiita--action-open-page page-info)))
+
+(defvar consult-qiita--candidates nil)
 
 (defun consult-qiita-page-titles (queryword)
   "Get the titles of Qiita pages in whcih inculude the queryword, then open the selected title on browser"
@@ -53,11 +54,12 @@
        (let ((candidates (my-qiita--build-candidate-page-titles page-titles))
 	     selected
 	     page-info)
-	 (setq selected (consult--read candidates
-				       :sort nil
-   				       :keymap consult-qiita-page-titles-map ; in testing
-				       ))
-	 (setq page-info (cdr (assoc selected candidates)))
+	 (setq consult-qiita--candidates candidates)
+	 (setq selected
+	       (consult--read candidates
+			      :sort nil
+   			      :keymap consult-qiita--page-titles-map))
+	 (setq page-info (cdr (assoc selected consult-qiita--candidates)))
 	 (my-qiita--action-open-page page-info))))))
 
 (provide 'consult-qiita)

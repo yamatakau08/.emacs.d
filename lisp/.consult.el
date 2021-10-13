@@ -1,7 +1,7 @@
 (use-package consult
 
   :init
-  (require 'bookmark+)
+  (require 'bookmark+) ; Since sometimes fail to call bookmark+ function, explicitly load.
 
   ;;:ensure t
   ;;:load-path "consult-0.9"
@@ -95,7 +95,6 @@
   (defvar my-consult-bookmark--map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "C-j") #'my-consult-bookmark--jump)
-      (define-key map (kbd "C-l") #'my-consult-bookmark--jump)
       map)
     "Additional keymap used by `my-consult-bookmark'.")
 
@@ -154,7 +153,7 @@ variable `consult-bookmark-narrow' for the narrowing configuration."
   ;; my-consult-buffer
   (defvar my-consult-buffer--map
     (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "C-l") #'my-consult-buffer--jump)
+      (define-key map (kbd "C-j") #'my-consult-buffer--jump)
       map)
     "Additional keymap used by `my-consult-buffer'.")
 
@@ -205,7 +204,12 @@ order to determine the project-specific files and buffers, the
     (interactive "P")
     ;; --max-depth 1 works, 0 doesn't work
     ;; see rg manual --max-depth <NUM>
-    (consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1"))
+    ;;(consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1")
+    (consult--minibuffer-with-setup-hook ;; fail
+	(lambda ()
+ 	  (beginning-of-line)
+ 	  (forward-char)))
+    (consult-grep "Ripgrep" #'consult--ripgrep-builder dir "pattern -- --ignore-case --hidden --max-depth 1"))
 
   (defun my-consult-dired-grep ()
     "Search for regexp in files marked dired mode, this works on other than Windows"
@@ -252,12 +256,12 @@ order to determine the project-specific files and buffers, the
 ;; Sample code using consult for studying
 (defvar my-consult-sample-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-l") #'my-consult-sample--open-browser)
+    (define-key map (kbd "C-j") #'my-consult-sample--open-browser)
     map)
   "Additional keymap used by `my-consult-sample'.")
 
 (defun my-consult-sample--open-browser ()
-  "Dummy function for checking  when type C-l in my-consult-sample session"
+  "function is called when type C-l in my-consult-sample session"
   (interactive)
   (let* ((candidate (consult-vertico--candidate))
 	 (url (consult--lookup-cdr nil my-consult-sample--candidates candidate)))
