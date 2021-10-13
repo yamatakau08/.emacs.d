@@ -203,6 +203,7 @@
 ;;(require 'google) ; replace with new function defined in .webjump.el
 (require '.instant-maximized-window)
 ;;(require '.run-assoc)
+(require '.col-highlight)
 
 ;;
 ;; my-own function, utility etc...
