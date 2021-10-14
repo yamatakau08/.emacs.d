@@ -34,8 +34,6 @@
    ("C-c b" . consult-bookmark)
    ;; M-s bindings (search-map)
    ;;("M-s r" . consult-ripgrep1)
-   :map dired-mode-map
-   ("C-<return>" . my-consult-dired-file-exteranally)
    )
 
   :config
@@ -79,15 +77,6 @@
 	(if file-name
 	    (consult-file-externally (expand-file-name file-name))
 	  (call-interactively #'find-file)))))
-
-  (defun my-consult-dired-file-exteranally ()
-    (interactive)
-    (let ((file-name (dired-get-file-for-visit)))
-      (cond ((string= (file-name-extension file-name) "mp4")
-	     ;; for windows 8.1
-	     (shell-command-to-string (format "%s %s" "start" file-name)))
-	    (t
-	     (consult-file-externally file-name)))))
 
   ;;
   ;; my-consult-bookmark

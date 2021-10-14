@@ -17,7 +17,11 @@
 (use-package dired
   :bind
   (:map dired-mode-map
-	("C-j" . my-dired-explore-open))
+	("C-l" . my-dired-explore-open)
+	;; others are assigned in .consult.el dired-mode-map
+	("C-j"      . my-dired-find-file)
+	("<return>" . my-dired-find-file)
+	)
 
   :config
   ;; original dired-get-marked-files function returns the file under the point when there is no marked files.
@@ -30,29 +34,26 @@
     (interactive)
     (if (eq (window-system) 'w32)
 	(w32-shell-execute "explore" (dired-current-directory) "/e,/select,")))
+
+  (defun my-dired-find-file ()
+    ;; refer
+    ;; consult-file-externally in consult
+    ;; https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
+    (interactive)
+    (if (eq (window-system) 'w32)
+	(let* ((file-name (dired-get-file-for-visit))
+	       (extension (file-name-extension file-name))
+	       (assocfile (member extension '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))))
+	  (if assocfile
+	      (cond ((or (string= (file-name-extension file-name) "MOV")
+			 (string= (file-name-extension file-name) "mp4"))
+		     ;; for windows 8.1
+		     (shell-command-to-string (format "%s %s" "start" file-name)))
+		    (t
+		     (w32-shell-execute "open" file-name)))
+	    (dired-find-file)))
+      (dired-find-file)))
+
   )
-
-;; dired にて、windows に関連付けられたファイルを起動する。
-;; original https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
-;; modified
-(defun uenox-dired-winstart ()
-  "Type '\\[uenox-dired-winstart]': win-start the current line's file."
-  (interactive)
-  (if (eq major-mode 'dired-mode)
-      (let ((fname (dired-get-filename)))
-	(cond
-	 ((eq system-type 'windows-nt)
-	  ;;(message "%s %s" fname (convert-standard-filename fname)) ; for debug
-	  ;;(w32-shell-execute "open" fname))
-	  ;;(my-app-open-file (convert-standard-filename fname)))
-	  (my-app-open-file fname))
-	 ((eq system-type 'darwin)
-	  ;;(shell-command-to-string (format "open %s" fname))))
-	  (start-process "open-with-default-app" nil "open" fname))
-	 ))))
-
-;; (add-hook 'dired-mode-hook
-;; 	  (lambda ()
-;; 	    (define-key dired-mode-map "z" 'uenox-dired-winstart)))
 
 (provide '.dired)
