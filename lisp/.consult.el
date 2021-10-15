@@ -1,7 +1,7 @@
 (use-package consult
 
-  :init
-  (require 'bookmark+) ; Since sometimes fail to call bookmark+ function, explicitly load.
+  ;;:init
+  ;;(require 'bookmark+) ; Since sometimes fail to call bookmark+ function, explicitly load.
 
   ;;:ensure t
   ;;:load-path "consult-0.9"

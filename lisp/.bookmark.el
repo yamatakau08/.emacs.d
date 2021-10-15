@@ -4,6 +4,8 @@
 	("C-j" . my-bookmark-jump))
 
   :config
+  (require 'bookmark+)
+
   (defun my-bookmark-jump ()
     "open directory with Windows explore"
     (interactive)
