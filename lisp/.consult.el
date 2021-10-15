@@ -3,13 +3,13 @@
   ;;:init
   ;;(require 'bookmark+) ; Since sometimes fail to call bookmark+ function, explicitly load.
 
-  ;;:ensure t
+  :ensure t
   ;;:load-path "consult-0.9"
 
   ;;; straight
   ;; use consult Version 0.9 for consult-grep,ripgrep Ver 0.10 doesn't work well on Mac
   ;; Windows environment, worse
-  :straight t ; check straight version lock function ~/.emacs.d/lisp/straight-default.el
+  ;;:straight t ; check straight version lock function ~/.emacs.d/lisp/straight-default.el
 
   ;;:straight (:branch "0.9") ; pass ,  but have Warning (straight): Could not check out branch "0.9" of repository "consult" Disable showing Disable logging
   ;;:straight (:commit "ee58941308d83a717728f056ea753e80f68cfbc0") ; pass
@@ -19,11 +19,6 @@
 
   ;; staright not support :ref
   ;;:straight (:ref "0.9")
-
-  :custom
-  (consult-ripgrep-args ; this variable since Version 0.10 add "--hidden"
-   "rg --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
-   --smart-case --no-heading --line-number .")
 
   :bind
   (("M-g g" . consult-goto-line)
@@ -189,16 +184,17 @@ order to determine the project-specific files and buffers, the
   ;; :demand consult-ripgrep1 is not found when M-x just after launching Emacs
   :preface
 
-  (defun my-consult-ripgrep1 (&optional dir)
+  ;; override
+  (defun consult-ripgrep (&optional dir)
     (interactive "P")
     ;; --max-depth 1 works, 0 doesn't work
     ;; see rg manual --max-depth <NUM>
     ;;(consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1")
-    (consult--minibuffer-with-setup-hook ;; fail
-	(lambda ()
- 	  (beginning-of-line)
- 	  (forward-char)))
-    (consult-grep "Ripgrep" #'consult--ripgrep-builder dir "pattern -- --ignore-case --hidden --max-depth 1"))
+    ;; (consult--minibuffer-with-setup-hook ;; fail
+    ;; 	(lambda ()
+    ;; 	  (beginning-of-line)
+    ;; 	  (forward-char)))
+    (consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1"))
 
   (defun my-consult-dired-grep ()
     "Search for regexp in files marked dired mode, this works on other than Windows"
