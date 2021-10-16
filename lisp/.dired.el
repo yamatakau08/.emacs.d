@@ -40,20 +40,29 @@
     ;; consult-file-externally in consult
     ;; https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
     (interactive)
-    (if (eq (window-system) 'w32)
-	(let* ((file-name (dired-get-file-for-visit))
-	       (extension (file-name-extension file-name))
-	       (assocfile (member extension '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))))
-	  (if assocfile
-	      (cond ((or (string= (file-name-extension file-name) "MOV")
-			 (string= (file-name-extension file-name) "mp4"))
-		     ;; for windows 8.1
-		     (shell-command-to-string (format "%s %s" "start" file-name)))
-		    (t
-		     (w32-shell-execute "open" file-name)))
-	    (dired-find-file)))
-      (dired-find-file)))
+    (cond
+     ((eq (window-system) 'w32)
+      (let* ((file-name (dired-get-file-for-visit))
+	     (extension (file-name-extension file-name))
+	     (assocfile (member extension '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))))
+	(if assocfile
+	    (cond
+	     ((or (string= extension "MOV")
+		  (string= extension "mp4"))
+	      ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
+	      ;; use shell-command-to-string,
+	      ;; but on windows10, both w32-shell-execute and shell-command-to-string are available
+	      ;; so use shell-command-to-string, but if there is space in file name,
+	      ;; can't open the file with associated program, neither (shell-quote-argument file-name)
+	      ;; I give up!
+	      (shell-command-to-string (format "%s %s" "start" file-name)))
+	     (t
+	      (w32-shell-execute "open" file-name)))
+	  (dired-find-file))))
+     (t
+      (dired-find-file))))
 
   )
+
 
 (provide '.dired)
