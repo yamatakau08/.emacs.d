@@ -34,12 +34,6 @@
   :config
   (recentf-mode) ; enable for consult-recetf-file command, refere https://github.com/minad/consult#virtual-buffers
 
-  (consult-customize
-   consult-buffer ; Since consult-buffer on Windows file access is a bit slow, disable preview
-   ;;:preview-key '(:debounce 3 any) ; after 3s
-   :preview-key (kbd "M-.") ; this doesn't effect?
-   )
-
   (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory on Version 0.10 above
     "Format PROMPT, expand directory DIR and return them as a pair."
     (let ((edir (file-name-as-directory (expand-file-name dir)))
@@ -74,7 +68,59 @@
 	  (call-interactively #'find-file)))))
 
   ;;
-  ;; my-consult-bookmark
+  ;; consult-buffer
+  ;;
+  (defvar my-consult-buffer--map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-j") #'my-consult-buffer--jump)
+      map)
+    "Additional keymap used by `my-consult-buffer'.")
+
+  (defun my-consult-buffer--jump ()
+    (interactive)
+    (let* ((cand (consult-vertico--candidate))
+	   (entry (get-text-property 0 'consult-multi cand))
+	   (kind  (car entry)))
+      (cond ((string= kind "file")
+	     (let ((file (cdr entry)))
+	       (my-w32-open-file file)))
+	    ((string= kind "bookmark")
+	     (my-consult-bookmark--jump)))))
+
+  (consult-customize
+   consult-buffer
+   :preview-key nil
+   :keymap my-consult-buffer--map)
+
+  ;;
+  ;; consult-grep
+  ;;
+  (consult-customize
+   consult-grep
+   :preview-key '(:debounce 3 any))
+
+  ;;
+  ;; consult-ripgrep
+  ;;
+  (consult-customize
+   consult-ripgrep
+   ;;:preview-key  (kbd "M-]") ; not work
+   :preview-key '(:debounce 3 any)
+   )
+
+  (defun my-consult-ripgrep (&optional dir inital)
+    (interactive "P")
+    (consult--minibuffer-with-setup-hook ; to move point beginning
+	(lambda ()
+	  (beginning-of-line)
+	  (forward-char))
+      (consult--grep "Ripgrep" #'consult--ripgrep-builder dir "pattern -- --ignore-case --hidden --max-depth 1")))
+
+  ;; redefine consult-bookmark
+  (advice-add 'consult-ripgrep :override #'my-consult-ripgrep)
+
+  ;;
+  ;; consult-bookmark
   ;;
   (defvar my-consult-bookmark--map
     (let ((map (make-sparse-keymap)))
@@ -93,108 +139,16 @@
 	    (filename
 	     (my-w32-open-file filename)))))
 
-  (defun my-consult-bookmark (name)
-    "If bookmark NAME exists, open it, otherwise create a new bookmark with NAME.
-The command supports preview of file bookmarks and narrowing. See the
-variable `consult-bookmark-narrow' for the narrowing configuration."
-    (require 'consult)
-    (interactive
-     (list
-      (let ((narrow (mapcar (pcase-lambda (`(,x ,y ,_)) (cons x y))
-                            consult-bookmark-narrow)))
-	(consult--read
-	 (consult--bookmark-candidates)
-	 :prompt "Bookmark: "
-	 :preview-key nil ;; added
-	 :state (consult--bookmark-preview)
-	 :category 'bookmark
-	 :history 'bookmark-history
-	 ;; Add default names to future history.
-	 ;; Ignore errors such that `consult-bookmark' can be used in
-	 ;; buffers which are not backed by a file.
-	 :add-history (ignore-errors (bookmark-prop-get (bookmark-make-record) 'defaults))
-	 :group (consult--type-group narrow)
-	 :narrow (consult--type-narrow narrow)
-	 :keymap my-consult-bookmark--map))))
-    (bookmark-maybe-load-default-file)
-    ;; original
-    (if (assoc name bookmark-alist)
-        (bookmark-jump name)
-      (bookmark-set name)))
-    ;; (if (assoc name bookmark-alist)
-    ;; 	(let* ((bookmark (bmkp-get-bookmark name 'NOERROR))
-    ;; 	       (filename (bookmark-get-filename bookmark)))
-    ;; 	  (cond ((eq (window-system) 'w32)
-    ;; 		 (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
-    ;; 			(bmkp-jump-url-browse bookmark))
-    ;; 		       (t
-    ;; 			(my-w32-open-file filename))))
-    ;; 		(t (bookmark-jump (bookmark-bmenu-bookmark)))))))
-
-  ;; redefine consult-bookmark
-  (advice-add 'consult-bookmark :override #'my-consult-bookmark)
-
-  ;; my-consult-buffer
-  (defvar my-consult-buffer--map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "C-j") #'my-consult-buffer--jump)
-      map)
-    "Additional keymap used by `my-consult-buffer'.")
-
-  (defun my-consult-buffer--jump ()
-    (interactive)
-    (let* ((cand (consult-vertico--candidate))
-	   (entry (get-text-property 0 'consult-multi cand))
-	   (kind  (car entry)))
-      (cond ((string= kind "file")
-	     (let ((file (cdr entry)))
-	       (my-w32-open-file file)))
-	    ((string= kind "bookmark")
-	     (my-consult-bookmark--jump)))))
-
-  (defun my-consult-buffer ()
-    "Enhanced `switch-to-buffer' command with support for virtual buffers.
-
-The command supports recent files, bookmarks, views and project files as virtual
-buffers. Buffers are previewed. Furthermore narrowing to buffers (b), files (f),
-bookmarks (m) and project files (p) is supported via the corresponding keys. In
-order to determine the project-specific files and buffers, the
-`consult-project-root-function' is used. See `consult-buffer-sources' and
-`consult--multi' for the configuration of the virtual buffer sources."
-    (interactive)
-    (when-let (buffer (consult--multi consult-buffer-sources
-                                      :require-match
-                                      (confirm-nonexistent-file-or-buffer)
-                                      :prompt "Switch to: "
-				      :keymap my-consult-buffer--map ; add own keymap
-				      :preview-key nil ; add
-                                      :history 'consult--buffer-history
-                                      :sort nil))
-      ;; When the buffer does not belong to a source,
-      ;; create a new buffer with the name.
-      (unless (cdr buffer)
-	(consult--buffer-action (car buffer)))))
-
-  ;; redefine consult-buffer
-  (advice-add 'consult-buffer :override #'my-consult-buffer)
+  (consult-customize
+   consult-bookmark
+   :preview-key nil
+   :keymap my-consult-bookmark--map)
 
   ;; :preface Symbol's function definitons is void: consult--grep
   ;; When M-x consult-ripgrep1 just after launching Emacs, consult--grep called from consult-ripgrep1 is internal function.
   ;; So revise to call consult-ripgrep public function
   ;; :demand consult-ripgrep1 is not found when M-x just after launching Emacs
   :preface
-
-  ;; override
-  (defun consult-ripgrep (&optional dir)
-    (interactive "P")
-    ;; --max-depth 1 works, 0 doesn't work
-    ;; see rg manual --max-depth <NUM>
-    ;;(consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1")
-    ;; (consult--minibuffer-with-setup-hook ;; fail
-    ;; 	(lambda ()
-    ;; 	  (beginning-of-line)
-    ;; 	  (forward-char)))
-    (consult-ripgrep dir "pattern -- --ignore-case --hidden --max-depth 1"))
 
   (defun my-consult-dired-grep ()
     "Search for regexp in files marked dired mode, this works on other than Windows"
