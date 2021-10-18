@@ -1,15 +1,59 @@
-(defun my-w32-open-file (file-path)
-  "open the file-path with Windows explore or application associated the file suffix"
+(defun my-w32-open-file (file-path &optional open-xplore-dir)
+  "open the file-path by application associated it's file suffix or Windows explore."
   ;; *important* Do not check file-exist-p, because return nil even if actual file exists
+  ;;   refer
+  ;;   consult-file-externally in consult
+  ;;   https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
   (interactive "fFile-path: ")
   (cond ((file-directory-p file-path)
-	 (w32-shell-execute "explore" file-path "/e,/select,"))
-	((string= (file-name-extension file-path) "mp4")
-	 ;;(w32-shell-execute "open" file-path)) ; not available on  Windows 8.1
-	 (shell-command-to-string (string-join `("start" ,file-path) " ")))
+	 (if open-xplore-dir
+	     (w32-shell-execute "explore" file-path "/e,/select,")
+	   (dired-find-file)))
+	((member (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))
+	 (if (or (string= (file-name-extension file-path) "MOV")
+		 (string= (file-name-extension file-path) "mp4"))
+	     ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
+	     ;;(w32-shell-execute "open" file-path))
+
+	     ;; use shell-command-to-string,
+	     ;; but on windows10, both w32-shell-execute and shell-command-to-string are available
+	     ;; so use shell-command-to-string.
+	     ;; But if there is space in file name, can't open the file with associated program, neither (shell-quote-argument file-name)
+	     ;; I give up!
+
+	     ;;(shell-command-to-string (format "%s %s" "start" file-name))) ; use the following
+	     (shell-command-to-string (string-join `("start" ,file-path) " "))
+	   (w32-shell-execute "open" file-path)))
 	(t
-	 (w32-shell-execute "open" file-path) ; open by associated program
-	 )))
+	 (dired-find-file))
+	 ))
+
+(defun xmy-dired-find-file ()
+  ;; refer
+  ;; consult-file-externally in consult
+  ;; https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
+  (interactive)
+  (cond
+   ((eq (window-system) 'w32)
+    (let* ((file-name (dired-get-file-for-visit))
+	   (extension (file-name-extension file-name))
+	   (assocfile (member extension '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))))
+      (if assocfile
+	  (cond
+	   ((or (string= extension "MOV")
+		(string= extension "mp4"))
+	    ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
+	    ;; use shell-command-to-string,
+	    ;; but on windows10, both w32-shell-execute and shell-command-to-string are available
+	    ;; so use shell-command-to-string, but if there is space in file name,
+	    ;; can't open the file with associated program, neither (shell-quote-argument file-name)
+	    ;; I give up!
+	    (shell-command-to-string (format "%s %s" "start" file-name)))
+	   (t
+	    (w32-shell-execute "open" file-name)))
+	(dired-find-file))))
+   (t
+    (dired-find-file))))
 
 ;;; the followings will be deprecated
 (defun my-app-open-file-get-file-name ()

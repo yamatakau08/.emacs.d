@@ -17,23 +17,26 @@
 (use-package dired
   :bind
   (:map dired-mode-map
-	("C-l" . my-dired-explore-open)
-	;; others are assigned in .consult.el dired-mode-map
+	("C-l"      . my-dired-open-directory)
 	("C-j"      . my-dired-find-file)
-	("<return>" . my-dired-find-file)
-	)
+	("<return>" . my-dired-find-file))
 
   :config
-  ;; original dired-get-marked-files function returns the file under the point when there is no marked files.
+  ;; original dired-get-marked-files function returns the file path under the point when there is no marked files.
   (defun my-dired-get-marked-files ()
     (when (> (string-to-number (dired-number-of-marked-files)) 0)
       (dired-get-marked-files)))
 
-  (defun my-dired-explore-open ()
-    "open directory with Windows explore"
+  (defun my-dired-open-directory ()
+    "Open directory with Windows explore"
     (interactive)
-    (if (eq (window-system) 'w32)
-	(w32-shell-execute "explore" (dired-current-directory) "/e,/select,")))
+    (cond
+     ((eq (window-system) 'w32)
+      (let* ((directory-path (dired-current-directory)))
+	(my-w32-open-file directory-path t) ; t:  open directory by explore
+	))
+     (t
+      (dired-find-file))))
 
   (defun my-dired-find-file ()
     ;; refer
@@ -42,23 +45,8 @@
     (interactive)
     (cond
      ((eq (window-system) 'w32)
-      (let* ((file-name (dired-get-file-for-visit))
-	     (extension (file-name-extension file-name))
-	     (assocfile (member extension '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))))
-	(if assocfile
-	    (cond
-	     ((or (string= extension "MOV")
-		  (string= extension "mp4"))
-	      ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
-	      ;; use shell-command-to-string,
-	      ;; but on windows10, both w32-shell-execute and shell-command-to-string are available
-	      ;; so use shell-command-to-string, but if there is space in file name,
-	      ;; can't open the file with associated program, neither (shell-quote-argument file-name)
-	      ;; I give up!
-	      (shell-command-to-string (format "%s %s" "start" file-name)))
-	     (t
-	      (w32-shell-execute "open" file-name)))
-	  (dired-find-file))))
+      (let* ((file-path (dired-get-file-for-visit)))
+	(my-w32-open-file file-path)))
      (t
       (dired-find-file))))
 

@@ -90,7 +90,11 @@
   (consult-customize
    consult-buffer
    :preview-key nil
-   :keymap my-consult-buffer--map)
+   :keymap my-consult-buffer--map
+   :initial "m" ; bookmark not work
+   ;;:narrow ?m ; error
+   ;;:name     "Bookmark" ; error
+   )
 
   ;;
   ;; consult-grep
