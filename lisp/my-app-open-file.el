@@ -1,4 +1,4 @@
-(defun my-w32-open-file (file-path &optional open-xplore-dir)
+(defun my-w32-open-file (file-path &optional open-explore-dir)
   "open the file-path by application associated it's file suffix or Windows explore."
   ;; *important* Do not check file-exist-p, because return nil even if actual file exists
   ;;   refer
@@ -6,7 +6,7 @@
   ;;   https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
   (interactive "fFile-path: ")
   (cond ((file-directory-p file-path)
-	 (if open-xplore-dir
+	 (if open-explore-dir
 	     (w32-shell-execute "explore" file-path "/e,/select,")
 	   (dired-find-file)))
 	((member (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))
@@ -29,34 +29,7 @@
 	 (dired-find-file))
 	 ))
 
-(defun xmy-dired-find-file ()
-  ;; refer
-  ;; consult-file-externally in consult
-  ;; https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
-  (interactive)
-  (cond
-   ((eq (window-system) 'w32)
-    (let* ((file-name (dired-get-file-for-visit))
-	   (extension (file-name-extension file-name))
-	   (assocfile (member extension '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))))
-      (if assocfile
-	  (cond
-	   ((or (string= extension "MOV")
-		(string= extension "mp4"))
-	    ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
-	    ;; use shell-command-to-string,
-	    ;; but on windows10, both w32-shell-execute and shell-command-to-string are available
-	    ;; so use shell-command-to-string, but if there is space in file name,
-	    ;; can't open the file with associated program, neither (shell-quote-argument file-name)
-	    ;; I give up!
-	    (shell-command-to-string (format "%s %s" "start" file-name)))
-	   (t
-	    (w32-shell-execute "open" file-name)))
-	(dired-find-file))))
-   (t
-    (dired-find-file))))
-
-;;; the followings will be deprecated
+;;; the followings are deprecated
 (defun my-app-open-file-get-file-name ()
   "to get UNC path from cursor line"
   (interactive)
