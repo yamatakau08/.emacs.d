@@ -18,12 +18,15 @@
 	     ;; use shell-command-to-string,
 	     ;; but on windows10, both w32-shell-execute and shell-command-to-string are available
 	     ;; so use shell-command-to-string.
-	     ;; But if there is space in file name, can't open the file with associated program, neither (shell-quote-argument file-name)
-	     ;; I give up! on Windows 8.1
-	     ;; Windows 10 is no problem
 
-	     ;;(shell-command-to-string (format "%s %s" "start" file-name))) ; use the following
-	     (shell-command-to-string (string-join `("start" ,file-path) " "))
+	     ;;(shell-command-to-string (format "%s %s" "start" file-path)) ; use the following
+	     ;;(shell-command-to-string (string-join `("start" ,file-path) " "))
+
+	     ;; But if there is space in file name, can't open the file with associated program, neither (shell-quote-argument file-name)
+	     ;; need to modify "start" script then put ~/.config/fish/functions/xstart
+	     (shell-command-to-string (format "%s \"%s\"" "xstart" file-path))
+
+	     ;; Windows 10 is no problem
 	   (w32-shell-execute "open" file-path)))
 	(t
 	 (dired-find-file))
