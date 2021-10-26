@@ -7,7 +7,14 @@
   (interactive "fFile-path: ")
   (cond ((file-directory-p file-path)
 	 (if open-explore-dir
-	     (w32-shell-execute "explore" file-path "/e,/select,")
+	     ;;(w32-shell-execute "explore" file-path "/e,/select,")
+	     ;; the above sometimes make Windows Emacs freeze, use following
+
+	     ;;(async-shell-command (format "%s \"%s\"" "xstart" file-path) nil nil)
+	     ;; this pop-up *Async Shell Command* buffer, not good
+
+	     ;; https://stackoverflow.com/a/22982525
+	     (call-process-shell-command (format "%s \"%s\"" "xstart" file-path) nil 0)
 	   (dired-find-file)))
 	((member (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "pptx" "xls" "xlsm" "xlsx"))
 	 (if (or (string= (file-name-extension file-path) "MOV")

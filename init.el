@@ -172,6 +172,7 @@
 (require '.beacon)
 (require '.dired-narrow)
 (require '.dired-subtree)
+(require '.dired-filter)
 ;;(require '.selectrum)
 ;;(require '.selectrum-prescient)
 
@@ -243,3 +244,8 @@
 ;; Wrote c:/yama/NUL
 ;; helm-M-x-execute-command: Renaming: Invalid argument, c:/yama/tmp1JWWLO, c:/yama/NUL
 ;; Package refresh done
+
+(emacs-init-time) ; not put out in Message bffer
+
+(provide 'init)
+;;; init.el ends here

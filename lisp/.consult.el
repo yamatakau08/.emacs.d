@@ -23,8 +23,8 @@
   :bind
   (("M-g g" . consult-goto-line)
    ("C-x b" . consult-buffer)
-   ("C-s"   . consult-line)
-   ("C-r"   . consult-line)
+   ("C-s"   . consult-line-symbol-at-point)
+   ("C-r"   . consult-line-symbol-at-point)
    ("C-x f" . my-consult-file-externally)
    ("C-c b" . consult-bookmark)
    ;; M-s bindings (search-map)
@@ -68,6 +68,13 @@
 	  (call-interactively #'find-file)))))
 
   ;;
+  ;; consult-line
+  ;;
+  (defun consult-line-symbol-at-point ()
+    (interactive)
+    (consult-line (thing-at-point 'symbol)))
+
+  ;;
   ;; consult-buffer
   ;;
   (defvar my-consult-buffer--map
@@ -87,11 +94,25 @@
 	    ((string= kind "bookmark")
 	     (my-consult-bookmark--jump)))))
 
+  ;; Configure initial narrowing per command
+  ;; https://github.com/minad/consult/wiki#start-command-with-initial-narrowing
+  ;; https://github.com/minad/consult/issues/450 my question
+  (defvar consult-initial-narrow-config
+    '((consult-buffer . ?m))) ; bookmark
+
+  ;; Add initial narrowing hook
+  (defun consult-initial-narrow ()
+    (when-let (key (alist-get this-command consult-initial-narrow-config))
+      (setq unread-command-events (append unread-command-events (list key 32)))))
+  (add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
+
   (consult-customize
    consult-buffer
-   :preview-key nil
+   ;;:preview-key nil
+   :preview-key (kbd "M-.") ; not work
+   ;;:preview-key '(:debounce 3 any)
    :keymap my-consult-buffer--map
-   :initial "m" ; bookmark not work
+   ;;:initial "m" ; bookmark not work
    ;;:narrow ?m ; error
    ;;:name     "Bookmark" ; error
    )
