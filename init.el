@@ -115,6 +115,7 @@
 ;;(require '.warnings)
 (require '.bookmark)
 (require '.bookmark+)
+(require '.pixel-scroll)
 
 ;;
 ;; package
