@@ -35,7 +35,8 @@
 (defun my-network-type--interface-list ()
   "return all ipv4's network interface first octet"
   (delete-dups
-   (mapcar (lambda (interface) (aref (nth 1 interface) 0)) (network-interface-list t 'ipv4))))
+   ;;(mapcar (lambda (interface) (aref (nth 1 interface) 0)) (network-interface-list t 'ipv4))))
+   (mapcar (lambda (interface) (aref (car interface) 0)) (network-interface-list))))
 
 (provide 'my-network-type)
 ;;; my-network-type.el ends here
