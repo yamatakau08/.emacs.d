@@ -10,4 +10,3 @@
  ;;("consult" . "a0953dbbfb26a69578e5f83097437aa691ce41b7") ; Tag 0.3 no "consult-customize"
  ;;("consult" . "4fa902e9a86b67e7bf56a79f8b575fd3ecfa7aa8") ; Tag 0.2 no "consult-customize"
 )
-:beta
