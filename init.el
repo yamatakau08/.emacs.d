@@ -59,6 +59,7 @@
 ;;
 ;; for package manage
 ;;
+(require '.url-vars) ;; set proxy, should be loaded after company-network-p,use-package is active
 (require '.package)
 (require '.straight)
 
@@ -89,7 +90,6 @@
 (require '.time)
 (require '.frame)
 
-(require '.url-vars) ;; set proxy, should be loaded after company-network-p,use-package is active
 (require '.info)
 (require '.paren)
 (require '.dired)
