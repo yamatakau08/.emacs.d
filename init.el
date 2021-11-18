@@ -60,6 +60,10 @@
 ;; for package manage
 ;;
 (require '.url-vars) ; set proxy, should be loaded after company-network-p,use-package is active
+(if (eq system-type 'gnu/linux)
+    ;;(my-git-source-get "git@github.com:raxod502/straight.el.git" "straight/repos"))
+    (message "execute the following command manually")
+    (message "git clone git@github.com:raxod502/straight.el.git straight/repos/straight.el"))
 (require '.straight) ; call before "package" to succeed downloading on Emacs 27.0.50, Linux
 (require '.package)
 
@@ -145,8 +149,9 @@
 ;; org-mode
 (require '.org)
 (require '.ox-html)
-(require '.ox-confluence)
-(require '.company-org-block)
+(unless (eq system-type 'gnu/linux)
+  (require '.ox-confluence)
+  (require '.company-org-block))
 
 (require '.visual-regexp)
 (require '.dumb-jump)
@@ -156,8 +161,9 @@
 ;;(require '.centaur-tabs)
 (require '.macrostep)
 (require '.flycheck)
-(require '.ruby-refactor)
-(require '.emr)
+(unless (eq system-type 'gnu/linux)
+  (require '.ruby-refactor)
+  (require '.emr))
 (require '.japanese-holidays)
 
 ;;(require '.jiralib2)
@@ -180,7 +186,8 @@
 (require '.ppp)
 ;;(require '.seml-mode)
 
-(require '.vertico)
+(unless (eq system-type 'gnu/linux)
+  (require '.vertico)) ; (unless (eq system-type 'gnu/linux)
 (require '.orderless)
 (require '.consult)
 (require '.marginalia)
@@ -214,7 +221,8 @@
 ;;(require 'my-skips)
 ;;(require '.my-anki-connect)
 (require '.eced-menu) ; english conversation expression dictionary
-(require '.my-confluence)
+(unless (eq system-type 'gnu/linux)
+  (require '.my-confluence))
 (require '.helm-confluence)
 (require '.my-anki-browse)
 (require '.helm-anki-browse)
