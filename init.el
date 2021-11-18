@@ -59,9 +59,9 @@
 ;;
 ;; for package manage
 ;;
-(require '.url-vars) ;; set proxy, should be loaded after company-network-p,use-package is active
+(require '.url-vars) ; set proxy, should be loaded after company-network-p,use-package is active
+(require '.straight) ; call before "package" to succeed downloading on Emacs 27.0.50, Linux
 (require '.package)
-(require '.straight)
 
 ;; emacs
 (use-package emacs
