@@ -7,14 +7,19 @@
   (interactive "fFile-path: ")
   (cond ((file-directory-p file-path)
 	 (if open-explore-dir
-	     ;;(w32-shell-execute "explore" file-path "/e,/select,")
-	     ;; the above sometimes make Windows Emacs freeze, use following
+	     ;; (w32-shell-execute "explore" file-path "/e,/select,")
+	     ;; this can open folder in which has Japanese character
+	     ;; but sometimes makes Windows Emacs freeze, use following
 
-	     ;;(async-shell-command (format "%s \"%s\"" "xstart" file-path) nil nil)
-	     ;; this pop-up *Async Shell Command* buffer, not good
+	     (w32-shell-execute nil file-path) ; nil see help
+	   ;; monitor if this doesn't make Emacs freeze
 
-	     ;; https://stackoverflow.com/a/22982525
-	     (call-process-shell-command (format "%s \"%s\"" "xstart" file-path) nil 0)
+	   ;;(async-shell-command (format "%s \"%s\"" "xstart" file-path) nil nil)
+	   ;; this pop-up *Async Shell Command* buffer, not good
+
+	   ;; https://stackoverflow.com/a/22982525
+	   ;; this can't open directory if directory name has multi byte. e.g. Japanese character
+	   ;;(call-process-shell-command (format "%s \"%s\"" "xstart" file-path) nil 0)
 	   (dired-find-file)))
 	((member (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html"))
 	 (if (or (string= (file-name-extension file-path) "MOV")
@@ -33,11 +38,11 @@
 	     ;; need to modify "start" script then put ~/.config/fish/functions/xstart
 	     (shell-command-to-string (format "%s \"%s\"" "xstart" file-path))
 
-	     ;; Windows 10 is no problem
+	   ;; Windows 10 is no problem
 	   (w32-shell-execute "open" file-path)))
 	(t
 	 (dired-find-file))
-	 ))
+	))
 
 ;;; the followings are deprecated
 (defun my-app-open-file-get-file-name ()
