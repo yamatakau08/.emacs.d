@@ -21,7 +21,7 @@
 
   (defun google ()
     (interactive)
-    (let* ((site (assoc "Google" webjump-sample-sites))
+    (let* ((site '("Google" . [simple-query "www.google.com" "www.google.com/search?q=" ""]))
 	   (name (car site))
 	   (expr (cdr site)))
       (browse-url-default-browser (webjump-url-fix (webjump-builtin expr name)))))
