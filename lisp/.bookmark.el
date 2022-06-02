@@ -3,6 +3,12 @@
   (:map bookmark-bmenu-mode-map
 	("C-j" . my-bookmark-jump))
 
+  :custom
+  (bookmark-default-file
+   (if (eq (window-system) 'w32)
+       "c:/Users/0000910700/OneDrive - Sony/lisp/bookmarks"
+     (locate-user-emacs-file "bookmarks" ".emacs.bmk")))
+
   :config
   (require 'bookmark+)
 
@@ -37,4 +43,3 @@
   )
 
 (provide '.bookmark)
-
