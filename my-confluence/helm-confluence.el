@@ -41,6 +41,11 @@
   (let ((webui (let-alist page-info ._links.webui)))
     (browse-url-default-browser (format "%s%s" my-confluence-url webui))))
 
+(defun helm-confluence-logout ()
+  "Clear password"
+  (interactive)
+  (setq my-confluence-password nil))
+
 (defun helm-confluence-get-my-pages ()
   "Get the list of the pages of currentUser()"
   (interactive)
