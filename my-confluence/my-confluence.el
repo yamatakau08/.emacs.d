@@ -507,8 +507,9 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
 
 (defun my-confluence--ensure-password ()
   "Ensures that `my-confluence-password' is set."
-  (when (not my-confluence-password)
-    (my-confluence--read-password)))
+  (if (not my-confluence-password)
+      (my-confluence--read-password)
+    my-confluence-password))
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
 ;; function jk-org-kwd gets the propertie specifed by args.
