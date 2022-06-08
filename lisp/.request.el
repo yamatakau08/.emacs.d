@@ -3,8 +3,8 @@
 
   :config
   ;; Important!
-  ;; On msys2 mingw64 emacs environment
-  ;; When request-backend is curl, request's GET method has the following error and doesn't work.
+  ;; On Windows 8.1 emacs, msys2 mingw64
+  ;; When request-backend is curl version 7.76.1, request's GET method has the following error and doesn't work.
   ;; {"errorMessages":["Unexpected character ('u' (code 117)): expected a valid value (number, String, array, object, 'true', 'false' or 'null')\n at [Source: org.apache.catalina.connector.CoyoteInputStream@461e5b9e; line: 1, column: 2]"]}
   ;;
   ;; So, I tried to use url-retrieve as request-backend
@@ -22,6 +22,9 @@
   ;; and specified it as request-curl command.
   ;; Finally it WORKS FINE and SOLVED the all above cumbersome problem.
   ;; should be set in :config, not :custom, I don't know why it's not effective in :custom section
+  ;;
+  ;; On Windows 10, msys2 curl version 7.66.0, cygwin curl version 7.79.1 works
+  ;;
   (custom-set-variables
    '(request-curl
      (cond
@@ -39,4 +42,3 @@
   )
 
 (provide '.request)
-
