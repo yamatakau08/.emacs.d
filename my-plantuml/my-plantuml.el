@@ -27,7 +27,7 @@
   "PlantUML execution"
   :group 'tools)
 
-(defcustom my-plantuml-java "/C/Program Files (x86)/Common Files/Oracle/Java/javapath/java.exe"
+(defcustom my-plantuml-java "c:/Program Files (x86)/Common Files/Oracle/Java/javapath/java.exe"
   "java path"
   :group 'my-plantuml
   :type  'string)
@@ -50,7 +50,8 @@
 ;; private
 (defun my-plantuml--exec (plantuml-file)
   "plantuml-flie: e.g c:/Temp/PlantUML/uml.puml"
-  (let* (;;(java      (my-plantuml--path-drive-win2msys2 my-plantuml-java))
+  (let* ((cygwin-shell-file-name "c:/cygwin64/bin/fish.exe")
+	 (shell-file-name (if (eq system-type 'windows-nt) cygwin-shell-file-name shell-file-name))
 	 (java      my-plantuml-java)
 	 (plantuml  my-plantuml-plantuml)
 	 (puml-file (expand-file-name plantuml-file)) ; to be safety, call expand-file-name
@@ -62,14 +63,13 @@
     ;; "/C/Program\\ Files\\ \\(x86\\)/Common\\ Files/Oracle/Java/javapath/java.exe -jar /C/Program\\ Files/PlantUML/plantuml.1.2020.15.jar /C/Temp/Plantuml/uml.puml
     ;; on fish shell pass
     ;; /C/Program\ Files\ \(x86\)/Common\ Files/Oracle/Java/javapath/java.exe -jar /C/Program\ Files/PlantUML/plantuml.1.2020.15.jar uml.txt
-    ;; executed on fish shell
     (message "[my-plantuml] --exec: %s" cmd)
     (setq ret (shell-command-to-string cmd))
     (if (string-equal ret "") ; success
 	(progn
-	 (message "[my-plantuml] --exec: compiled")
-	 ;(run-associated-program (format "%s.png" (file-name-sans-extension file))))
-	 (w32-shell-execute "open" (format "%s.png" (file-name-sans-extension plantuml-file))))
+	  (message "[my-plantuml] --exec: compiled")
+					;(run-associated-program (format "%s.png" (file-name-sans-extension file))))
+	  (w32-shell-execute "open" (format "%s.png" (file-name-sans-extension plantuml-file))))
       (message "[my-plantuml] --exec error: %s" ret))))
 
 (defun my-plantuml--path-drive-win2msys2 (path)
