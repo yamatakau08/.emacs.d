@@ -32,7 +32,7 @@
   :group 'my-plantuml
   :type  'string)
 
-(defcustom my-plantuml-plantuml "/C/Program Files/PlantUML/plantuml.1.2020.15.jar"
+(defcustom my-plantuml-plantuml "c:/Program Files/PlantUML/plantuml.1.2020.15.jar" ;; availabe windows drive letter notation
   "plantuml path"
   :group 'my-plantuml
   :type  'string)
@@ -50,9 +50,10 @@
 ;; private
 (defun my-plantuml--exec (plantuml-file)
   "plantuml-flie: e.g c:/Temp/PlantUML/uml.puml"
-  (let* ((java      (my-plantuml--path-drive-win2msys2 my-plantuml-java))
-	 (plantuml  (my-plantuml--path-drive-win2msys2 my-plantuml-plantuml))
-	 (puml-file (my-plantuml--path-drive-win2msys2 (expand-file-name plantuml-file))) ; to be safety, call expand-file-name
+  (let* (;;(java      (my-plantuml--path-drive-win2msys2 my-plantuml-java))
+	 (java      my-plantuml-java)
+	 (plantuml  my-plantuml-plantuml)
+	 (puml-file (expand-file-name plantuml-file)) ; to be safety, call expand-file-name
 	 ;;(cmd    (format "%s -jar %s -charset UTF-8 %s" java plantuml file))
 	 (cmd (mapconcat #'shell-quote-argument
 			 (list java "-jar" plantuml "-charset" "UTF-8" puml-file) " "))
