@@ -76,7 +76,16 @@
   ;; https://qiita.com/kai2nenobu/items/ddf94c0e5a36919bc6db
   (eol-mnemonic-unix "(LF)")
   (eol-mnemonic-dos  "(CRLF)")
-  (eol-mnemonic-mac  "(CR)"))
+  (eol-mnemonic-mac  "(CR)")
+  ;; On cygwin environment, shell-file-name is set "/bin/fish".
+  ;; This makes some packaes doesn't work, xref, my-plantuml... "... No such file or directory, /bin/fish"
+  ;; Set shell-file-name explicitly.
+  (shell-file-name
+   (let ((cygwin-shell-file-name "c:/cygwin64/bin/fish.exe"))
+     (if (eq system-type 'windows-nt)
+	 cygwin-shell-file-name
+       shell-file-name)))
+  )
 
 ;(message "[debug] befor exec-path: %s" exec-path)
 ;(use-package exec-path-from-shell
