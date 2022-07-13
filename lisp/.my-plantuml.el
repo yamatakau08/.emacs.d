@@ -10,7 +10,6 @@
   ;; Cygwin
   (my-plantuml-java "c:/Program Files/Android/Android Studio/jre/bin/java.exe") ; availabe windows drive letter notation
   (my-plantuml-plantuml "c:/yama/bin/plantuml.jar") ; availabe windows drive letter notation
-
   )
 
 (provide '.my-plantuml)
