@@ -81,7 +81,7 @@
   ;; This makes some packaes doesn't work, xref, my-plantuml... "... No such file or directory, /bin/fish"
   ;; Set shell-file-name explicitly.
   (shell-file-name
-   (let ((cygwin-shell-file-name "c:/cygwin64/bin/fish.exe"))
+   (let ((cygwin-shell-file-name "c:/cygwin64/bin/fish.exe")) ;; without ".exe" is also available
      (if (eq system-type 'windows-nt)
 	 cygwin-shell-file-name
        shell-file-name)))
