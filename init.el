@@ -221,7 +221,7 @@
 ;;(require 'google) ; replace with new function defined in .webjump.el
 (require '.instant-maximized-window)
 ;;(require '.run-assoc)
-(require '.col-highlight)
+;;(require '.col-highlight) ; this makes point move super slow in message buffer has json big data.
 
 ;;
 ;; my-own function, utility etc...
