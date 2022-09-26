@@ -67,6 +67,11 @@
 	   (url   (let-alist result .url)))
        (message "\"%s\",%s" title url))) results))
 
+(defun my-qiita--my-parser ()
+  (end-of-buffer)
+  (backward-list)
+  (json-read))
+
 (defun my-qiita--get-page-titles (queryword callback)
   (let (datas
 	(per_page 100))
@@ -75,7 +80,8 @@
      (my-qiita--request
       (format "%s/items" my-qiita--api-base-url)
       :params `(("page" . ,page) ("per_page" . ,per_page) ("query" . ,(format "title:%s" queryword)))
-      :parser 'json-read
+      ;;:parser 'json-read
+      :parser 'my-qiita--my-parser
       :success (cl-function
 		(lambda (&key data &allow-other-keys)
 		  (setq datas (vconcat datas data))))))
