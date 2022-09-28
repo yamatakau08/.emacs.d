@@ -97,14 +97,16 @@
   ;; Configure initial narrowing per command
   ;; https://github.com/minad/consult/wiki#start-command-with-initial-narrowing
   ;; https://github.com/minad/consult/issues/450 my question
-  (defvar consult-initial-narrow-config
-    '((consult-buffer . ?m))) ; bookmark
+  ;; stop using this since 2022/09/28, if available this again, unncomment the following block
+  ;;(defvar consult-initial-narrow-config
+  ;;  '((consult-buffer . ?m))) ; bookmark
 
   ;; Add initial narrowing hook
-  (defun consult-initial-narrow ()
-    (when-let (key (alist-get this-command consult-initial-narrow-config))
-      (setq unread-command-events (append unread-command-events (list key 32)))))
-  (add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
+  ;; stop using this since 2022/09/28
+  ;;(defun consult-initial-narrow ()
+  ;;  (when-let (key (alist-get this-command consult-initial-narrow-config))
+  ;;    (setq unread-command-events (append unread-command-events (list key 32)))))
+  ;;(add-hook 'minibuffer-setup-hook #'consult-initial-narrow)
 
   (consult-customize
    consult-buffer
