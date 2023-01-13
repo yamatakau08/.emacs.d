@@ -195,8 +195,7 @@
 (require '.ppp)
 ;;(require '.seml-mode)
 
-(unless (eq system-type 'gnu/linux)
-  (require '.vertico)) ; (unless (eq system-type 'gnu/linux)
+(require '.vertico)
 (require '.orderless)
 (require '.consult)
 (require '.marginalia)
@@ -229,7 +228,8 @@
 (require 'my-app-open-file) ; to open file associated application
 ;;(require 'my-skips)
 ;;(require '.my-anki-connect)
-(require '.eced-menu) ; english conversation expression dictionary
+(unless (eq system-type 'gnu/linux)
+  (require '.eced-menu)) ; english conversation expression dictionary
 (unless (eq system-type 'gnu/linux)
   (require '.my-confluence))
 (require '.helm-confluence)
