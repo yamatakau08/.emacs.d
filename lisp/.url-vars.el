@@ -7,8 +7,8 @@
 (if (eq (my-network-type) 'company)
     (custom-set-variables
      '(url-proxy-services `(("http"  . ,(when (eq (my-network-type) 'company)
-					  (format "%s:%s" wl-proxy-server wl-proxy-port)))
+					  (format "%s:%s" proxy-server proxy-port)))
 			    ("https" . ,(when (eq (my-network-type) 'company)
-					  (format "%s:%s" wl-proxy-server wl-proxy-port)))))))
+					  (format "%s:%s" proxy-server proxy-port)))))))
 
 (provide '.url-vars)

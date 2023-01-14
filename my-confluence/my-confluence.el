@@ -117,7 +117,8 @@ https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-cookie-based-a
 	:data (json-encode
 	       `(("username" . ,xusername)
 		 ("password" . ,xpassword)))
-	:parser 'json-read ; parse-error occurs without json-encode at ":data" part
+	;;:parser 'json-read ; parse-error occurs without json-encode at ":data" part
+	:parser 'my-confluence--parser
 	:success (cl-function
 		  (lambda (&key data &allow-other-keys)
 		    (setq my-confluence--session data)
@@ -231,7 +232,8 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-get"
   (let (content-info)
     (my-confluence--request
      (format "%s/rest/api/content/%s" my-confluence-url content-id)
-     :parser 'json-read
+     ;;:parser 'json-read
+     :parser 'my-confluence--parser
      :success (cl-function
 	       (lambda (&key data &allow-other-keys)
 		 (setq content-info
@@ -269,7 +271,8 @@ https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/#
     :sync t
     :type "GET"
     :headers `(("Content-Type" . "application/json") ("cookie" . ,my-confluence--cookie))
-    :parser 'json-read
+    ;;:parser 'json-read
+    :parser 'my-confluence--parser
     :success (cl-function
 	      (lambda (&key data &allow-other-keys)
 		(let ((bufname (format "Confluence pageId: %s" pageId)))
@@ -309,7 +312,8 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-content-id-put"
      (format "%s/rest/api/content/%s" my-confluence-url pageId)
      :type "PUT"
      :data    (json-encode uci)
-     :parser  'json-read
+     ;;:parser  'json-read
+     :parser 'my-confluence--parser
      :success (cl-function
 	       (lambda (&key data &allow-other-keys)
 		 (message "[my-confluence] --update-content success pageId(%s)" pageId))))))
@@ -336,7 +340,8 @@ https://developer.atlassian.com/cloud/confluence/rest/#api-api-contentbody-conve
       :type "POST"
       :data (json-encode `(("value" . ,wiki-content)
 			   ("representation" . "wiki")))
-      :parser 'json-read
+      ;;:parser 'json-read
+      :parser 'my-confluence--parser
       ;; :success (cl-function
       ;; 		(lambda (&key data &allow-other-keys)
       ;; 		  (switch-to-buffer "*request-result*")
@@ -448,7 +453,8 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
   "https://developer.atlassian.com/cloud/confluence/rest/api-group-content/#api-api-content-search-get"
   (my-confluence--request
    (format "%s/rest/api/content/search" my-confluence-url)
-   :parser 'json-read
+   ;;:parser 'json-read
+   :parser 'my-confluence--parser
    :params `(("cql" . ,cql) ("limit" . 1000)) ; add limit=1000 is from result data, default is 25
    :success (cl-function
 	     (lambda (&key data &allow-other-keys)
@@ -467,7 +473,8 @@ https://community.atlassian.com/t5/Answers-Developer-Questions/How-do-you-post-m
 https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-space-get"
   (my-confluence--request
    (format "%s/rest/api/space" my-confluence-url)
-   :parser 'json-read
+   ;;:parser 'json-read
+   :parser 'my-confluence--parser
    :params '(("limit" . 500)) ; add limit=500 is from result data, default is 25
    :success (cl-function
 	     (lambda (&key data &allow-other-keys)
@@ -485,7 +492,8 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
   (let (ret)
     (my-confluence--request
      (format "%s/rest/api/user/current" my-confluence-url)
-     :parser 'json-read
+     ;;:parser 'json-read
+     :parser 'my-confluence--parser
      :success (cl-function
 	       (lambda (&key data &allow-other-keys)
 		 (setq ret data))))
@@ -510,6 +518,14 @@ https://developer.atlassian.com/cloud/confluence/rest/api-group-space/#api-api-s
   (if (not my-confluence-password)
       (my-confluence--read-password)
     my-confluence-password))
+
+(defalias 'my-confluence--parser 'my-confluence--my-parser)
+
+(defun my-confluence--my-parser ()
+  "Since proxy server spec was changed on 2022/09/14, need to custom parser instead of normarl parser \"json-read\""
+  (end-of-buffer)
+  (backward-list)
+  (json-read))
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/
 ;; function jk-org-kwd gets the propertie specifed by args.

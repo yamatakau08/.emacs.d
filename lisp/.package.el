@@ -38,8 +38,8 @@
 ;; https://emacs.stackexchange.com/questions/39250/error-package-use-package-is-unavailable
 (cond
  ((eq (my-network-type) 'company)
-  (setenv "HTTP_PROXY"  (format "%s:%s" wl-proxy-server wl-proxy-port))
-  (setenv "HTTPS_PROXY" (format "%s:%s" wl-proxy-server wl-proxy-port))
+  (setenv "HTTP_PROXY"  (format "%s:%s" proxy-server proxy-port))
+  (setenv "HTTPS_PROXY" (format "%s:%s" proxy-server proxy-port))
 
   (package-refresh-contents) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
   (unless (package-installed-p 'use-package)

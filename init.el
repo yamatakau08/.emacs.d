@@ -83,7 +83,7 @@
   ;; This makes some packaes doesn't work, xref, my-plantuml... "... No such file or directory, /bin/fish"
   ;; Set shell-file-name explicitly.
   (shell-file-name
-   (let ((cygwin-shell-file-name "c:/cygwin64/bin/fish.exe"))
+   (let ((cygwin-shell-file-name "c:/cygwin64/bin/fish.exe")) ;; without ".exe" is also available
      (if (eq system-type 'windows-nt)
 	 cygwin-shell-file-name
        shell-file-name)))
@@ -197,8 +197,7 @@
 (require '.ppp)
 ;;(require '.seml-mode)
 
-(unless (eq system-type 'gnu/linux)
-  (require '.vertico)) ; (unless (eq system-type 'gnu/linux)
+(require '.vertico)
 (require '.orderless)
 (require '.consult)
 (require '.marginalia)
@@ -223,7 +222,7 @@
 ;;(require 'google) ; replace with new function defined in .webjump.el
 (require '.instant-maximized-window)
 ;;(require '.run-assoc)
-(require '.col-highlight)
+;;(require '.col-highlight) ; this makes point move super slow in message buffer has json big data.
 
 ;;
 ;; my-own function, utility etc...
@@ -231,7 +230,8 @@
 (require 'my-app-open-file) ; to open file associated application
 ;;(require 'my-skips)
 ;;(require '.my-anki-connect)
-(require '.eced-menu) ; english conversation expression dictionary
+(unless (eq system-type 'gnu/linux)
+  (require '.eced-menu)) ; english conversation expression dictionary
 (unless (eq system-type 'gnu/linux)
   (require '.my-confluence))
 (require '.helm-confluence)
