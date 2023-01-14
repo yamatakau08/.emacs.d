@@ -21,7 +21,9 @@
     (y-or-n-p (message "%s is not found,proceed?" file))))
 
 ;;; load private settings
-(require 'private)
+(if (file-exists-p "~/.emacs.d/lisp/private.el")
+    (require 'private)
+  (error "prepare private.el in ~/.emacs.d/lisp"))
 
 ;; check if ip-address is company's network
 (require 'my-network-type)
