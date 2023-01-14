@@ -8,10 +8,8 @@
   :if
   ;; cmigemo
   ;; on Windows, https://www.kaoriya.net/software/cmigemo/
-  (if (executable-find "cmigemo") ; should set cmigemo path in exec-path which is set in init.el
-      t
-    (message "[debug] .migemo.el, Install cmigemo and path in exec-path in init.el")
-    nil)
+  (unless (executable-find "cmigemo") ; should set cmigemo path in exec-path which is set in init.el
+    (error "[debug] .migemo.el, Install cmigemo and path in exec-path in init.el"))
 
   :custom
   ;; migemo options
