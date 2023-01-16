@@ -20,6 +20,9 @@
   ;; staright not support :ref
   ;;:straight (:ref "0.9")
 
+  :custom
+  (completion-styles '(substring basic))
+
   :bind
   (("M-g g" . consult-goto-line)
    ("C-x b" . consult-buffer)
