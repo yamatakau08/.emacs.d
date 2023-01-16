@@ -21,7 +21,10 @@
   ;;:straight (:ref "0.9")
 
   :custom
-  (completion-styles '(substring basic))
+  ;;(completion-styles '(substring basic))
+  ;; explicitly set orderless because setting in .orderless is not effective SOMEHOW.
+  ;; probably :after migemo in .orderless will affect.
+  (completion-styles '(orderless basic))
 
   :bind
   (("M-g g" . consult-goto-line)

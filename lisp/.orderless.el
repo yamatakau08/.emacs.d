@@ -7,7 +7,7 @@
   :after migemo
 
   :custom
-  (completion-styles '(orderless))
+  (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles . (partial-completion)))))
   (orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
   ;; https://github.com/oantolin/orderless#component-separator-regexp

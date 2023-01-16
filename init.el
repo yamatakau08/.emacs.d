@@ -197,9 +197,9 @@
 (require '.ppp)
 ;;(require '.seml-mode)
 
+(require '.consult)
 (require '.vertico)
 (require '.orderless)
-(require '.consult)
 (require '.marginalia)
 (require '.embark)
 
