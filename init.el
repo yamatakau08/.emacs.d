@@ -51,8 +51,9 @@
 ;(set-exec-path-from-shell-PATH)
 
 ;; without this, migemo doesn't work and orderless using migemo also doesn't work.
-(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
-(add-to-list 'exec-path "/usr/local/bin")
+;; move to ~/.emacs.d/lisp/.migemo.el
+;;(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+;;(add-to-list 'exec-path "/usr/local/bin")
 
 ;; for "git clone" or one file get which is not get by package system
 (add-to-list 'load-path "~/.emacs.d/my-git-source-get")

@@ -3,13 +3,16 @@
   :ensure t
 
   :init
-  ;;(add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+  (if (eq system-type 'windows-nt)
+      (add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+    (add-to-list 'exec-path "/usr/local/bin"))
 
-  :if
+  ;;:if
   ;; cmigemo
   ;; on Windows, https://www.kaoriya.net/software/cmigemo/
-  (unless (executable-find "cmigemo") ; should set cmigemo path in exec-path which is set in init.el
-    (message "[debug] .migemo.el, Install cmigemo and path in exec-path in init.el"))
+  ;; remove the following for loading migemo
+  ;; (unless (executable-find "cmigemo") ; should set cmigemo path in exec-path which is set in init.el
+  ;;   (message "[debug] .migemo.el, Install cmigemo and path in exec-path in init.el"))
 
   :custom
   ;; migemo options
