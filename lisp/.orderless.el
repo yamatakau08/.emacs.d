@@ -4,12 +4,18 @@
   :init
   (setq completion-category-defaults nil)
 
-  :after migemo
+  ;;:after migemo
+  ;; comment because without migemo, orderless doesn't work well
 
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles . (partial-completion)))))
-  (orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
+
+  ;; add condition "(if (executable-find "cmigemo") ...", orderless-migemo affect orderless work.
+  (orderless-matching-styles (if (executable-find "cmigemo")
+				 '(orderless-literal orderless-regexp orderless-migemo)
+			       '(orderless-literal orderless-regexp)
+			       ))
   ;; https://github.com/oantolin/orderless#component-separator-regexp
   (orderless-component-separator #'orderless-escapable-split-on-space) ; escpae space
 

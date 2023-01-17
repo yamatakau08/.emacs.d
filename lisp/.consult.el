@@ -21,10 +21,14 @@
   ;;:straight (:ref "0.9")
 
   :custom
-  ;;(completion-styles '(substring basic))
-  ;; explicitly set orderless because setting in .orderless is not effective SOMEHOW.
-  ;; probably :after migemo in .orderless will affect.
-  (completion-styles '(orderless basic))
+  ;; (completion-styles '(substring basic))
+  ;; see step 4. https://github.com/minad/consult#bug-reports
+  ;; without completion-styles setting, consult--line doesn't work well
+  ;; since consult recommend completion-styles 'orderless add conditon "(if (featurep 'orderless) ...)"
+  ;; in .orderless, I set completion-styles as '(orderless basic)
+  (completion-styles (if (featurep 'orderless)
+			 '(orderless basic)
+		       '(substring basic)))
 
   :bind
   (("M-g g" . consult-goto-line)
