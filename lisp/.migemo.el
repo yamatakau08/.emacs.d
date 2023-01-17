@@ -34,7 +34,7 @@
 	 ((eq system-type 'darwin)
 	  "/usr/local/share/migemo/utf-8")
 	 ((eq system-type 'gnu/linux)
-	  "/usr/share/cmigemo/utf-8")))
+	  "~/.emacs.d/conf/migemo/dict/utf-8")))
 
   ;; (migemo-user-dictionary  nil) ; don't use user-dictionary
   ;; (migemo-regex-dictionary nil) ; don't use regex-dictionary
