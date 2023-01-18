@@ -39,7 +39,11 @@
 (cond
  ((eq (my-network-type) 'company)
   (setenv "HTTP_PROXY"  (format "%s:%s" proxy-server proxy-port))
-  (setenv "HTTPS_PROXY" (format "%s:%s" proxy-server proxy-port))
+  ;;(setenv "HTTPS_PROXY" (format "%s:%s" proxy-server proxy-port))
+  ;; curl backend of use-package use this environment variable,
+  ;; since (url-retrieve-synchronously "https://orgmode.org/elpa/archive-contents") take much time to finish
+  ;; set nil
+  (setenv "HTTPS_PROXY" nil)
 
   (package-refresh-contents) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
   (unless (package-installed-p 'use-package)
@@ -51,7 +55,8 @@
   (setenv "HTTPS_PROXY" nil)
   (package-refresh-contents) ; without this line, happen package-compute-transaction: Package ‘use-package-’ is unavailable
   (unless (package-installed-p 'use-package)
-    (package-install 'use-package))))
+    (package-install 'use-package)))
+ )
 
 ;; use-package
 (use-package use-package

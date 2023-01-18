@@ -6,9 +6,11 @@
 ;; need to load before use-package
 (if (eq (my-network-type) 'company)
     (custom-set-variables
-     '(url-proxy-services `(("http"  . ,(when (eq (my-network-type) 'company)
-					  (format "%s:%s" proxy-server proxy-port)))
-			    ("https" . ,(when (eq (my-network-type) 'company)
-					  (format "%s:%s" proxy-server proxy-port)))))))
+     '(url-proxy-services `(("http"  . ,(format "%s:%s" proxy-server proxy-port))
+			    ;; comment https
+			    ;; curl backend of use-package "(url-retrieve-synchronously "https://orgmode.org/elpa/archive-contents")"
+			    ;; takes much time 5minute to finish
+			    ;;("https" . ,(format "%s:%s" proxy-server proxy-port))
+			    ))))
 
 (provide '.url-vars)

@@ -62,6 +62,7 @@
 ;;
 ;; for package manage
 ;;
+(require 'url) ; the below .url-var use url-proxy-services in url.el variable
 (require '.url-vars) ; set proxy, should be loaded after company-network-p,use-package is active
 (if (eq system-type 'gnu/linux)
     ;;(my-git-source-get "git@github.com:raxod502/straight.el.git" "straight/repos"))
