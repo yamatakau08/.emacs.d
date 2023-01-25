@@ -7,6 +7,7 @@
 (if (eq (my-network-type) 'company)
     (custom-set-variables
      '(url-proxy-services `(("http"  . ,(format "%s:%s" proxy-server proxy-port))
+			    ;; google translate package needs "http" of url-proxy-services under proxy environment
 			    ;; comment https
 			    ;; curl backend of use-package "(url-retrieve-synchronously "https://orgmode.org/elpa/archive-contents")"
 			    ;; takes much time 5minute to finish
