@@ -38,7 +38,8 @@
 ;; https://emacs.stackexchange.com/questions/39250/error-package-use-package-is-unavailable
 (cond
  ((eq (my-network-type) 'company)
-  (setenv "HTTP_PROXY"  (format "%s:%s" proxy-server proxy-port))
+  ;;(setenv "HTTP_PROXY"  (format "%s:%s" proxy-server proxy-port))
+  (setenv "HTTP_PROXY" nil)
   ;;(setenv "HTTPS_PROXY" (format "%s:%s" proxy-server proxy-port))
   ;; curl backend of use-package use this environment variable,
   ;; since (url-retrieve-synchronously "https://orgmode.org/elpa/archive-contents") take much time to finish
