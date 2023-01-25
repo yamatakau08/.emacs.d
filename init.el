@@ -234,8 +234,8 @@
 ;;(require '.my-anki-connect)
 (unless (eq system-type 'gnu/linux)
   (require '.eced-menu)) ; english conversation expression dictionary
-(unless (eq system-type 'gnu/linux)
-  (require '.my-confluence))
+
+(require '.my-confluence)
 (require '.helm-confluence)
 (require '.my-anki-browse)
 (require '.helm-anki-browse)
