@@ -254,7 +254,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
     :error (cl-function
 	    (lambda (&rest args &key error-thrown &allow-other-keys)
 	      (setq my-anki-browse--anki-connect-version nil)
-	      (error "[my-anki-browse] anki is not launched!"))))
+	      (error "[my-anki-browse] anki is not launched! or NO_PROXY evironment is not set localhost"))))
   my-anki-browse--anki-connect-version)
 
 ;; private
