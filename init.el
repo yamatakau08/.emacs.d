@@ -232,8 +232,7 @@
 (require 'my-app-open-file) ; to open file associated application
 ;;(require 'my-skips)
 ;;(require '.my-anki-connect)
-(unless (eq system-type 'gnu/linux)
-  (require '.eced-menu)) ; english conversation expression dictionary
+(require '.eced-menu) ; english conversation expression dictionary
 
 (require '.my-confluence)
 (require '.helm-confluence)
