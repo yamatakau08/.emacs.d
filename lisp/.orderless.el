@@ -15,7 +15,7 @@
   ;; that works but, since the order of completion-styles depends on loading package order that can't control
   ;; I follow the orderless overview
 
-  (completion-category-overrides '((file (styles . (partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion))))
 
   ;; add condition "(if (executable-find "cmigemo") ...", orderless-migemo affect orderless work.
   (orderless-matching-styles (if (executable-find "cmigemo")
