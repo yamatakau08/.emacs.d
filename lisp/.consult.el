@@ -3,13 +3,13 @@
   ;;:init
   ;;(require 'bookmark+) ; Since sometimes fail to call bookmark+ function, explicitly load.
 
-  :ensure t
+  ;;:ensure t
   ;;:load-path "consult-0.9"
 
   ;;; straight
   ;; use consult Version 0.9 for consult-grep,ripgrep Ver 0.10 doesn't work well on Mac
   ;; Windows environment, worse
-  ;;:straight t ; check straight version lock function ~/.emacs.d/lisp/straight-default.el
+  :straight t ; check straight version lock function ~/.emacs.d/lisp/straight-default.el
 
   ;;:straight (:branch "0.9") ; pass ,  but have Warning (straight): Could not check out branch "0.9" of repository "consult" Disable showing Disable logging
   ;;:straight (:commit "ee58941308d83a717728f056ea753e80f68cfbc0") ; pass
@@ -26,6 +26,8 @@
   ;; without completion-styles setting, consult--line doesn't work well
   ;; since consult recommend completion-styles 'orderless add conditon "(if (featurep 'orderless) ...)"
   ;; in .orderless, I set completion-styles as '(orderless basic)
+
+  ;; see the comment :config section
   (completion-styles (if (featurep 'orderless)
 			 '(orderless basic)
 		       '(substring basic)))
@@ -42,6 +44,8 @@
    )
 
   :config
+  ;;(add-to-list 'completion-styles 'substring) ; conao3 advice, see the comment :custom section in .orderless.el
+
   (recentf-mode) ; enable for consult-recetf-file command, refere https://github.com/minad/consult#virtual-buffers
 
   (defun consult--directory-prompt-1 (prompt dir) ; redefine to show directory on Version 0.10 above
