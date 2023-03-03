@@ -125,7 +125,15 @@
   (consult-customize
    consult-buffer
    ;;:preview-key nil
-   :preview-key (kbd "M-.") ; not work
+   ;;:preview-key (kbd "M-.") ; not work
+   ;; but I still enable this setting,
+   ;; this have an error consult--key-parse: [134217774] is not a valid key definition; see `key-valid-p' since conslut Version: 0.32?
+   ;; refer https://github.com/minad/consult#multiple-sources
+   ;; By default, consult-buffer previews buffers, bookmarks and files.
+   ;; Loading recent files or bookmarks can result in expensive operations.
+   ;; However it is possible to configure a manual preview as follows.
+   ;; referring the above, I understand this :preview-key for manual preview,
+   ;; so comment this and select the default behavior.
    ;;:preview-key '(:debounce 3 any)
    :keymap my-consult-buffer--map
    ;;:initial "m" ; bookmark not work
