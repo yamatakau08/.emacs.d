@@ -15,6 +15,13 @@
 (straight-use-package 'use-package)
 
 ;; to create straight-profiles under ~/.emacs.d/lisp
-(custom-set-variables '(straight-profiles `((nil . ,(concat user-emacs-directory "lisp/straight-default.el")))))
+;; refer https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases
+;; after modified custom-set-variables setting, rm ~/.emacs.d/custom.el then launch emacs.
+(custom-set-variables
+ '(straight-profiles
+   `((nil . ,(concat user-emacs-directory
+		     (if (eq system-type 'windows-nt)
+			 "lisp/straight-default-windows-nt.el"
+		       "lisp/straight-default.el"))))))
 
 (provide '.straight)
