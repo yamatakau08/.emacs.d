@@ -5,7 +5,7 @@
 
  ;;("consult" . "0f55ad146b327d82a4a6dfa674349bfbbf3820e4") ; Tag 0.18 C-x b consult--display-width: Symbol’s function definition is void: compat-string-width
 
- ("consult" . "f517b70dd8a3be0b8c883633f2a7721448b40f0f" ) ; Tag 0.17 C-x b works fine
+ ;;("consult" . "f517b70dd8a3be0b8c883633f2a7721448b40f0f" ) ; Tag 0.17 C-x b works fine
  ;;("consult" . "800824601b610016066991d6e2dde198d4b0ad8f" ) ; Tag 0.16 C-x b works fine
 
  ;;("consult" . "e1e17965a98515a620c439be1eb28cd125f984a0" ) ; Tag 0.15 C-x b works fine

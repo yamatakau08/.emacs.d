@@ -200,6 +200,7 @@
 ;;(require '.seml-mode)
 
 (require '.consult)
+(require '.compat)
 (require '.vertico)
 (require '.orderless)
 (require '.marginalia)

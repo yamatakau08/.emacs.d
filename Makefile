@@ -12,7 +12,7 @@ clean-straight:
 	rm -rf straight
 
 clean-consult:
-	rm -rf elpa/consult-2*
+	rm -rf elpa/consult-*
 	rm -rf straight/repos/consult
 	rm -rf straight/build/consult
 	rm -rf straight/links/consult

@@ -3,13 +3,13 @@
   ;;:init
   ;;(require 'bookmark+) ; Since sometimes fail to call bookmark+ function, explicitly load.
 
-  ;;:ensure t
+  :ensure t ; enable since don't use straight function
   ;;:load-path "consult-0.9"
 
   ;;; straight
   ;; use consult Version 0.9 for consult-grep,ripgrep Ver 0.10 doesn't work well on Mac
   ;; Windows environment, worse
-  :straight t ; check straight version lock function ~/.emacs.d/lisp/straight-default.el
+  ;;:straight t ; check straight version lock function ~/.emacs.d/lisp/straight-default.el
 
   ;;:straight (:branch "0.9") ; pass ,  but have Warning (straight): Could not check out branch "0.9" of repository "consult" Disable showing Disable logging
   ;;:straight (:commit "ee58941308d83a717728f056ea753e80f68cfbc0") ; pass
