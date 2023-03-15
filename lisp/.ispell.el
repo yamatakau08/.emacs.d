@@ -1,18 +1,15 @@
 (use-package ispell
   :if (executable-find "hunspell")
 
-  ;;:init
+  :init
   ;; hunspell refers environment variable DICTIONARY to use the dictionary
-  ;; enable if ispell backend is hunspell doesn't work
-  ;;(setenv "DICTIONARY" "en_US")
+  ;; Since if it's not set, ispell back end is hunspell doesn't work, execute setenv for safety.
+  (setenv "DICTIONARY" "en_US")
 
   :custom
   (ispell-program-name "hunspell")
 
   :config
-  (setq ispell-hunspell-dict-paths-alist
-	'(("en_US" "c:/cygwin64/usr/share/myspell/en_US.aff")))
-
   (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))
 
   (defun ispell-find-hunspell-dictionaries:around (orig-fun &rest args)
@@ -26,6 +23,8 @@ this around advice function is for work around for that."
 
   (when (and (eq system-type 'windows-nt)
 	     (file-exists-p "c:/cygwin64"))
+    (setq ispell-hunspell-dict-paths-alist
+	  '(("en_US" "c:/cygwin64/usr/share/myspell/en_US.aff")))
     (advice-add 'ispell-find-hunspell-dictionaries :around #'ispell-find-hunspell-dictionaries:around))
 
   )
