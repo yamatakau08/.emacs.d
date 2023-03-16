@@ -23,11 +23,12 @@ this around advice function is for work around for that."
 
   (when (and (eq system-type 'windows-nt)
 	     (file-exists-p "c:/cygwin64"))
+    ;; on windows need to set ispell-hunspell-dict-paths-alist
     (setq ispell-hunspell-dict-paths-alist
-	  '(("en_US" "c:/cygwin64/usr/share/myspell/en_US.aff")))
+	  `(("en_US" ,(concat user-emacs-directory "myspell/en_US.aff")))
+     	  )
     (advice-add 'ispell-find-hunspell-dictionaries :around #'ispell-find-hunspell-dictionaries:around))
 
   )
 
 (provide '.ispell)
-
