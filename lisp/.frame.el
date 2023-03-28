@@ -2,23 +2,25 @@
   :if window-system
   :custom
   (default-frame-alist
-    '((foreground-color . "black")
-      (background-color . "LemonChiffon")
-      (border-color . "black")
-      (mouse-color  . "white")
-      (cursor-color . "black")
-      (width . 120) ; column, unit is NOT pixel, get pixel (frame-pixel-width)
-      (height . 47) ; row, unit is NOT pixel,get pixel (frame-pixel-height)
-      (top . 8)
-      (left . 339) ; Fix on for Windows (workarea width - frame-pixel-width) / 2
-      (alpha . 100)
-      ;; font
-      ;;(font . "Myrica M-10") ; set by :config section
-      ;; ime font
-      ;; (ime-font . "private-fontset-japanese-jisx208")
-      ;; (ime-font . "fixedsys-jisx0208")
-      ;; (ime-font . "ms-mincho-12-jisx0208")
-      ))
+   '(
+     ;; Since using modus-themes, comment about color setting
+     ;;(foreground-color . "black")
+     ;;(background-color . "LemonChiffon")
+     ;;(border-color . "black")
+     ;;(mouse-color  . "white")
+     ;;(cursor-color . "black")
+     (width . 120) ; column, unit is NOT pixel, get pixel (frame-pixel-width)
+     (height . 47) ; row, unit is NOT pixel,get pixel (frame-pixel-height)
+     (top . 8)
+     (left . 339) ; Fix on for Windows (workarea width - frame-pixel-width) / 2
+     (alpha . 100)
+     ;; font
+     ;;(font . "Myrica M-10") ; set by :config section
+     ;; ime font
+     ;; (ime-font . "private-fontset-japanese-jisx208")
+     ;; (ime-font . "fixedsys-jisx0208")
+     ;; (ime-font . "ms-mincho-12-jisx0208")
+     ))
 
   :config
   ;; font setting

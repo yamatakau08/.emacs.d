@@ -270,5 +270,7 @@
 
 (emacs-init-time) ; not put out in Message bffer
 
+(require '.my-modus-themes)
+
 (provide 'init)
 ;;; init.el ends here
