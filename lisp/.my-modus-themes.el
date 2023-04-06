@@ -1,6 +1,4 @@
-;;(if (featurep 'modus-themes) ; Since returns nil in Emacs startup, can't use this condition which Emacs has modus-themes has
-(if (functionp 'modus-themes-select)
-    (load-theme 'misterioso))
+(load-theme 'misterioso)
 
 ;; the followings are all built in themes `consult-themes` can find
 ;; '*' means themes I like with a glance

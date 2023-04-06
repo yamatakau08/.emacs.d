@@ -3,13 +3,16 @@
 
   :init
   ;; hunspell refers environment variable DICTIONARY to use the dictionary
-  ;; Since if it's not set, ispell back end is hunspell doesn't work, execute setenv for safety.
+  ;; Since if it's not set, ispell back end hunspell doesn't work, execute setenv for safety.
   (setenv "DICTIONARY" "en_US")
 
   :custom
   (ispell-program-name "hunspell")
 
   :config
+  (unless (getenv "DICPATH")
+    (warn "set DICPATH environment variable in shell"))
+
   (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))
 
   (defun ispell-find-hunspell-dictionaries:around (orig-fun &rest args)
