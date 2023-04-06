@@ -1,3 +1,4 @@
+;; ox-confluence is included in org-plus-contrib is ensurued installed in ./.org.el
 (use-package ox-confluence
   :config
   ;; redefined org-confluence-link to support images and attachement in confluence pages
