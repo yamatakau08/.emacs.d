@@ -64,10 +64,10 @@
 ;;
 (require 'url) ; the below .url-var use url-proxy-services in url.el variable
 (require '.url-vars) ; set proxy, should be loaded after company-network-p,use-package is active
-(if (eq system-type 'gnu/linux)
-    ;;(my-git-source-get "git@github.com:raxod502/straight.el.git" "straight/repos"))
-    (message "execute the following command manually")
-    (message "git clone git@github.com:raxod502/straight.el.git straight/repos/straight.el"))
+;; (if (eq system-type 'gnu/linux)
+;;     ;;(my-git-source-get "git@github.com:raxod502/straight.el.git" "straight/repos"))
+;;     (message "execute the following command manually")
+;;     (message "git clone git@github.com:raxod502/straight.el.git straight/repos/straight.el"))
 (require '.straight) ; call before "package" to succeed downloading on Emacs 27.0.50, Linux
 (require '.package)
 
@@ -163,9 +163,8 @@
 ;; org-mode
 (require '.org)
 (require '.ox-html)
-(unless (eq system-type 'gnu/linux)
-  (require '.ox-confluence)
-  (require '.company-org-block))
+(require '.ox-confluence)
+(require '.company-org-block)
 
 (require '.visual-regexp)
 (require '.dumb-jump)
@@ -175,9 +174,8 @@
 ;;(require '.centaur-tabs)
 (require '.macrostep)
 (require '.flycheck)
-(unless (eq system-type 'gnu/linux)
-  (require '.ruby-refactor)
-  (require '.emr))
+(require '.ruby-refactor)
+(require '.emr)
 (require '.japanese-holidays)
 
 ;;(require '.jiralib2)
