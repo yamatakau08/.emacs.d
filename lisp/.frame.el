@@ -39,7 +39,9 @@
 		   ;; -16 is the almost same as on Windows Myrica M font -10
 		   (add-to-list 'default-frame-alist `(font . ,(concat font "-16"))))
 		  ((eq system-type 'windows-nt)
-		   (add-to-list 'default-frame-alist `(font . ,(concat font "-10"))))
+		   (if (equal (system-name) "JPC20545731")
+		       (add-to-list 'default-frame-alist `(font . ,(concat font "-14")))
+		     (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))
 		  (t
 		   (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))
 	    (throw 'font-added font)))))
