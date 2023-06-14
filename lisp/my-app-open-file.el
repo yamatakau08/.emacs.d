@@ -21,13 +21,8 @@
 	   ;; this can't open directory if directory name has multi byte. e.g. Japanese character
 	   ;;(call-process-shell-command (format "%s \"%s\"" "xstart" file-path) nil 0)
 	   (dired-find-file)))
-	((member (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "MP4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html"))
-	 (if (or (string= (file-name-extension file-path) "MOV")
-		 (string= (file-name-extension file-path) "mp4")
-		 (string= (file-name-extension file-path) "MP4")
-		 )
+	((member-ignore-case (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html"))
 	     ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
-	     ;;(w32-shell-execute "open" file-path))
 
 	     ;;(shell-command-to-string (format "%s %s" "start" file-path)) ; use the following
 	     ;;(shell-command-to-string (string-join `("start" ,file-path) " "))
@@ -37,13 +32,20 @@
 	     ;;(shell-command-to-string (format "%s \"%s\"" "xstart" file-path))
 
 	     ;; On Windows 10, w32-shell-execute has no problem
-	     (w32-shell-execute "open" file-path)
-
-	   ;; On Windows 10, w32-shell-execute has no problem
-	   (w32-shell-execute "open" file-path)))
+	     (w32-shell-execute "open" file-path))
 	(t
 	 (dired-find-file))
 	))
+
+;; to open html file in share folder which is exported by org with browser on windows environment
+(defun advice:w32-shell-execute-filter-args (args)
+  (setcar (cdr args) (replace-regexp-in-string "/" "\\\\" (cadr args))) ; pass ("open" "path is replaced with '/'")
+  args ; return args processed for w32-shell-execute function to execute
+)
+
+(advice-add 'w32-shell-execute
+	    :filter-args
+            'advice:w32-shell-execute-filter-args)
 
 ;;; the followings are deprecated
 (defun my-app-open-file-get-file-name ()
