@@ -21,9 +21,11 @@
 	   ;; this can't open directory if directory name has multi byte. e.g. Japanese character
 	   ;;(call-process-shell-command (format "%s \"%s\"" "xstart" file-path) nil 0)
 	   (dired-find-file)))
-	((member (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html"))
+	((member (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "MP4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html"))
 	 (if (or (string= (file-name-extension file-path) "MOV")
-		 (string= (file-name-extension file-path) "mp4"))
+		 (string= (file-name-extension file-path) "mp4")
+		 (string= (file-name-extension file-path) "MP4")
+		 )
 	     ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
 	     ;;(w32-shell-execute "open" file-path))
 
