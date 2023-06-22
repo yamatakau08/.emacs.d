@@ -219,14 +219,4 @@ possible."
 ;(advice-add 'org-tempo-complete-tag :around #'ad:org-tempo-around)
 ;;;(advice-remove 'org-tempo-complete-tag #'ad:org-tempo-around)
 
-;; to open html file in share folder which is exported by org with browser on windows environment
-(defun advice:w32-shell-execute-filter-args (args)
-  (setcar (cdr args) (replace-regexp-in-string "/" "\\\\" (cadr args))) ; pass ("open" "path is replaced with '/'")
-  args ; return args processed for w32-shell-execute function to execute
-)
-
-(advice-add 'w32-shell-execute
-	    :filter-args
-            'advice:w32-shell-execute-filter-args)
-
 (provide '.org)
