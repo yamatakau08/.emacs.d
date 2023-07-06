@@ -21,6 +21,10 @@
 	   ;; this can't open directory if directory name has multi byte. e.g. Japanese character
 	   ;;(call-process-shell-command (format "%s \"%s\"" "xstart" file-path) nil 0)
 	   (dired-find-file)))
+	((not (file-name-extension file-path))
+	 ;; add this clause, because without suffix such as "tako" ".emacs" have an error on next condition
+	 ;; member-ignore-case have Wrong type argument: stringp, nil
+	 (dired-find-file))
 	((member-ignore-case (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html"))
 	     ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
 
