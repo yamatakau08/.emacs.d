@@ -1,7 +1,7 @@
 ;;; config.el -*- lexical-binding: t; -*-
 
 ;;; for emergency debug
-(setq debug-on-error  nil) ; enable enter debugger if an error is signaled
+(setq debug-on-error  t) ; enable enter debugger if an error is signaled
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
 (setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
 
@@ -242,6 +242,8 @@
 
 (require '.my-plantuml)
 (require '.my-say)
+
+(require 'ffmpegcomp)
 
 ;; developing
 ;;(require '.yahoo-weather-mode.el)
