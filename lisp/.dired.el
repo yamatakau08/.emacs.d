@@ -53,7 +53,7 @@
      (t
       (dired-find-file))))
 
-  (defun camerarollcopy ()
+  (defun camerarollopen ()
     "open camearrollcopy directory in dired buffer
 if dired-dwim-target is set t, dired guess a default target directory.
 it easy to select the file to copy into target directory."
