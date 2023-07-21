@@ -13,7 +13,7 @@
   :custom
   (helm-jira-url       company-jira-url) ; URL of your JIRA instance (should not end in a slash)
   (helm-jira-username  "0000910700")     ; The username to use to log in to JIRA
-  (helm-jira-project   "BISYAMON3G")     ; The JIRA-project you want to interact with
+  (helm-jira-project   "bisyamon3g")     ; The JIRA-project you want to interact with
 
   ;; the following are not used for my environment
   (helm-jira-board-id  153) ; The ID of the board you want to interact with
