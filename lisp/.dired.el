@@ -16,7 +16,11 @@
 
 (use-package dired
   :custom
-  (dired-dwim-target t)
+  ;(dired-dwim-target t)
+  ;; for easy to copy the file in dired A to dired B,
+  ;; In case dired A is already opened and open dired B,
+  ;; in dired B buffer execute copy or move the file, dired A path is automaticaly put as destination directory.
+  (dired-dwim-target 'dired-dwim-target-recent)
 
   :bind
   (:map dired-mode-map
