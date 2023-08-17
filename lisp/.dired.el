@@ -15,6 +15,9 @@
 ;     1125899907103619     2k -rw-rw-rw-  1 0000910700 Domain Users   1.6k 12-23 17:10 window-setting.el
 
 (use-package dired
+  :custom
+  (dired-dwim-target t)
+
   :bind
   (:map dired-mode-map
 	("C-l"      . my-dired-open-directory)
@@ -49,6 +52,13 @@
 	(my-w32-open-file file-path)))
      (t
       (dired-find-file))))
+
+  (defun camerarollopen ()
+    "open camearrollcopy directory in dired buffer
+if dired-dwim-target is set t, dired guess a default target directory.
+it easy to select the file to copy into target directory."
+    (interactive)
+    (dired-other-window "c:/Users/0000910700/Pictures/Camera Roll/"))
 
   )
 
