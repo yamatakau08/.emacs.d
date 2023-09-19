@@ -1,7 +1,7 @@
 ;;; config.el -*- lexical-binding: t; -*-
 
 ;;; for emergency debug
-(setq debug-on-error  t) ; enable enter debugger if an error is signaled
+(setq debug-on-error  nil) ; enable enter debugger if an error is signaled
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
 (setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
 
@@ -81,14 +81,15 @@
   (eol-mnemonic-unix "(LF)")
   (eol-mnemonic-dos  "(CRLF)")
   (eol-mnemonic-mac  "(CR)")
-  ;; On cygwin environment, shell-file-name is set "/bin/fish".
-  ;; This makes some packaes doesn't work, xref, my-plantuml... "... No such file or directory, /bin/fish"
-  ;; Set shell-file-name explicitly.
+  ;; When login shell is fish shell, shell-file-name is set "/bin/fish".
+  ;; Since that makes some packaes xref, my-plantuml... doesn't work," then have an error "No such file or directory, /bin/fish", set shell-file-name explicitly to /bin/bash.
+  ;; After that, found dired-do-shell-command "tar zxvf" and eshell also doesn't work with the same reason.
   (shell-file-name
-   (let ((cygwin-shell-file-name "c:/cygwin64/bin/fish.exe")) ;; without ".exe" is also available
+   (let ((cygwin-shell-file-name "c:/cygwin64/bin/bash.exe")) ;; should use "c:/...",without ".exe" is also available
+     ;; when set "/bin/bash", it doesn't work well have error "shell-command-on-region: Searching for program: No such file or directory, /bin/bash"
      (if (eq system-type 'windows-nt)
 	 cygwin-shell-file-name
-       shell-file-name)))
+       "/bin/bash")))
   )
 
 ;(message "[debug] befor exec-path: %s" exec-path)
