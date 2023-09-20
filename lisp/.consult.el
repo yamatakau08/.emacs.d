@@ -86,7 +86,16 @@
   ;;
   (defun consult-line-symbol-at-point ()
     (interactive)
-    (consult-line (thing-at-point 'symbol)))
+    (let ((at-point-symbol (thing-at-point 'symbol)))
+      (if at-point-symbol
+	  ;; Without substring-no-properties,
+	  ;; at point on attributs of file in dired buffer
+	  ;; consult-line "Go to line:" prompt doesn't accept key input and display the character input.
+	  ;; consult-line initial arg seems to be expected normal string without text properties
+	  ;; that's why "substring-no-properties" is needed.
+	  (consult-line (substring-no-properties at-point-symbol))
+	;; e.g. point on '.', thing-at-point 'symbol returns nil,(substring-no-properties nil) has error
+	(consult-line))))
 
   ;;
   ;; consult-buffer

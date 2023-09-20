@@ -16,7 +16,33 @@
 
 (use-package dired
   :custom
-  (dired-dwim-target t)
+  ;(dired-dwim-target t)
+  ;; for easy to copy the file in dired A to dired B,
+  ;; In case dired A is already opened and open dired B,
+  ;; in dired B buffer execute copy or move the file, dired A path is automaticaly put as destination directory.
+  (dired-dwim-target 'dired-dwim-target-recent)
+
+  ;;
+  (dired-guess-shell-alist-user
+   (list
+    (list "\\.t\\(ar\\.\\)?gz\\'"
+          '(if dired-guess-shell-gnutar
+               (concat dired-guess-shell-gnutar " zxvfk")
+             (concat "gunzip -qc * | tar xvf -"))
+          ;; Extract files into a separate subdirectory
+          '(if dired-guess-shell-gnutar
+               (concat "mkdir " (file-name-sans-extension file)
+                       "; " dired-guess-shell-gnutar " -C "
+                       (file-name-sans-extension file) " -zxvf")
+             (concat "mkdir " (file-name-sans-extension file)
+                     "; gunzip -qc * | tar -C "
+                     (file-name-sans-extension file) " -xvf -"))
+          ;; Optional decompression.
+          '(concat "gunzip" (if dired-guess-shell-gzip-quiet " -q" ""))
+          ;; List archive contents.
+          '(if dired-guess-shell-gnutar
+               (concat dired-guess-shell-gnutar " ztvf")
+             (concat "gunzip -qc * | tar tvf -")))))
 
   :bind
   (:map dired-mode-map
