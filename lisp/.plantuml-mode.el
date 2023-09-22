@@ -3,7 +3,8 @@
 
   :custom
   (plantuml-java-command "C:/Program Files/Android/Android Studio/jre/bin/java.exe") ; Windows 8.1
-  (plantuml-jar-path "C:/Program Files/PlantUML/plantuml.1.2020.15.jar")
+  ;;(plantuml-jar-path "C:/Program Files/PlantUML/plantuml.1.2020.15.jar")
+  (plantuml-jar-path "c:/yama/bin/plantum.jar")
   (plantuml-default-exec-mode 'jar)
 
   )
