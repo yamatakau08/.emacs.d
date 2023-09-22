@@ -84,7 +84,9 @@
 if dired-dwim-target is set t, dired guess a default target directory.
 it easy to select the file to copy into target directory."
     (interactive)
-    (dired-other-window "c:/Users/0000910700/Pictures/Camera Roll/"))
+    (if onedrive-cameraroll-folder
+        (dired-other-window onedrive-cameraroll-folder)
+      (dired-other-window "c:/Users/0000910700/Pictures/Camera Roll/")))
 
   )
 
