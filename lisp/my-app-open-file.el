@@ -25,7 +25,7 @@
 	 ;; add this clause, because without suffix such as "tako" ".emacs" have an error on next condition
 	 ;; member-ignore-case have Wrong type argument: stringp, nil
 	 (dired-find-file))
-	((member-ignore-case (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html"))
+	((member-ignore-case (file-name-extension file-path) '("MOV" "doc" "docx" "gif" "jpeg" "mp4" "pdf" "ppt" "pptx" "xls" "xlsm" "xlsx" "html" "gdoc"))
 	     ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
 
 	     ;;(shell-command-to-string (format "%s %s" "start" file-path)) ; use the following
