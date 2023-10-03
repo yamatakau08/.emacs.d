@@ -81,6 +81,9 @@
   (eol-mnemonic-unix "(LF)")
   (eol-mnemonic-dos  "(CRLF)")
   (eol-mnemonic-mac  "(CR)")
+
+  (use-short-answers t) ; introuduced by https://blog.web-apps.tech/y-or-n-for-kill-modified-buffer/
+
   ;; When login shell is fish shell, shell-file-name is set "/bin/fish".
   ;; Since that makes some packaes xref, my-plantuml... doesn't work," then have an error "No such file or directory, /bin/fish", set shell-file-name explicitly to /bin/bash.
   ;; After that, found dired-do-shell-command "tar zxvf" and eshell also doesn't work with the same reason.
