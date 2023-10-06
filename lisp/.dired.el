@@ -48,7 +48,8 @@
   (:map dired-mode-map
 	("C-l"      . my-dired-open-directory)
 	("C-j"      . my-dired-find-file)
-	("<return>" . my-dired-find-file))
+	("<return>" . my-dired-find-file)
+	("N"        . my-dired-ffmpeg-comp))
 
   :config
   ;; original dired-get-marked-files function returns the file path under the point when there is no marked files.
@@ -87,6 +88,15 @@ it easy to select the file to copy into target directory."
     (if onedrive-cameraroll-folder
         (dired-other-window onedrive-cameraroll-folder)
       (dired-other-window "c:/Users/0000910700/Pictures/Camera Roll/")))
+
+  (defun my-dired-ffmpeg-comp ()
+    (interactive)
+    (cond
+     ((eq (window-system) 'w32)
+      (let* ((file-path (dired-get-file-for-visit)))
+	(ffmpegcomp file-path)))
+     (t
+      (message (concat (window-system) "is not supported")))))
 
   )
 
