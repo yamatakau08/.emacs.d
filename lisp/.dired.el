@@ -91,12 +91,8 @@ it easy to select the file to copy into target directory."
 
   (defun my-dired-ffmpeg-comp ()
     (interactive)
-    (cond
-     ((eq (window-system) 'w32)
-      (let* ((file-path (dired-get-file-for-visit)))
+    (let ((file-path (dired-get-file-for-visit)))
 	(ffmpegcomp file-path)))
-     (t
-      (message (concat (window-system) "is not supported")))))
 
   )
 

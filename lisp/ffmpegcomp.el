@@ -22,7 +22,7 @@ ffmpeg -i file.mp4 -crf 30 file_comp.mp4"
 	    (message "%s already exists." outfile)
 	  (message "output %s" outfile))
 	)
-    (message "specify mp4file!")
+    (message "specify mp4 or MOV file!")
     ))
 
 (provide 'ffmpegcomp)
