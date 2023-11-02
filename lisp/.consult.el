@@ -32,6 +32,9 @@
 			 '(orderless basic)
 		       '(substring basic)))
 
+  ;; to descend .* directory for consult-find
+  (consult-find-args "find .")
+
   :bind
   (("M-g g" . consult-goto-line)
    ("C-x b" . consult-buffer)
@@ -202,6 +205,26 @@
    :preview-key nil
    :keymap my-consult-bookmark--map)
 
+  ;; consult-find
+  ;; https://github.com/minad/consult/issues/317#issuecomment-849635051
+  ;; apply consult-find-args, but that doesn't work!
+  ;; (when (eq (window-system) 'w32)
+  ;;   (setq consult-find-args
+  ;;         (replace-regexp-in-string "\\*" "\\\\*" consult-find-args)))
+  (when (eq (window-system) 'w32)
+    (defalias 'consult-find 'consult-find+)
+
+    ;; refer https://emacs-china.org/t/windows-consult-find/22251/10
+    (defun consult-find+ (&optional dir initial)
+      "Same as `consult-find', and bind noglob environment variable for Cygwin and MSYS."
+      (interactive "P")
+      (pcase-let* ((process-environment (cons "MSYS=noglob" (cons "CYGWIN=noglob" process-environment)))
+		   (`(,prompt ,paths ,dir) (consult--directory-prompt "Find" dir))
+		   (default-directory dir)
+		   (builder (consult--find-make-builder paths)))
+	(find-file (consult--find prompt builder initial))))
+    )
+
   ;; :preface Symbol's function definitons is void: consult--grep
   ;; When M-x consult-ripgrep1 just after launching Emacs, consult--grep called from consult-ripgrep1 is internal function.
   ;; So revise to call consult-ripgrep public function
@@ -242,12 +265,6 @@
 	  )
       (consult-ripgrep nil "pattern -- --ignore-case --hidden")))
 
-  ;; consult-find
-  ;; https://github.com/minad/consult/issues/317#issuecomment-849635051
-  ;; apply consult-find-args, but that doesn't work!
-  ;; (when (eq (window-system) 'w32)
-  ;;   (setq consult-find-args
-  ;;         (replace-regexp-in-string "\\*" "\\\\*" consult-find-args)))
   )
 
 ;; Sample code using consult for studying
