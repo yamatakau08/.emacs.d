@@ -149,7 +149,7 @@ https://github.com/FooSoft/anki-connect/blob/master/actions/notes.md"
 		  :type "POST"
 		  :data (json-encode
 			 `((:action  . "addNote")
-			   (:version . ,my-anki-browse--anki-connect-version)
+			   (:version . ,(my-anki-browse-version))
 			   ;; add :tags [] ,because have error on Anki 2.0.52 old version + anki-connect installed on 2020/12/08 on Windows 8.1
 			   (:params (:note . (:deckName ,deckName :modelName ,modelName :fields (:Front ,Front :Back ,Back) :tags [])))))))
     (if result
@@ -236,7 +236,7 @@ cardids: [1,2] or '(1 2)
 
 (defun my-anki-browse-version ()
   "Gets the version of the API exposed by this plugin. Currently versions 1 through 6 are defined.
-https://github.com/FooSoft/anki-connect/blob/master/actions/miscellaneous.md"
+https://github.com/FooSoft/anki-connect#version"
   ;;(interactive)
   (request
     my-anki-browse--anki-connect-url
