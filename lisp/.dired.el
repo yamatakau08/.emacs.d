@@ -22,34 +22,14 @@
   ;; in dired B buffer execute copy or move the file, dired A path is automaticaly put as destination directory.
   (dired-dwim-target 'dired-dwim-target-recent)
 
-  ;;
-  (dired-guess-shell-alist-user
-   (list
-    (list "\\.t\\(ar\\.\\)?gz\\'"
-          '(if dired-guess-shell-gnutar
-               (concat dired-guess-shell-gnutar " zxvfk")
-             (concat "gunzip -qc * | tar xvf -"))
-          ;; Extract files into a separate subdirectory
-          '(if dired-guess-shell-gnutar
-               (concat "mkdir " (file-name-sans-extension file)
-                       "; " dired-guess-shell-gnutar " -C "
-                       (file-name-sans-extension file) " -zxvf")
-             (concat "mkdir " (file-name-sans-extension file)
-                     "; gunzip -qc * | tar -C "
-                     (file-name-sans-extension file) " -xvf -"))
-          ;; Optional decompression.
-          '(concat "gunzip" (if dired-guess-shell-gzip-quiet " -q" ""))
-          ;; List archive contents.
-          '(if dired-guess-shell-gnutar
-               (concat dired-guess-shell-gnutar " ztvf")
-             (concat "gunzip -qc * | tar tvf -")))))
-
   :bind
   (:map dired-mode-map
 	("C-l"      . my-dired-open-directory)
 	("C-j"      . my-dired-find-file)
 	("<return>" . my-dired-find-file)
-	("N"        . my-dired-ffmpeg-comp))
+	("N"        . my-dired-ffmpeg-comp)
+	("C-@"      . my-dired-uncompress)
+	)
 
   :config
   ;; original dired-get-marked-files function returns the file path under the point when there is no marked files.
@@ -83,10 +63,10 @@
   (defun camerarollopen ()
     "open camearrollcopy directory in dired buffer
 if dired-dwim-target is set t, dired guess a default target directory.
-it easy to select the file to copy into target directory."
+it's easy to select the file to copy into target directory."
     (interactive)
     (if onedrive-cameraroll-folder
-        (dired-other-window onedrive-cameraroll-folder)
+	(dired-other-window onedrive-cameraroll-folder)
       (dired-other-window "c:/Users/0000910700/Pictures/Camera Roll/")))
 
   (defun my-dired-ffmpeg-comp ()
@@ -94,7 +74,22 @@ it easy to select the file to copy into target directory."
     (let ((file-path (dired-get-file-for-visit)))
 	(ffmpegcomp file-path)))
 
-  )
+  (defun my-dired-uncompress ()
+  "uncompress tar.gz file in the directory name is the basename of tar.gz file"
+  (interactive)
+  (let* ((targzafile (dired-get-filename))
+	 (targzfile (file-name-nondirectory targzafile))
+	 (suffix ".tar.gz")
+	 (directory (replace-regexp-in-string suffix "" targzafile)))
+    (if (string-match suffix targzafile)
+	(progn
+	  (make-directory directory)
+	  (shell-command-to-string
+	   (mapconcat #'shell-quote-argument
+		      (list "tar" "zxvfk" targzfile "--directory" directory) " "))
+	  (message (format "uncompress %s finished in %s !" targzfile directory)))
+      (warn (format "non tar.gz file: %s" targzafile)))))
 
+)
 
 (provide '.dired)
