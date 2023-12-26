@@ -59,7 +59,8 @@
 	      ("C-l" . vertico-directory-delete-word) ; same key assign of helm
               ("M-DEL" . vertico-directory-delete-word))
   ;; Tidy shadowed file names
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
+  ;; comment following setting, this show "nc: sg: su:" ... when execute find-file then specifi "/" etc.
+  ;;:hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
 )
 
 (provide '.vertico)
