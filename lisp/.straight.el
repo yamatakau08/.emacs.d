@@ -12,7 +12,7 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'use-package)
+;;(straight-use-package 'use-package)
 
 ;; to create straight-profiles under ~/.emacs.d/lisp
 ;; refer https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases
