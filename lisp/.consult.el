@@ -35,6 +35,12 @@
   ;; to descend .* directory for consult-find
   (consult-find-args "find .")
 
+  ;; add option --unrestricted for consult-fd
+  ;; --unrestricted Perform an unrestricted search, including ignored and hidden files. This is an alias for '--no-ignore --hidden'.
+  (consult-fd-args
+   '((if (executable-find "fdfind" 'remote) "fdfind" "fd")
+     "--full-path --color=never --unrestricted"))
+
   :bind
   (("M-g g" . consult-goto-line)
    ("C-x b" . consult-buffer)
