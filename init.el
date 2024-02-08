@@ -138,6 +138,7 @@
 (require '.bookmark)
 (require '.bookmark+)
 (require '.pixel-scroll)
+(require '.ediff)
 
 ;;
 ;; package
