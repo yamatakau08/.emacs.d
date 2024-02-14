@@ -4,7 +4,10 @@
 
   :config
   ;; override original function to suppress the error ediff-files on Windows Emacs + cygwin
-  (defun ediff-exec-process (program buffer synch options &rest files)
+  ;; but don't use this function.
+  ;; because deal with default-process-coding-system variable
+  ;; so rename the function name
+  (defun xediff-exec-process (program buffer synch options &rest files)
     "Execute the diff PROGRAM.
 
 The PROGRAM output is sent to BUFFER, which must be a live buffer

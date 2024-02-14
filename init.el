@@ -28,13 +28,23 @@
 ;; check if ip-address is company's network
 (require 'my-network-type)
 
-(set-language-environment "Japanese")
 (setenv "TZ" "JST-9") ; gnu サイトから入手したWindows binaryだと、time-zone が日本になっていないので、実時間と mode-line 時間表示が異なるので設定
 
-;;; 新規作成時のファイルの文字コードを utf-8-unix
-(set-default-coding-systems 'utf-8-unix)
-;;; sdic 和英検索がcygwinで正しく動作しない対応
-(prefer-coding-system 'utf-8-unix)
+(set-language-environment "Japanese")
+
+(when (eq system-type 'windows-nt)
+  ;; After execute (set-language-environment "Japanese") function have some errors on Windows Emacs + Cygwin.
+
+  ;; Since file-encoding is set to japanese-shift-jis-unix when open the buffer for the new file,
+  ;; set to utf-8-unix same as Linux, Mac environment.
+  (prefer-coding-system 'utf-8-unix)
+  ;; the following is workaround for "ediff-files" with japanese filename doesn't work,
+  ;; "diff" requires the file-name encoding cp932
+  (setq default-process-coding-system '(japanese-shift-jis-dos . cp932))
+
+  ;; the following is also effective in case of "diff" command only.
+  ;;(add-to-list 'process-coding-system-alist '("diff" japanese-shift-jis-dos . cp932))
+  )
 
 ;;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 ;(defun set-exec-path-from-shell-PATH ()
