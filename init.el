@@ -35,18 +35,22 @@
 (when (eq system-type 'windows-nt)
   ;; After execute (set-language-environment "Japanese") function have some errors on Windows Emacs + Cygwin.
 
-  ;; Since file-encoding is set to japanese-shift-jis-unix when open the buffer for the new file,
-  ;; set to utf-8-unix same as Linux, Mac environment.
+  ;; Since file-encoding is set to japanese-shift-jis-unix when open the buffer for the new file, set to utf-8-unix
+  ;; same as Linux, Mac environment.
   (prefer-coding-system 'utf-8-unix)
 
-  ;; the following is workaround for "ediff-files" with japanese filename doesn't work,
-  ;; "diff" requires the file-name encoding cp932
+  ;; the following is workaround for "ediff-files" with the japanese filename doesn't work,
+  ;; because "diff" requires the file-name is encoding cp932
   ;;(setq default-process-coding-system '(japanese-shift-jis-dos . cp932))
 
-  ;; but the above consult-grep has mojibake with japanese character and file name.
-  ;; use the following is also effective in case of "diff" command only.
-  (add-to-list 'process-coding-system-alist '("diff" japanese-shift-jis-dos . cp932))
-  )
+  ;; but the above has negative effects.
+  ;; e.g. consult-grep with search string in japanese character outputs garbled characters and the japanese filename also garbled.
+  ;; so use the following is effective in case of "diff" command only.
+  (add-to-list 'process-coding-system-alist '("diff" japanese-shift-jis-dos . cp932-unix))
+  ;; the following is the workaround for consult-find to work with the japanese file name
+  (add-to-list 'process-coding-system-alist '("find" utf-8-unix . cp932-unix))
+  ;; the following is the workaround for consult-grep to work with search string in Japanese and the japanese filename
+  (add-to-list 'process-coding-system-alist '("grep" utf-8-unix . cp932-unix)))
 
 ;;; refer https://qiita.com/catatsuy/items/3dda714f4c60c435bb25
 ;(defun set-exec-path-from-shell-PATH ()
