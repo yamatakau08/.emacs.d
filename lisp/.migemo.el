@@ -27,17 +27,10 @@
   ;; 	  '("-q" "--emacs")) ; pass, set the value explicitly
   ;; 	  ))
 
-  ;; by setting migemo-directory, migemo-dictionary is also set
-  (migemo-directory
-   (cond ((eq system-type 'windows-nt)
-	  "c:/yama/.emacs.d/conf/migemo/dict/utf-8") ; Windows file path notification
-	 ((eq system-type 'darwin)
-	  "/usr/local/share/migemo/utf-8")
-	 ((eq system-type 'gnu/linux)
-	  "~/.emacs.d/conf/migemo/dict/utf-8")))
+  ;; by setting migemo-directory
+  ;; migemo-dictionary, migemo-user-dictionary, migemo-regex-dictionary are also set
+  (migemo-directory "~/.emacs.d/conf/migemo/dict/utf-8")
 
-  ;; (migemo-user-dictionary  nil) ; don't use user-dictionary
-  ;; (migemo-regex-dictionary nil) ; don't use regex-dictionary
   )
 
 (provide '.migemo)
