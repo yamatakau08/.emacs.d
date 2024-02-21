@@ -21,6 +21,8 @@
   ;;:straight (:ref "0.9")
 
   :custom
+  (consult-async-min-input 1)
+
   ;; (completion-styles '(substring basic))
   ;; see step 4. https://github.com/minad/consult#bug-reports
   ;; without completion-styles setting, consult--line doesn't work well
