@@ -2,6 +2,12 @@
   :custom
   (ediff-window-setup-function #'ediff-setup-windows-plain)
 
+  ;; to prevent from character garbled in ediff-diff buffers on Windows Emacs + cgwin diff
+  (ediff-coding-system-for-read
+   (if (eq system-type 'windows-nt)
+       'utf-8-unix
+     'raw-text))
+
   :config
   ;; override original function to suppress the error ediff-files on Windows Emacs + cygwin
   ;; but don't use this function.
