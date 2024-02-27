@@ -185,7 +185,6 @@
 	  (forward-char))
       (consult--grep "Ripgrep" #'consult--ripgrep-builder dir "pattern -- --ignore-case --hidden --max-depth 1")))
 
-  ;; redefine consult-bookmark
   (advice-add 'consult-ripgrep :override #'my-consult-ripgrep)
 
   ;;
