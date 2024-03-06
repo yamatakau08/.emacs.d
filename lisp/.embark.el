@@ -7,13 +7,17 @@
   (enable-recursive-minibuffers t) ; conao3's advice
 
   :bind
+  ;; referece is in oantolin is embark author
+  ;; https://github.com/oantolin/emacs-config/blob/dfd0115ca82346e039191be385c2f6c3d3a0a61d/init.el
   (;;("C-." . embark-act)         ;; pick some comfortable binding, no effect!
    ;; note that "C-." is commented, because embark-act is prior.
    ("C-;"  . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
+   ("C-:" . embark-act-all)
    :map minibuffer-local-map ;; supported emacs-jp slack
    ("C-." . embark-act)         ;; pick some comfortable binding, no effect!
    ("C-c C-e" . embark-export)
+   ("C-s" . embark-select)
    :map occur-mode-map
    ("C-c C-p" . occur-edit-mode) ;; to use the same binding C-c C-p on grep mode for editing
    )
@@ -28,6 +32,47 @@
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none))))
+
+  ;; the following code snippets from
+  ;; https://github.com/oantolin/embark/issues/166#issuecomment-1058044854
+  (defun +embark-mark (&optional unmark)
+    (interactive)
+    (unless (derived-mode-p #'embark-collect-mode)
+      (error "Not in an Embark collect buffer"))
+    (when-let (target (embark-target-collect-candidate))
+      (pcase-let* ((`(,_type ,_cand ,beg . ,end) target)
+                   (ov (seq-find (lambda (ov) (overlay-get ov '+embark-mark)) (overlays-at beg))))
+	(unless (eq (not ov) unmark)
+          (if ov
+              (delete-overlay ov)
+            (unless (facep 'dired-marked)
+              (require 'dired))
+            (setq ov (make-overlay beg end))
+            (overlay-put ov '+embark-mark t)
+            (overlay-put ov 'face 'dired-marked)))))
+    ;; (call-interactively #'next-line)
+    (call-interactively #'forward-button)
+    )
+
+  (defun +embark-unmark ()
+    (interactive)
+    (+embark-mark t))
+
+  (defun +embark-marked-candidates ()
+    (when-let (ovs (and (derived-mode-p #'embark-collect-mode)
+			(nreverse (seq-filter (lambda (ov) (overlay-get ov '+embark-mark))
+                                              (overlays-in (point-min) (point-max))))))
+      (cons embark--type
+            (save-excursion
+              (mapcar (lambda (ov)
+			(goto-char (overlay-start ov))
+			(cadr (embark-target-collect-candidate)))
+                      ovs)))))
+
+  (add-to-list 'embark-candidate-collectors #'+embark-marked-candidates)
+  (define-key embark-collect-mode-map "m" #'+embark-mark)
+  (define-key embark-collect-mode-map "u" #'+embark-unmark)
+
   )
 
 ;; Consult users will also want the embark-consult package.
