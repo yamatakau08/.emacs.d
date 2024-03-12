@@ -48,7 +48,7 @@
    ("C-x b" . consult-buffer)
    ("C-s"   . consult-line-symbol-at-point)
    ("C-r"   . consult-line-symbol-at-point)
-   ("C-x f" . my-consult-file-externally)
+   ;;("C-x f" . my-consult-file-externally) ; use my-find-file in .files.el instead
    ("C-c b" . consult-bookmark)
    ;; M-s bindings (search-map)
    ;;("M-s r" . consult-ripgrep1)
@@ -82,6 +82,7 @@
                (format "%s in %s: " prompt adir))))
 	 edir))))
 
+  ;; no more use, use embark-dwim command instead
   (defun my-consult-file-externally ()
     (interactive)
     (let ((url (thing-at-point 'url))
@@ -97,15 +98,16 @@
   ;;
   (defun consult-line-symbol-at-point ()
     (interactive)
-    (let ((at-point-symbol (thing-at-point 'symbol)))
+    ;; When I used consult line first argument (thing-at-point 'symbol),
+    ;; faced that issue which consult-line "Go to line:" prompt doesn't accept key input and display the character input.
+    ;; the first argument of consult-line function seems to be expected normal string without text properties
+    ;; that's why "substring-no-properties" is needed.
+    ;; e.g. point on '.', thing-at-point 'symbol returns nil,(substring-no-properties nil).
+    ;; In that case, need to check if (thing-at-point 'symbol) returns nil.
+    ;; after that, I found thing-at-point function has that "NO-PROPERTIES" option.
+    (let ((at-point-symbol (thing-at-point 'symbol t)))
       (if at-point-symbol
-	  ;; Without substring-no-properties,
-	  ;; at point on attributs of file in dired buffer
-	  ;; consult-line "Go to line:" prompt doesn't accept key input and display the character input.
-	  ;; consult-line initial arg seems to be expected normal string without text properties
-	  ;; that's why "substring-no-properties" is needed.
-	  (consult-line (substring-no-properties at-point-symbol))
-	;; e.g. point on '.', thing-at-point 'symbol returns nil,(substring-no-properties nil) has error
+	  (consult-line at-point-symbol)
 	(consult-line))))
 
   ;;
