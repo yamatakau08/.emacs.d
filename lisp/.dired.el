@@ -43,7 +43,7 @@
     (cond
      ((eq (window-system) 'w32)
       (let* ((directory-path (dired-current-directory)))
-	(my-w32-open-file directory-path t) ; t:  open directory by explore
+	(my-open-file-with-app directory-path t) ; t:  open directory by explore
 	))
      (t
       (dired-find-file))))
@@ -56,7 +56,7 @@
     (cond
      ((eq (window-system) 'w32)
       (let* ((file-path (dired-get-file-for-visit)))
-	(my-w32-open-file file-path)))
+	(my-open-file-with-app file-path)))
      (t
       (dired-find-file))))
 

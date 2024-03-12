@@ -19,7 +19,7 @@
 	   (filename (let-alist id .filename)))
       (if (eq (window-system) 'w32)
 	  (if (file-directory-p filename)
-	      (my-w32-open-file filename)
+	      (my-open-file-with-app filename)
 	    (bookmark-jump (bookmark-bmenu-bookmark)))
 	(bookmark-jump (bookmark-bmenu-bookmark)))))
 
@@ -30,7 +30,7 @@
 	   (filename (let-alist entry .filename)))
       (if (eq (window-system) 'w32)
 	  (if (file-directory-p filename)
-	      (my-w32-open-file filename)
+	      (my-open-file-with-app filename)
 	    (bookmark-jump (bookmark-bmenu-bookmark)))
 	(bookmark-jump (bookmark-bmenu-bookmark)))))
 

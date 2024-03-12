@@ -126,7 +126,7 @@
 	   (kind  (car entry)))
       (cond ((string= kind "file")
 	     (let ((file (cdr entry)))
-	       (my-w32-open-file file)))
+	       (my-open-file-with-app file)))
 	    ((string= kind "bookmark")
 	     (my-consult-bookmark--jump)))))
 
@@ -207,7 +207,7 @@
       (cond (location
 	     (browse-url-default-browser location))
 	    (filename
-	     (my-w32-open-file filename)))))
+	     (my-open-file-with-app filename)))))
 
   (consult-customize
    consult-bookmark

@@ -17,7 +17,7 @@
 	     (cond ((eq (bookmark-get-handler bookmark) #'bmkp-jump-url-browse)
 		    (bmkp-jump-url-browse bookmark))
 		   (t
-		    (my-w32-open-file filename))))
+		    (my-open-file-with-app filename))))
 	    (t (bookmark-jump (bookmark-bmenu-bookmark))))))
 
   )

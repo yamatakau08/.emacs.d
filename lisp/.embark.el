@@ -20,6 +20,8 @@
    ("C-s" . embark-select)
    :map occur-mode-map
    ("C-c C-p" . occur-edit-mode) ;; to use the same binding C-c C-p on grep mode for editing
+   :map dired-mode-map
+   ("C-x x" . my-embark-open-externally)
    )
 
   :init
@@ -32,6 +34,10 @@
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none))))
+
+  (defun my-embark-open-externally ()
+    (interactive)
+    (embark-open-externally (dired-get-file-for-visit)))
 
   ;; the following code snippets from
   ;; https://github.com/oantolin/embark/issues/166#issuecomment-1058044854
