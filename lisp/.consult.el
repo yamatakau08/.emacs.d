@@ -121,8 +121,8 @@
 
   (defun my-consult-buffer--jump ()
     (interactive)
-    (let* ((cand (consult-vertico--candidate))
-	   (entry (get-text-property 0 'consult-multi cand))
+    (let* ((cand (consult--vertico-candidate))
+	   (entry (get-text-property 0 'multi-category cand))
 	   (kind  (car entry)))
       (cond ((string= kind "file")
 	     (let ((file (cdr entry)))
@@ -200,7 +200,7 @@
 
   (defun my-consult-bookmark--jump ()
     (interactive)
-    (let* ((cand (consult-vertico--candidate))
+    (let* ((cand (consult--vertico-candidate))
 	   (bmkp-record (get-text-property 0 'bmkp-full-record cand))
 	   (location (let-alist (cdr bmkp-record) .location))
 	   (filename (let-alist (cdr bmkp-record) .filename)))

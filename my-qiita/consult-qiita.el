@@ -38,7 +38,7 @@
 
 (defun consult-qiita--open-browser ()
   (interactive)
-  (let* ((cand (consult-vertico--candidate))
+  (let* ((cand (consult--vertico-candidate))
 	 (page-info (cdr (assoc cand consult-qiita--candidates))))
     (my-qiita--action-open-page page-info)))
 
