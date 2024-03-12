@@ -28,10 +28,12 @@
 
   (defun my-google-translate ()
     (interactive)
-    (let ((region (region-active-p))
+    (let ((region (use-region-p))
 	  (word (thing-at-point 'word)))
       (if region
-	  (google-translate-at-point)
+	  (if (string-match "\\cj" (buffer-substring (region-beginning) (region-end)))
+	      (google-translate-at-point-reverse)
+	    (google-translate-at-point))
 	(if word
 	    (if (string-match "\\cj" word) ; utilize '\\cj' is used in "sdic"
 		(%google-translate-at-point nil t)
