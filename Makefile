@@ -20,5 +20,7 @@ clean-consult:
 clean-transient:
 	rm -rf transient
 
+clean-quickstart
+	rm -rf package-quickstart.*
 
-clean-all: clean-custom clean-elpa clean-straight clean-transient;
+clean-all: clean-custom clean-elpa clean-straight clean-transient clean-quickstart;
