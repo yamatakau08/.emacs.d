@@ -6,3 +6,5 @@
   ;; when set this, (insert (all-the-icons-icon-for-file "foo.js")) returns nil
   (setq inhibit-compacting-font-caches t))
 
+(provide '.all-the-icons)
+
