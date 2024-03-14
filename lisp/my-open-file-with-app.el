@@ -866,7 +866,7 @@
 	   (if (string-match "does not exist" ret)
 	       nil t)))
 	((eq (window-system) 'w32)
-	 (member-ignore-case (file-name-extension file-path) (append '("pdf" "gdoc" "gsheet") (my-open-file-with-app-extestions))))
+	 (member-ignore-case (file-name-extension file) (append '("pdf" "gdoc" "gsheet") (my-open-file-with-app-extestions))))
 	(t
 	 nil)))
 
