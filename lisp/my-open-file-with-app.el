@@ -5,6 +5,48 @@
   ;;   consult-file-externally in consult
   ;;   https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
   (interactive "fFile-path: ")
+  (cond ((file-directory-p file-path)
+	 (if open-explore-dir
+	     ;; (w32-shell-execute "explore" file-path "/e,/select,")
+	     ;; this can open folder in which has Japanese character
+	     ;; but sometimes makes Windows Emacs freeze, use following
+
+	     (my-open-file-with-app-mimeapp-execute file-path)
+	     ;; monitor if this doesn't make Emacs freeze
+
+	     ;;(async-shell-command (format "%s \"%s\"" "xstart" file-path) nil nil)
+	     ;; this pop-up *Async Shell Command* buffer, not good
+
+	     ;; https://stackoverflow.com/a/22982525
+	     ;; this can't open directory if directory name has multi byte. e.g. Japanese character
+	     ;;(call-process-shell-command (format "%s \"%s\"" "xstart" file-path) nil 0)
+	     (find-file file-path)))
+	((not (file-name-extension file-path))
+	 ;; add this clause, because without suffix such as "tako" ".emacs" have an error on next condition
+	 ;; member-ignore-case have Wrong type argument: stringp, nil
+	 (find-file file-path))
+	((my-open-file-with-app-mimeapp-p file-path)
+	 ;; Since windows 8.1, (w32-shell-execute "open" file-name) is not available in case of "MOV", "mp4"
+
+	 ;;(shell-command-to-string (format "%s %s" "start" file-path)) ; use the following
+	 ;;(shell-command-to-string (string-join `("start" ,file-path) " "))
+
+	 ;; But if there is space in file name, can't open the file with associated program, neither (shell-quote-argument file-name)
+	 ;; need to modify "start" script then put ~/.config/fish/functions/xstart
+	 ;;(shell-command-to-string (format "%s \"%s\"" "xstart" file-path))
+
+	 ;; On Windows 10, w32-shell-execute has no problem
+	 (my-open-file-with-app-mimeapp-execute file-path "open"))
+	(t
+	 (find-file file-path))))
+
+(defun xmy-open-file-with-app (file-path &optional open-explore-dir)
+  "open the file-path by application associated it's file suffix or Windows explore."
+  ;; *important* Do not check file-exist-p, because return nil even if actual file exists
+  ;;   refer
+  ;;   consult-file-externally in consult
+  ;;   https://sakashushu.blog.ss-blog.jp/2014-04-29 "体当たり開始"
+  (interactive "fFile-path: ")
   (cond ((eq (window-system) 'w32)
 	 (cond ((file-directory-p file-path)
 		(if open-explore-dir
@@ -814,6 +856,29 @@
      (string-match "^\.\\(.*\\)=.*" x)
      (match-string 1 x))
    my-open-file-with-w32-assoc-list))
+
+(defun my-open-file-with-app-mimeapp-p (file)
+  "check if mimeappp is exist associated file"
+  (cond ((eq (window-system) 'x)
+	 (let ((ret (shell-command-to-string
+		     (mapconcat #'shell-quote-argument
+				(list "xdg-mime" "query" "filetype" (expand-file-name file)) " "))))
+	   (if (string-match "does not exist" ret)
+	       nil t)))
+	((eq (window-system) 'w32)
+	 (member-ignore-case (file-name-extension file-path) (append '("pdf" "gdoc" "gsheet") (my-open-file-with-app-extestions))))
+	(t
+	 nil)))
+
+(defun my-open-file-with-app-mimeapp-execute (file &optional operation)
+  (cond ((eq (window-system) 'w32)
+	 (w32-shell-execute operation file))
+	((eq (window-system) 'x)
+	 (shell-command-to-string
+	  (mapconcat #'shell-quote-argument
+		     (list "xdg-open" (expand-file-name file)) " ")))
+	(t
+	 nil)))
 
 ;;; the followings are deprecated
 (defun my-open-file-with-app-get-file-name ()
