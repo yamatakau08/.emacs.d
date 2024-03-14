@@ -871,14 +871,13 @@
 	 nil)))
 
 (defun my-open-file-with-app-mimeapp-execute (file &optional operation)
-  (cond ((eq (window-system) 'w32)
-	 (w32-shell-execute operation file))
-	((eq (window-system) 'x)
-	 (shell-command-to-string
-	  (mapconcat #'shell-quote-argument
-		     (list "xdg-open" (expand-file-name file)) " ")))
-	(t
-	 nil)))
+  (if (eq (window-system) 'w32)
+      (w32-shell-execute operation file)
+    (call-process (pcase system-type ; refered embark-open-externally function
+		    ('darwin "open")
+		    ('cygwin "cygstart")
+		    (_ "xdg-open"))
+                  nil 0 nil file)))
 
 ;;; the followings are deprecated
 (defun my-open-file-with-app-get-file-name ()
