@@ -9,12 +9,12 @@
   ;; https://kumaroot.readthedocs.io/ja/latest/emacs-use-package.html#id2
   ;; Error (use-package): Cannnot load
   ;; https://github.com/jwiegley/use-package/issues/597#issuecomment-352898477
-  ;;:ensure org-plus-contrib
+  :ensure org-plus-contrib ; revert from :straight org-contrib because mac os freeze
   ;; After Emacs laaunch on clean, the org mode built in shows "IMPORTANT: please install Org from GNU ELPA as Org ELPA will close before Org 9.6"
   ;; to suppress it, use straight and download org from GNU ELPA.
   ;; unfortunately straight can't download org-plus-contrib,
   ;; refer the workaround https://github.com/radian-software/straight.el/issues/753#issuecomment-832553456
-  :straight org-contrib
+  ;;:straight org-contrib
 
   :hook
   ;; https://github.com/jwiegley/use-package#hooks
