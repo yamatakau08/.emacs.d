@@ -40,13 +40,9 @@
   (defun my-dired-open-directory ()
     "Open directory with Windows explore"
     (interactive)
-    (cond
-     ((eq (window-system) 'w32)
-      (let* ((directory-path (dired-current-directory)))
-	(my-open-file-with-app directory-path t) ; t:  open directory by explore
-	))
-     (t
-      (dired-find-file))))
+    (let* ((directory-path (dired-current-directory)))
+      (my-open-file-with-app directory-path t) ; t: open directory by Explore, Finder
+      ))
 
   (defun my-dired-find-file ()
     ;; refer
