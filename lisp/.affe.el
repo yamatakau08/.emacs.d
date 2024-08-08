@@ -13,7 +13,8 @@
         affe-highlight-function #'orderless--highlight)
 
   ;; Manual preview key for `affe-grep'
-  ;;(consult-customize affe-grep :preview-key (kbd "M-.")))
+  ;;(consult-customize affe-grep :preview-key (kbd "M-."))
+  )
 
 (provide '.affe)
 
