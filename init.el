@@ -250,6 +250,7 @@
 
 (require '.plantuml-mode)
 
+(require '.ellama)
 
 ;;
 ;; useful packages are not registerd in elpa ...
