@@ -9,7 +9,7 @@
   ;;https://www.arat.xyz/wordpress/?p=129
   (skk-jisyo-code 'utf-8) ; refer skk-vars.el
   (skk-jisyo "~/.emacs.d/skk-jisyo/.skk-jisyo")
-  (skk-large-jisyo "~/.emacs.d/skk-jisyo/SKK-JISYO.myjisyo")
+  ;;(skk-large-jisyo "~/.emacs.d/skk-jisyo/SKK-JISYO.myjisyo")
   (skk-henkan-strict-okuri-precedence t)
 
   ;; emacs-jp
