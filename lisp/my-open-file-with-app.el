@@ -823,7 +823,7 @@
 	 (member-ignore-case (file-name-extension file)
 			     (append '("pdf" "gdoc" "gsheet") ; pdf, gdoc is not in assoc
 				     (cl-set-difference (my-open-file-with-app-extestions)
-							'("txt" "sh") ; to open them in buffer.
+							'("log" "txt" "sh") ; to open them in buffer.
 							:test 'string=)
 				     )))
 	(t
