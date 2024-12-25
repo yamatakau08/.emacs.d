@@ -252,6 +252,8 @@
 
 (require '.ellama)
 
+(require '.puni)
+
 ;;
 ;; useful packages are not registerd in elpa ...
 ;;
@@ -278,6 +280,8 @@
 (require '.my-say)
 
 (require 'ffmpegcomp)
+
+(require '.my-misc)
 
 ;; developing
 ;;(require '.yahoo-weather-mode.el)
