@@ -656,7 +656,7 @@
 			 ".pubmhtml=publishermhtmlfile"
 			 ".pwz=PowerPoint.Wizard.8"
 			 ".pxml=AzIP.pxml"
-			 ".py=Python.File"
+			 ; ".py=Python.File"
 			 ".pyc=Python.CompiledFile"
 			 ".pyd=Python.Extension"
 			 ".pyo=Python.CompiledFile"
