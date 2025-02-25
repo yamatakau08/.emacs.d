@@ -3,11 +3,9 @@
 
   :custom
   (howm-directory
-   (if (file-directory-p "~/OneDrive/howm")
-       "~/OneDrive/howm/"
-     (if (file-directory-p "~/GoogleDrive/howm")
-	 "~/GoogleDrive/howm"
-       "~/howm/")))
+   (if (file-directory-p "~/gdrive/howm")
+       "~/gdrive/howm"
+       "~/howm/"))
 
 )
 
