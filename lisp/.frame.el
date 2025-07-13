@@ -23,6 +23,9 @@
      ))
 
   :config
+  ;; once change font size to see easily on MacBook Air 13inch
+  (set-face-attribute 'default nil :height 150)
+
   ;; font setting
   ;; the followings are the values from frame-parameters when using Myrica M font
   ;; (font . "-outline-Myrica M-normal-normal-normal-mono-20-*-*-*-c-*-iso8859-1") ; on Windows
