@@ -123,6 +123,7 @@
        "/bin/bash")))
   )
 
+(require 'my-global-set-key)
 ;(message "[debug] befor exec-path: %s" exec-path)
 ;(use-package exec-path-from-shell
 ;  :ensure t
@@ -268,7 +269,7 @@
 (require 'my-open-file-with-app) ; to open file associated application
 ;;(require 'my-skips)
 ;;(require '.my-anki-connect)
-(require '.eced-menu) ; english conversation expression dictionary
+;;(require '.eced-menu) ; english conversation expression dictionary
 
 (require '.my-confluence)
 (require '.helm-confluence)
