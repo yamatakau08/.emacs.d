@@ -5,7 +5,9 @@
   :init
   (if (eq system-type 'windows-nt)
       (add-to-list 'exec-path "~/bin/cmigemo-default-win64")
-    (add-to-list 'exec-path "/usr/local/bin"))
+    (add-to-list 'exec-path "/usr/local/bin")
+    (add-to-list 'exec-path "~/.nix-profile/bin")
+    )
 
   ;;:if
   ;; cmigemo
