@@ -276,6 +276,7 @@
 (require '.my-anki-browse)
 (require '.helm-anki-browse)
 (require '.my-qiita)
+(require '.my-zenn)
 
 (require '.my-plantuml)
 (require '.my-say)
