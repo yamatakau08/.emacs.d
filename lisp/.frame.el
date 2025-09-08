@@ -27,13 +27,11 @@
   (set-face-attribute 'default nil :height 150)
 
   ;; font setting
-  ;; the followings are the values from frame-parameters when using Myrica M font
-  ;; (font . "-outline-Myrica M-normal-normal-normal-mono-20-*-*-*-c-*-iso8859-1") ; on Windows
-  ;; When set the above value on Mac, returns the following
-  ;; (font .       "-*-Myrica M-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1")
-  ;; almost the same but, height will be shorter than Windows'one
+  ;; once set the font size on default font
+  (let ((font (face-attribute 'default :family)))
+    (add-to-list 'default-frame-alist `(font . ,(concat font "-20"))))
 
-  ;; font setting, Myrica font https://myrica.estable.jp/
+  ;; font setting on Myrica https://myrica.estable.jp/
   (catch 'font-added
     (dolist (font '("Myrica M" "MyricaM M"))
       (if (member font (font-family-list))
