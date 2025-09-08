@@ -254,6 +254,7 @@
 (require '.ellama)
 
 (require '.puni)
+(require '.nix-mode)
 
 ;;
 ;; useful packages are not registerd in elpa ...
