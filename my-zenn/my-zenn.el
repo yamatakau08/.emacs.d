@@ -48,7 +48,7 @@
   :type 'integer
   :group 'my-zenn)
 
-(defcustom my-zenn-search-order "alltime"
+(defcustom my-zenn-search-order "latest"
   "Zenn API order daily(trending), alltime, latest"
   :type 'string
   :group 'my-zenn)
