@@ -23,9 +23,6 @@
      ))
 
   :config
-  ;; once change font size to see easily on MacBook Air 13inch
-  (set-face-attribute 'default nil :height 150)
-
   ;; font setting
   ;; once set the font size on default font
   (let ((font (face-attribute 'default :family)))
