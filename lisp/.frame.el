@@ -33,12 +33,12 @@
 
   ;; font setting on Myrica https://myrica.estable.jp/
   (catch 'font-added
-    (dolist (font '("Myrica M" "MyricaM M"))
+    (dolist (font '("NOTONOTO" "Myrica M" "MyricaM M"))
       (if (member font (font-family-list))
 	  (progn
 	    (cond ((eq system-type 'darwin)
-		   ;; -16 is the almost same as on Windows Myrica M font -10
-		   (add-to-list 'default-frame-alist `(font . ,(concat font "-16"))))
+		   (add-to-list 'default-frame-alist `(font . ,(concat font "-24"))) ; LG ULTRAFINE monitor 5120x2160
+		   )
 		  ((eq system-type 'windows-nt)
 		   (if (equal (system-name) "JPC20545731")
 		       (add-to-list 'default-frame-alist `(font . ,(concat font "-14")))
