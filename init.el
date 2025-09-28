@@ -150,7 +150,7 @@
 (require '.ansi-color)
 (require '.whitespace)
 (require '.autoinsert)
-(require '.quickurl)
+;; (require '.quickurl)
 (require '.shell)
 (require '.ruby-mode)
 (require '.nxml-mode)
