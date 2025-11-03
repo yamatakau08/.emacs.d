@@ -10,10 +10,10 @@
   (google-translate-pop-up-buffer-set-focus t)
 
   :bind
-  (;;("C-c t" . google-translate-at-point)
-   ;;("C-c T" . google-translate-query-translate)
-   ("C-c t" . my-google-translate)
-   ("C-c T" . my-google-query-translate)
+  (("C-c t" . google-translate-at-point)
+   ("C-c T" . google-translate-query-translate)
+   ;;("C-c t" . my-google-translate)
+   ;;("C-c T" . my-google-query-translate)
    ("C-c r" . google-translate-at-point-reverse)
    ("C-c R" . google-translate-query-translate-reverse))
 
