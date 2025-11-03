@@ -3,7 +3,7 @@
   :custom
   (google-translate-translation-listening-debug t) ; ?
 
-  (google-translate-default-source-language "en")
+  (google-translate-default-source-language "auto") ; "auto" is available when target-language is specified
   (google-translate-default-target-language "ja")
 
   ;; window (buffer with translation) gets focus in google-translate-core-ui.el
