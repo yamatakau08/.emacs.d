@@ -19,7 +19,7 @@
   ;; defualt 'emacs, since error occurs ad-Advice-search-forward: Search failed: ",tkk:'"
   ;; https://github.com/atykhonov/google-translate/issues/137#issuecomment-723938431
   ;; workaround
-  ;; I'm not sure if this workaround is permanentaly and finally marged the original source.
+  ;; I'm not sure if this workaround is permanently and finally merged the original source.
   (defun google-translate--search-tkk ()
     "Search TKK."
     (list 430675 2721866130))
