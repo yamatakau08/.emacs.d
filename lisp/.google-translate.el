@@ -1,8 +1,6 @@
 (use-package google-translate
   :ensure t
   :custom
-  (google-translate-translation-listening-debug t) ; ?
-
   (google-translate-default-source-language "auto") ; "auto" is available when target-language is specified
   (google-translate-default-target-language "ja")
 
