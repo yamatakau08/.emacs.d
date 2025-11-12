@@ -18,9 +18,8 @@
     "advice to enable \"r\" key to register items in \"*Google Translate*\" buffer"
     (local-set-key "r" 'my-google-translate-register-item-in-anki))
 
-  (advice-add 'google-translate-buffer-insert-translation :before
-	      #'google-translate-buffer-insert-translation-advice)
+  ;; (advice-add 'google-translate-buffer-insert-translation :before
+  ;; 	      #'google-translate-buffer-insert-translation-advice)
   )
 
 (provide '.my-anki-browse)
-

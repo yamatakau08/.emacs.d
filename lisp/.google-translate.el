@@ -16,7 +16,9 @@
    ;;("C-c t" . my-google-translate)
    ;;("C-c T" . my-google-query-translate)
    ("C-c r" . google-translate-at-point-reverse)
-   ("C-c R" . google-translate-query-translate-reverse))
+   ("C-c R" . google-translate-query-translate-reverse)
+   :map google-translate-mode-map
+   ("r" . my-google-translate-register-item-in-anki))
 
   :config
   ;; defualt 'emacs, since error occurs ad-Advice-search-forward: Search failed: ",tkk:'"
@@ -53,7 +55,7 @@
 	(progn
 	  (goto-line 3)
 	  ;; use 'sentence to get line content without \n
-	  (thing-at-point 'sentence))))
+	  (thing-at-point 'sentence t))))
 
   (defun my-google-translate-register-item-read-back ()
     "Get sentence from *Google Translate* buffer for registering anki card's back"
