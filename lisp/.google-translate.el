@@ -1,5 +1,8 @@
 (use-package google-translate
   :ensure t
+
+  :demand t
+
   :custom
   (google-translate-default-source-language "auto") ; "auto" is available when target-language is specified
   (google-translate-default-target-language "ja")
