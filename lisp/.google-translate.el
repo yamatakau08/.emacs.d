@@ -11,10 +11,10 @@
   (google-translate-pop-up-buffer-set-focus t)
 
   :bind
-  (("C-c t" . google-translate-at-point)
-   ("C-c T" . google-translate-query-translate)
-   ;;("C-c t" . my-google-translate)
-   ;;("C-c T" . my-google-query-translate)
+  (;;("C-c t" . google-translate-at-point)
+   ;;("C-c T" . google-translate-query-translate)
+   ("C-c t" . my-google-translate)
+   ("C-c T" . my-google-query-translate)
    ("C-c r" . google-translate-at-point-reverse)
    ("C-c R" . google-translate-query-translate-reverse)
    :map google-translate-mode-map
@@ -31,22 +31,22 @@
 
   (defun my-google-translate ()
     (interactive)
-    (let ((region (use-region-p))
-	  (word (thing-at-point 'word)))
-      (if region
-	  (if (string-match "\\cj" (buffer-substring (region-beginning) (region-end)))
-	      (google-translate-at-point-reverse)
-	    (google-translate-at-point))
-	(if word
-	    (if (string-match "\\cj" word) ; utilize '\\cj' is used in "sdic"
-		(%google-translate-at-point nil t)
-	      (%google-translate-at-point nil nil))))))
+    (let ((text (if (use-region-p)
+                    (buffer-substring (region-beginning) (region-end))
+                  (thing-at-point 'word t))))
+      (cond
+       ((and text (string-match "\\cj" text))
+	(google-translate-translate "auto" "en" text))
+       (text
+	(google-translate-translate "auto" "ja" text))
+       (t
+	(message "No text selected or found")))))
 
   (defun my-google-query-translate (from)
     (interactive "sFrom: ")
     (if (string-match "\\cj" from)
-	(google-translate-translate "ja" "en" from nil)
-      (google-translate-translate "en" "ja" from nil)))
+	(google-translate-translate "ja" "en" from)
+      (google-translate-translate "auto" "ja" from)))
 
   (defun my-google-translate-get-source ()
     "Get source sentence from *Google Translate* buffer for registering anki card's front"
