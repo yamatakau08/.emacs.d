@@ -9,8 +9,8 @@
     (interactive)
     (if (string= "*Google Translate*" (buffer-name))
 	(let ((deck "英語") ; fixed
-	      (front (read-string "Front: " (my-google-translate-register-item-read-front)))
-	      (back  (read-string "Back : " (my-google-translate-register-item-read-back ))))
+	      (front (read-string "Front: " (my-google-translate-get-source)))
+	      (back  (read-string "Back : " (my-google-translate-get-target))))
 	  ;;(my-anki-connect-push-notex deck front back)
 	  (my-anki-browse-addNote deck front back))))
 

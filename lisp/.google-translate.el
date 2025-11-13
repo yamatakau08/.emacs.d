@@ -48,8 +48,8 @@
 	(google-translate-translate "ja" "en" from nil)
       (google-translate-translate "en" "ja" from nil)))
 
-  (defun my-google-translate-register-item-read-front ()
-    "Get sentence from *Google Translate* buffer for registering anki card's front"
+  (defun my-google-translate-get-source ()
+    "Get source sentence from *Google Translate* buffer for registering anki card's front"
     (interactive)
     (if (string-equal (buffer-name) "*Google Translate*")
 	(progn
@@ -57,8 +57,8 @@
 	  ;; use 'sentence to get line content without \n
 	  (thing-at-point 'sentence t))))
 
-  (defun my-google-translate-register-item-read-back ()
-    "Get sentence from *Google Translate* buffer for registering anki card's back"
+  (defun my-google-translate-get-target ()
+    "Get target sentence from *Google Translate* buffer for registering anki card's back"
     (interactive)
     (if (string-equal (buffer-name) "*Google Translate*")
 	(progn
