@@ -30,7 +30,7 @@
 
   ;; font setting on Myrica https://myrica.estable.jp/
   (catch 'font-added
-    (dolist (font '("NOTONOTO" "Myrica M" "MyricaM M"))
+    (dolist (font '("NOTONOTO HS" "NOTONOTO" "Myrica M" "MyricaM M"))
       (if (member font (font-family-list))
 	  (progn
 	    (cond ((eq system-type 'darwin)
@@ -41,7 +41,7 @@
 		       (add-to-list 'default-frame-alist `(font . ,(concat font "-14")))
 		     (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))
 		  (t
-		   (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))
+		   (add-to-list 'default-frame-alist `(font . ,(concat font "-14")))))
 	    (throw 'font-added font)))))
 
   ;; alpha
