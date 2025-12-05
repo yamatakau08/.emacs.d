@@ -143,6 +143,7 @@
 (require '.info)
 (require '.paren)
 (require '.dired)
+(require '.dired-aux)
 (require '.dired-x) ; only disable key assign
 (require '.thingatpt)
 (require '.ffap)
