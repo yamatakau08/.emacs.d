@@ -5,6 +5,8 @@ auto-save-list/
 elpa/
 private.el
 custom.el
+ellama-sessions
+eln-cache
 instant-maximized-window/
 run-assoc/
 transient/
