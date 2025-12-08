@@ -27,8 +27,7 @@
                                      :test #'string=))))
                      (file-name-parent-directory default-directory)
                    default-directory))
-		(diff (or (ellama--diff-cached)
-                          (ellama--diff))))
+		(diff (ellama--diff-cached)))
       (let ((buf (get-buffer-create "*commit-message*")))
 	(with-current-buffer buf
           (erase-buffer))
@@ -44,6 +43,7 @@
                        (insert "Error occurred:\n\n")
                        (insert error-message))
                      (pop-to-buffer (get-buffer "*commit-message*")))))))
+
   )
 
 (provide '.ellama)
