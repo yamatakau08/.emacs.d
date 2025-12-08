@@ -1,5 +1,5 @@
 (use-package vc
   :custom
-  (vc-handled-backends nil))
-
+  (vc-handled-backends '(Git))
+)
 (provide '.vc)

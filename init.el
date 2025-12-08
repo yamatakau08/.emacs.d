@@ -134,7 +134,7 @@
 ;;
 ;; library
 ;;
-(require '.vc) ; (custom-set-variables '(vc-handled-backends nil)) to suppress Emacs file open is extremly slow
+(require '.vc)
 (require '.files) ; no backup
 (require '.simple) ; line-number,column-number in mode line
 (require '.time)
