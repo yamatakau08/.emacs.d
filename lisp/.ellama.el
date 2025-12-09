@@ -44,6 +44,25 @@
                        (insert error-message))
                      (pop-to-buffer (get-buffer "*commit-message*")))))))
 
+  (defun my-ellama-generate-magit-commit-message ()
+    "Generate commit message and put it in Magit COMMIT_EDITMSG"
+    (interactive)
+    (when-let* ((buf (get-buffer "COMMIT_EDITMSG")) ; Magit COMMIT_EDITMSG
+		(default-directory
+		 (if (string= ".git"
+                              (car (reverse
+                                    (cl-remove
+                                     ""
+                                     (file-name-split default-directory)
+                                     :test #'string=))))
+                     (file-name-parent-directory default-directory)
+                   default-directory))
+		(diff (ellama--diff-cached)))
+      (ellama-stream
+       (format ellama-generate-commit-message-template diff)
+       :buffer buf
+       :point (point-min)
+       :provider ellama-coding-provider)))
   )
 
 (provide '.ellama)
