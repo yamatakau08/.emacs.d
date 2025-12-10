@@ -16,7 +16,7 @@
 
   :config
   (defun my-ellama-generate-commit-message ()
-    "Generate commit message based on diff in a new buffer."
+    "Show the commit message genereated by ellama-generate-commit-message in the buffer *ellama-commit-message*"
     (interactive)
     (when-let* ((default-directory
 		 (if (string= ".git"
@@ -28,21 +28,14 @@
                      (file-name-parent-directory default-directory)
                    default-directory))
 		(diff (or (ellama--diff-cached)(ellama--diff))))
-      (let ((buf (get-buffer-create "*commit-message*")))
+      (let* ((buf-name "*ellama-commit-message*")
+	     (buf (get-buffer-create buf-name)))
+	(pop-to-buffer buf)
 	(with-current-buffer buf
-          (erase-buffer))
-	(ellama-stream
-	 (format ellama-generate-commit-message-template diff)
-	 :buffer buf
-	 :provider ellama-coding-provider
-	 :on-done (lambda (_)
-                    (pop-to-buffer (get-buffer "*commit-message*")))
-	 :on-error (lambda (error-message)
-                     (with-current-buffer (get-buffer "*commit-message*")
-                       (erase-buffer)
-                       (insert "Error occurred:\n\n")
-                       (insert error-message))
-                     (pop-to-buffer (get-buffer "*commit-message*")))))))
+	  (erase-buffer)
+	  (ellama-stream
+	   (format ellama-generate-commit-message-template diff)
+	   :provider ellama-coding-provider)))))
 
   )
 
