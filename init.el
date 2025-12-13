@@ -124,13 +124,8 @@
   )
 
 (require 'my-global-set-key)
-;(message "[debug] befor exec-path: %s" exec-path)
-;(use-package exec-path-from-shell
-;  :ensure t
-;  :config (exec-path-from-shell-initialize)
-;  )
-;(message "[debug] after exec-path: %s" exec-path)
 
+(require '.exec-path-from-shell)
 ;;
 ;; library
 ;;
