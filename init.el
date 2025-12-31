@@ -120,7 +120,7 @@
      ;; when set "/bin/bash", it doesn't work well have error "shell-command-on-region: Searching for program: No such file or directory, /bin/bash"
      (if (eq system-type 'windows-nt)
 	 cygwin-shell-file-name
-       "/bin/bash")))
+       (executable-find "bash"))))
   )
 
 (require 'my-global-set-key)
