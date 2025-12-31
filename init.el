@@ -179,12 +179,8 @@
 
 ;; helm
 (require '.helm)
-(require '.helm-swoop)
-(require '.helm-ag)
-(require '.helm-posframe)
-;;(require '.helm-google)
-(require '.helm-chrome)
 
+;; 
 (require '.magit)
 (require '.wl)
 (require '.sdic)
