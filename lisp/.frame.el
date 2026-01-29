@@ -1,5 +1,11 @@
 (use-package frame
   :if window-system
+
+  :init
+  ;; refer https://github.com/YaLTeR/niri/issues/2632#issuecomment-3586826278
+  (setopt frame-inhibit-implied-resize t)
+  (setopt frame-resize-pixelwise t)
+
   :custom
   (default-frame-alist
    '(
@@ -9,10 +15,10 @@
      ;;(border-color . "black")
      ;;(mouse-color  . "white")
      ;;(cursor-color . "black")
-     (width . 120) ; column, unit is NOT pixel, get pixel (frame-pixel-width)
-     (height . 47) ; row, unit is NOT pixel,get pixel (frame-pixel-height)
-     (top . 8)
-     (left . 339) ; Fix on for Windows (workarea width - frame-pixel-width) / 2
+     ;;(width . 120) ; column, unit is NOT pixel, get pixel (frame-pixel-width)
+     ;;(height . 47) ; row, unit is NOT pixel,get pixel (frame-pixel-height)
+     ;; (top . 8)
+     ;; (left . 339) ; Fix on for Windows (workarea width - frame-pixel-width) / 2
      (alpha . 100)
      ;; font
      ;;(font . "Myrica M-10") ; set by :config section
