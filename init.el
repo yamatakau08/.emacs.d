@@ -140,6 +140,7 @@
 (require '.dired)
 (require '.dired-aux)
 (require '.dired-x) ; only disable key assign
+(require '.wdired)
 (require '.thingatpt)
 (require '.ffap)
 (require '.windmove)
@@ -180,7 +181,7 @@
 ;; helm
 (require '.helm)
 
-;; 
+;;
 (require '.magit)
 (require '.wl)
 (require '.sdic)
