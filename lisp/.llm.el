@@ -1,6 +1,5 @@
-(use-package llm ; shoud be llm, not llm-refactoring
+(use-package llm
   :ensure t
-  :vc (:url "https://github.com/ahyatt/llm")
 
   :init
   (require 'llm-gemini))
