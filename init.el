@@ -244,6 +244,7 @@
 
 (require '.plantuml-mode)
 
+(require '.llm)
 (require '.ellama)
 
 (require '.puni)
@@ -307,4 +308,3 @@
 (require '.my-modus-themes)
 
 (provide 'init)
-;;; init.el ends here
