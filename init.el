@@ -165,6 +165,7 @@
 (require '.bookmark+)
 (require '.pixel-scroll)
 (require '.ediff)
+;;(require '.epg)
 
 ;;
 ;; package
