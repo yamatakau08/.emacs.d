@@ -15,14 +15,14 @@
   (setopt ellama-providers
 	  '(;; "gemini-3-pro-preview" ; not available in the free tier
 	    ("gemini-3-flash-preview" . (make-llm-gemini
-					 :key (auth-source-pick-first-password :user "gen-lang-client-0425588602")
+					 :key (auth-source-pick-first-password :host "gemini" :user "gen-lang-client-0425588602")
 					 :chat-model "gemini-3-flash-preview"))
 	    ;; "gemini-2.5-pro" ; not available in the free tier
 	    ("gemini-2.5-flash" . (make-llm-gemini
-				   :key (auth-source-pick-first-password :user "gen-lang-client-0425588602")
+				   :key (auth-source-pick-first-password :host "gemini" :user "gen-lang-client-0425588602")
 				   :chat-model "gemini-2.5-flash"))
 	    ("gemini-2.5-flash-lite" . (make-llm-gemini
-				   :key (auth-source-pick-first-password :user "gen-lang-client-0425588602")
+				   :key (auth-source-pick-first-password :host "gemini" :user "gen-lang-client-0425588602")
 				   :chat-model "gemini-2.5-flash-lite"))
 	    ))
 
