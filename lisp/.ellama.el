@@ -13,11 +13,10 @@
 	   :chat-model "gemma3:latest" ; gpt-oss-20b is too slow
 	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
   (setopt ellama-providers
-	  '(;; "gemini-3-pro-preview" ; not available in the free tier
-	    ("gemini-3-flash-preview" . (make-llm-gemini
+	  '(("gemini-3-flash-preview" . (make-llm-gemini
 					 :key (auth-source-pick-first-password :host "gemini" :user "gemini-api")
 					 :chat-model "gemini-3-flash-preview"))
-	    ;; "gemini-2.5-pro" ; not available in the free tier
+	    ;; gemini-2.5-pro is not available free tier
 	    ("gemini-2.5-flash" . (make-llm-gemini
 				   :key (auth-source-pick-first-password :host "gemini" :user "gemini-api")
 				   :chat-model "gemini-2.5-flash"))
