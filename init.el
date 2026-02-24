@@ -1,7 +1,7 @@
 ;;; config.el -*- lexical-binding: t; -*-
 
 ;;; for emergency debug
-(setq debug-on-error  nil) ; enable enter debugger if an error is signaled
+(setq debug-on-error  t) ; enable enter debugger if an error is signaled
 (setq debug-on-signal nil) ; requested to set by wl maintainer when email the bug on wanderlust
 (setq debug-on-quit   nil) ; enable interrupt C-g when Emacs is super slow.
 
@@ -250,6 +250,7 @@
 
 (require '.puni)
 (require '.nix-mode)
+(require '.gemini-cli)
 
 ;;
 ;; useful packages are not registerd in elpa ...
@@ -309,3 +310,34 @@
 (require '.my-modus-themes)
 
 (provide 'init)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-archives
+   '(("org" . "https://orgmode.org/elpa/")
+     ("melpa" . "https://melpa.org/packages/")
+     ("gnu" . "https://elpa.gnu.org/packages/")))
+ '(package-check-signature nil)
+ '(package-vc-selected-packages
+   '((gemini-cli :url "https://github.com/linchen2chris/gemini-cli.el")))
+ '(request-curl
+   (cond
+    ((eq system-type 'windows-nt)
+     (let ((curl "c:/winbin/curl-win64-mingw/bin/curl.exe"))
+       (if (executable-find curl) curl "curl")))
+    (t "curl")))
+ '(straight-profiles
+   `
+   ((nil \
+     , (concat user-emacs-directory
+	       (if (eq system-type 'windows-nt)
+		   "lisp/straight-default-windows-nt.el"
+		 "lisp/straight-default.el"))))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
