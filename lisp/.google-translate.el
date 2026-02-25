@@ -31,9 +31,15 @@
 
   (defun my-google-translate ()
     (interactive)
-    (let ((text (if (use-region-p)
-                    (buffer-substring (region-beginning) (region-end))
-                  (thing-at-point 'word t))))
+    (let* ((rawtext (if (use-region-p)
+			(buffer-substring (region-beginning) (region-end))
+                      (thing-at-point 'word t)))
+	   (text (apply #'string (mapcar (lambda (c)
+					   (cond ((char-equal c ?“) ?\")
+						 ((char-equal c ?”) ?\")
+						 ((char-equal c ?‘) ?')
+						 ((char-equal c ?’) ?')
+						 (t c))) rawtext))))
       (cond
        ((and text (string-match "\\cj" text))
 	(google-translate-translate "auto" "en" text))
