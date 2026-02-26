@@ -38,19 +38,68 @@
           (plist-get (gtasks-list-list) :items)))
 
 (defun consult-gtasks--select-list ()
-  "Prompt the user to select a Google Task list. Returns the list ID."
+  "Prompt the user to select a Google Task list.
+Returns a cons cell (TITLE . ID)."
   (let* ((lists (consult-gtasks--get-lists))
          (titles (mapcar #'car lists))
          (chosen (completing-read "Task list: " titles nil t)))
-    (cdr (assoc chosen lists))))
+    (assoc chosen lists)))
+
+(defun consult-gtasks--sort-tasks (tasks)
+  "Re-order TASKS so each subtask immediately follows its parent.
+Within the same parent, tasks are sorted by :position (lexicographic).
+TASKS is a flat list of plists as returned by the Google Tasks API."
+  (let* (;; id -> plist lookup
+         (by-id (let ((tbl (make-hash-table :test #'equal)))
+                  (dolist (task tasks)
+                    (puthash (plist-get task :id) task tbl))
+                  tbl))
+         ;; parent-id -> sorted list of child plists
+         (children (let ((tbl (make-hash-table :test #'equal)))
+                     (dolist (task tasks)
+                       (let ((parent (plist-get task :parent)))
+                         (when parent
+                           (puthash parent
+                                    (cons task (gethash parent tbl))
+                                    tbl))))
+                     ;; sort each child list by :position
+                     (maphash (lambda (k v)
+                                (puthash k
+                                         (sort v (lambda (a b)
+                                                   (string< (or (plist-get a :position) "")
+                                                            (or (plist-get b :position) ""))))
+                                         tbl))
+                              tbl)
+                     tbl))
+         ;; top-level tasks sorted by :position
+         (roots (sort (seq-filter (lambda (t) (not (plist-get t :parent))) tasks)
+                      (lambda (a b)
+                        (string< (or (plist-get a :position) "")
+                                 (or (plist-get b :position) "")))))
+         (result '()))
+    ;; depth-first walk: root -> its children -> their children ...
+    (cl-labels ((walk (task)
+                  (push task result)
+                  (dolist (child (gethash (plist-get task :id) children))
+                    (walk child))))
+      (dolist (root roots)
+        (walk root)))
+    (nreverse result)))
 
 (defun consult-gtasks--get-tasks (list-id)
-  "Return a list of task plists for LIST-ID, filtering out completed tasks."
-  (let ((items (plist-get (gtasks-task-list list-id) :items)))
-    ;; needsAction = incomplete, completed = done
-    (seq-filter (lambda (task)
-                  (not (equal (plist-get task :status) "completed")))
-                (or items '()))))
+  "Return a list of task plists for LIST-ID, including completed tasks,
+sorted so subtasks follow their parent."
+  (let* ((items (plist-get (gtasks-task-list list-id
+                                        t   ; show-completed
+                                        t   ; show-deleted
+                                        t)  ; show-hidden
+                              :items))
+         (valid (seq-filter
+                 (lambda (task)
+                   (let ((title (plist-get task :title)))
+                     (and (stringp title) (not (string-empty-p title)))))
+                 (or items '()))))
+    (consult-gtasks--sort-tasks valid)))
 
 (defun consult-gtasks--task-annotation (task)
   "Return an annotation string for TASK plist."
@@ -64,13 +113,20 @@
 
 (defun consult-gtasks--tasks-to-candidates (tasks)
   "Convert TASKS plists into consult candidate strings with text properties.
-Each candidate string shows the task :title.  Subtasks (those with a
-non-nil :parent field) are prefixed with \"↳ \" so they are visually
-distinguishable even though they appear at the same level as top-level tasks."
+Each candidate is prefixed with a status marker:
+  ' ' = needsAction (incomplete)
+  'C' = completed
+  'D' = deleted
+Subtasks are additionally prefixed with \"↳ \"."
   (mapcar (lambda (task)
-            (let* ((title  (or (plist-get task :title) "(no title)"))
-                   (prefix (if (plist-get task :parent) "↳ " ""))
-                   (cand   (concat prefix title)))
+            (let* ((status (plist-get task :status))
+                   (deleted (plist-get task :deleted))
+                   (marker (cond (deleted                          "D ")
+                                 ((equal status "completed")       "C ")
+                                 (t                                "  ")))
+                   (title  (or (plist-get task :title) "(no title)"))
+                   (indent (if (plist-get task :parent) "↳ " ""))
+                   (cand   (concat marker indent title)))
               (propertize cand 'consult-gtasks-task task)))
           tasks))
 
@@ -93,9 +149,14 @@ v/c/d/q actions as `consult-gtasks-tasks'."
                            (list-id    (cdr list-pair))
                            (tasks      (consult-gtasks--get-tasks list-id)))
                       (mapcar (lambda (task)
-                                (let* ((title  (or (plist-get task :title) "(no title)"))
-                                       (prefix (if (plist-get task :parent) "↳ " ""))
-                                       (cand   (format "[%s] %s%s" list-title prefix title)))
+                                (let* ((status  (plist-get task :status))
+                                       (deleted (plist-get task :deleted))
+                                       (marker  (cond (deleted                    "D ")
+                                                      ((equal status "completed") "C ")
+                                                      (t                          "  ")))
+                                       (title  (or (plist-get task :title) "(no title)"))
+                                       (indent (if (plist-get task :parent) "↳ " ""))
+                                       (cand   (format "[%s] %s%s%s" list-title marker indent title)))
                                   (propertize cand
                                               'consult-gtasks-task    task
                                               'consult-gtasks-list-id list-id)))
@@ -129,7 +190,11 @@ Keybindings in the minibuffer:
   M-d   - Delete the selected task
   M-c   - Mark the selected task as completed"
   (interactive)
-  (let* ((list-id (or list-id (consult-gtasks--select-list)))
+  (let* ((list-pair (if list-id
+                        (cons nil list-id)
+                      (consult-gtasks--select-list)))
+         (list-name (or (car list-pair) ""))
+         (list-id   (cdr list-pair))
          (tasks   (consult-gtasks--get-tasks list-id))
          (cands   (consult-gtasks--tasks-to-candidates tasks)))
     (if (null cands)
@@ -137,7 +202,7 @@ Keybindings in the minibuffer:
       (let ((chosen
              (consult--read
               cands
-              :prompt "Task: "
+              :prompt (format "%s Task: " list-name)
               :category 'consult-gtasks-task
               :sort nil
               :require-match t
@@ -208,7 +273,7 @@ If LIST-ID is non-nil, skip the list selection prompt."
          (let ((d (read-string "Due date YYYY-MM-DD (optional): ")))
            (unless (string-empty-p d)
              (concat d "T00:00:00.000Z")))))
-  (let* ((list-id (or list-id (consult-gtasks--select-list)))
+  (let* ((list-id (or list-id (cdr (consult-gtasks--select-list))))
          (payload (list :title title)))
     (when notes (setq payload (plist-put payload :notes notes)))
     (when due   (setq payload (plist-put payload :due due)))
@@ -221,7 +286,7 @@ If LIST-ID is non-nil, skip the list selection prompt."
 (defun consult-gtasks-complete (list-id)
   "Select and mark a task as completed in LIST-ID (prompts if nil)."
   (interactive (list nil))
-  (let* ((list-id (or list-id (consult-gtasks--select-list)))
+  (let* ((list-id (or list-id (cdr (consult-gtasks--select-list))))
          (tasks   (consult-gtasks--get-tasks list-id))
          (cands   (consult-gtasks--tasks-to-candidates tasks))
          (chosen  (consult--read cands
@@ -246,7 +311,7 @@ If LIST-ID is non-nil, skip the list selection prompt."
 (defun consult-gtasks-delete (list-id)
   "Select and delete a task in LIST-ID (prompts if nil)."
   (interactive (list nil))
-  (let* ((list-id (or list-id (consult-gtasks--select-list)))
+  (let* ((list-id (or list-id (cdr (consult-gtasks--select-list))))
          (tasks   (consult-gtasks--get-tasks list-id))
          (cands   (consult-gtasks--tasks-to-candidates tasks))
          (chosen  (consult--read cands
