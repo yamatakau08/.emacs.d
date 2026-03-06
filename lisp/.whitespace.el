@@ -2,14 +2,16 @@
   :config
   (global-whitespace-mode t) ; should be in :config, in :init doesn't effect.
 
-  ;;(delq 'lines whitespace-style)      ; delete lines check over 80 column set by whitespace-line-column
-  ;;(delq 'spaces whitespace-style)     ; not to highlite SPACEs and HARD SPACEs are visualized via faces.
-  ;;(delq 'space-mark whitespace-style) ; not to display "table.SPACEs" and HARD SPACEs are visualized via faces.
-  ;;(delq 'newline-mark whitespace-style) ; NEWLINEs are visualized via display table.
+  ;; whitespace-style
+  ;; 'lines        ; delete lines check over 80 column set by whitespace-line-column
+  ;; 'spaces       ; not to highlite SPACEs and HARD SPACEs are visualized via faces.
+  ;; 'space-mark   ; not to display "table.SPACEs" and HARD SPACEs are visualized via faces.
+  ;; 'newline-mark ; NEWLINEs are visualized via display table.
+  ;; 'indentation  ; visualize `tab-width' or more SPACEs at beginning of line, if `indent-tabs-mode' (which see) is non-nil
 
-  (dolist (val '(lines spaces space-mark newline-mark))
-    (delq val whitespace-style)))
+  (setq whitespace-style
+        (seq-difference whitespace-style
+                        '(lines spaces space-mark newline-mark indentation)))
+  )
 
 (provide '.whitespace)
-
-
