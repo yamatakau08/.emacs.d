@@ -3,9 +3,8 @@
 
   :custom
   (howm-directory
-   (if (file-directory-p "~/gdrive/howm")
-       "~/gdrive/howm"
-       "~/howm/"))
+   (seq-some (lambda (dir) (if (file-directory-p dir) dir))
+          '("~/gdrive/howm" "~/gdrive/Obsidian" "~/howm")))
 
 )
 
