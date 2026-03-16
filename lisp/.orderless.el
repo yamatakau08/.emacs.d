@@ -17,11 +17,12 @@
 
   (completion-category-overrides '((file (styles basic partial-completion))))
 
-  ;; add condition "(if (executable-find "cmigemo") ...", orderless-migemo affect orderless work.
-  (orderless-matching-styles (if (executable-find "cmigemo")
+  ;; Enable orderless-migemo only if both the migemo package and cmigemo binary are available
+  (orderless-matching-styles (if (and (featurep 'migemo)
+				      (executable-find "cmigemo"))
 				 '(orderless-literal orderless-regexp orderless-migemo)
-			       '(orderless-literal orderless-regexp)
-			       ))
+			       '(orderless-literal orderless-regexp)))
+
   ;; https://github.com/oantolin/orderless#component-separator-regexp
   (orderless-component-separator #'orderless-escapable-split-on-space) ; escpae space
 
