@@ -1,6 +1,26 @@
 (use-package ellama
   :ensure t
 
+  :custom
+  (ellama-generate-commit-message-template "<INSTRUCTIONS>
+You are a professional software developer.
+
+Write a concise commit message based on a diff in the following format:
+<FORMAT>
+The first line should contain a short title describing major changes in functionality.
+</FORMAT>
+<EXAMPLE>
+Improve abc
+</EXAMPLE>
+
+**Reply with the commit message only, and without any quotes.**
+</INSTRUCTIONS>
+
+<DIFF>
+%s
+</DIFF>"
+   "Prompt template for `ellama-generate-commit-message'.")
+
   :init
   ;; setup key bindings
   ;;(setopt ellama-keymap-prefix "C-c e")
