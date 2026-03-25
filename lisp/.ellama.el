@@ -52,6 +52,22 @@ Improve abc
                 (let ((auto-insert nil))
                   (apply orig-fun args))))
 
+  (defun my-ellama-write ()
+    "Rewrite text and insert the result one line below."
+    (interactive)
+    (ellama-context-reset)
+    (when (region-active-p)
+      (ellama-context-add-selection))
+    (ellama-stream (format ellama-write-prompt-template "校正して")
+		   :point (save-excursion
+			    (when (= (forward-line 1) 1)
+			      (goto-char (point-max))
+			      (insert "\n"))
+			    (insert "\n")
+			    (line-beginning-position))
+		   :filter (when (derived-mode-p 'org-mode)
+			     #'ellama--translate-markdown-to-org-filter)))
+
   (defun my-ellama-generate-commit-message ()
     "Show the commit message genereated by ellama-generate-commit-message in the buffer *ellama-commit-message*"
     (interactive)
