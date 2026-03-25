@@ -171,6 +171,7 @@
 ;; package
 ;;
 (require '.ddskk)
+;;(require '.nskk)
 (require '.howm)
 (require '.request)  ; curl for anki/jira/confluence
 (require '.google-translate)
@@ -252,6 +253,7 @@
 (require '.nix-mode)
 (require '.gemini-cli)
 (require '.gtasks)
+(require '.kuro)
 
 ;;
 ;; useful packages are not registerd in elpa ...
