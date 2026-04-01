@@ -170,8 +170,8 @@
 ;;
 ;; package
 ;;
-(require '.ddskk)
-;;(require '.nskk)
+;; (require '.ddskk)
+(require '.nskk)
 (require '.howm)
 (require '.request)  ; curl for anki/jira/confluence
 (require '.google-translate)
