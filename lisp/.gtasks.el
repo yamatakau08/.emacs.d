@@ -1,4 +1,5 @@
 (use-package gtasks
+  :unless (eq window-system 'w32)
   :ensure t
 
   :config

@@ -1,4 +1,5 @@
 (use-package llm
+  :unless (eq window-system 'w32)
   :ensure t
 
   :init

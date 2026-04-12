@@ -3,7 +3,7 @@
 
   :init
   ;; refer https://github.com/YaLTeR/niri/issues/2632#issuecomment-3586826278
-  (unless (eq system-type 'darwin) ; on Mac , if enabl this option, Emacs logo in `*GNU Emacs*` buffer doesn't appear
+  (unless (memq system-type '(darwin windows-nt)) ; on both Mac and Windows , if enabl this option, Emacs logo in `*GNU Emacs*` buffer doesn't appear
     (setopt frame-inhibit-implied-resize t))
   (setopt frame-resize-pixelwise t)
 

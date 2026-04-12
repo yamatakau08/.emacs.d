@@ -1,4 +1,5 @@
 (use-package nskk
+  :unless (eq window-system 'w32)
   :vc (:url "https://github.com/takeokunn/nskk.el" :rev :newest)
 
   :init
