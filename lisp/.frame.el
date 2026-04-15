@@ -35,21 +35,22 @@
   (let ((font (face-attribute 'default :family)))
     (add-to-list 'default-frame-alist `(font . ,(concat font "-20"))))
 
-  ;; font setting on Myrica https://myrica.estable.jp/
+  ;; font setting
   (catch 'font-added
     (dolist (font '("NOTONOTO HS" "NOTONOTO" "Myrica M" "MyricaM M"))
-      (if (member font (font-family-list))
-	  (progn
-	    (cond ((eq system-type 'darwin)
-		   (add-to-list 'default-frame-alist `(font . ,(concat font "-24"))) ; LG ULTRAFINE monitor 5120x2160
-		   )
-		  ((eq system-type 'windows-nt)
-		   (if (equal (system-name) "JPC20545731")
-		       (add-to-list 'default-frame-alist `(font . ,(concat font "-14")))
-		     (add-to-list 'default-frame-alist `(font . ,(concat font "-10")))))
-		  (t
-		   (add-to-list 'default-frame-alist `(font . ,(concat font "-14")))))
-	    (throw 'font-added font)))))
+      (when (member font (font-family-list))
+	(cond
+	 ((eq system-type 'darwin)
+          ;; LG ULTRAFINE monitor 5120x2160
+          (add-to-list 'default-frame-alist
+                       `(font . ,(concat font "-24"))))
+	 ((eq system-type 'windows-nt)
+          (add-to-list 'default-frame-alist
+                       `(font . ,(concat font "-18"))))
+	 (t
+          (add-to-list 'default-frame-alist
+                       `(font . ,(concat font "-14")))))
+	(throw 'font-added font))))
 
   ;; alpha
   ;; http://th.nao.ac.jp/MEMBER/zenitani/elisp-j.html#alpha
