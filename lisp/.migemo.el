@@ -1,20 +1,14 @@
 (use-package migemo
   ;; About migemo itself, refer http://0xcc.net/migemo/
+  ;; get `cmigemo` on Windows from https://www.kaoriya.net/software/cmigemo/
+
   :ensure t
 
   :init
   (if (eq system-type 'windows-nt)
-      (add-to-list 'exec-path "~/bin/cmigemo-default-win64")
+      (add-to-list 'exec-path "~/.emacs.d/bin/cmigemo-default-win64")
     (add-to-list 'exec-path "/usr/local/bin")
-    (add-to-list 'exec-path "~/.nix-profile/bin")
-    )
-
-  ;;:if
-  ;; cmigemo
-  ;; on Windows, https://www.kaoriya.net/software/cmigemo/
-  ;; remove the following for loading migemo
-  ;; (unless (executable-find "cmigemo") ; should set cmigemo path in exec-path which is set in init.el
-  ;;   (message "[debug] .migemo.el, Install cmigemo and path in exec-path in init.el"))
+    (add-to-list 'exec-path "~/.nix-profile/bin"))
 
   :custom
   ;; migemo options
@@ -30,25 +24,24 @@
   ;; 	  ))
 
   ;; by setting migemo-directory
-  ;; migemo-dictionary, migemo-user-dictionary, migemo-regex-dictionary are also set
+  ;; migemo-dictionary, migemo-user-dictionary, migemo-regex-dictionary are also set.
   (migemo-directory "~/.emacs.d/conf/migemo/dict/utf-8")
 
-  )
+)
 
 (provide '.migemo)
 
 ;; memo on windows
-;; https://nagayasu-shinya.com/emacs-cmigemo-windows/
-;; の説明にあるような環境変数等を設定しなくても動作する
 ;; http://grugrut.hatenablog.jp/entry/2015/04/emacs-migemo-on-windows の"正しい設定"
 ;; Windows環境の外部コマンドを使うような場合には、絶対パスで記述する方がよいようだ。が、相対パスでも動作する
 
 ;; migemo-command
 ;; 相対パス設定でも動作する
-;; file suffix .exeを指定しなくても動作するが、.exe を付けておく。file-exist-p 等のファイル存在確認時に、.exe がないと nil になってしまうので、合せておく
-;; (setq migemo-command "c:/yama/bin/cmigemo-default-win64/cmigemo.exe")
-;; (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo.exe")
-;; (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo")
+;; file suffix `.exe` を指定しなくても動作するが `.exe` を付けておく方が良い。
+;; file-exist-p 等のファイル存在確認時に、`.exe` がないと nil になってしまうので。
+;; (setq migemo-command "c:/yama/bin/cmigemo-default-win64/cmigemo.exe") => t
+;; (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo.exe") => t
+;; (setq migemo-command "~/bin/cmigemo-default-win64/cmigemo") => nil
 
 ;; migemo-options
 ;; (setq migemo-options '("-q" "--emacs" "-i" "\a"))
