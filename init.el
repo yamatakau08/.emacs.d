@@ -115,12 +115,7 @@
   ;; When login shell is fish shell, shell-file-name is set "/bin/fish".
   ;; Since that makes some packaes xref, my-plantuml... doesn't work," then have an error "No such file or directory, /bin/fish", set shell-file-name explicitly to /bin/bash.
   ;; After that, found dired-do-shell-command "tar zxvf" and eshell also doesn't work with the same reason.
-  (shell-file-name
-   (let ((cygwin-shell-file-name "c:/cygwin64/bin/bash.exe")) ;; should use "c:/...",without ".exe" is also available
-     ;; when set "/bin/bash", it doesn't work well have error "shell-command-on-region: Searching for program: No such file or directory, /bin/bash"
-     (if (eq system-type 'windows-nt)
-	 cygwin-shell-file-name
-       (executable-find "bash"))))
+  (shell-file-name "bash")
   )
 
 (require 'my-global-set-key)
