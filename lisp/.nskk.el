@@ -1,4 +1,6 @@
 (use-package nskk
+  :disabled ; not use nskk
+
   :unless (eq window-system 'w32)
   :vc (:url "https://github.com/takeokunn/nskk.el" :rev :newest)
 
