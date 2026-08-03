@@ -39,6 +39,7 @@
 						 ((char-equal c ?”) ?\")
 						 ((char-equal c ?‘) ?')
 						 ((char-equal c ?’) ?')
+						 ((char-equal c ?‐) ?-)
 						 (t c))) rawtext))))
       (cond
        ((and text (string-match "\\cj" text))
