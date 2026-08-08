@@ -33,11 +33,11 @@
   ;; font setting
   ;; once set the font size on default font
   (let ((font (face-attribute 'default :family)))
-    (add-to-list 'default-frame-alist `(font . ,(concat font "-20"))))
+    (add-to-list 'default-frame-alist `(font . ,(concat font "-12"))))
 
   ;; font setting
   (catch 'font-added
-    (dolist (font '("NOTONOTO HS" "NOTONOTO" "Myrica M" "MyricaM M"))
+    (dolist (font '("HackGen" "NOTONOTO HS" "NOTONOTO" "Myrica M" "MyricaM M"))
       (when (member font (font-family-list))
 	(cond
 	 ((eq system-type 'darwin)
