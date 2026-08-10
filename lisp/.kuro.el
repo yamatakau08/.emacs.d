@@ -1,4 +1,6 @@
 (use-package kuro
+  :disabled
+
   :unless (eq window-system 'w32)
   ;; :vc (:url "https://github.com/takeokunn/kuro/emacs-lisp")
 
