@@ -37,9 +37,9 @@
   ;; supported by emacs-jp slack
   ;; need to (require 'org-temp)
   ;; on Ver. 9.1.9 this cause "Problems while trying to load feature org-tempo"
-  (if (version< "9.1.9" (org-version))
-      (require 'org-tempo)
-    (message "update org to 9.2.X"))
+  ;; (if (version< "9.1.9" (org-version))
+  ;;     (require 'org-tempo)
+  ;;   (message "update org to 9.2.X"))
 
   ;; org day of the week format Japanese to English
   ;; https://w.atwiki.jp/opentfc/pages/116.html "日付を挿入"

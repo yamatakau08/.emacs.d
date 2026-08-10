@@ -16,6 +16,7 @@
 ;	     :frame "border")))
 
 (use-package ox-html
+  :disabled
   :custom
   ;; the same works
   ;; #+attr_html: :frame box in org file
