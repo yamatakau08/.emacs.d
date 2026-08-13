@@ -37,7 +37,7 @@
 
   ;; font setting
   (catch 'font-added
-    (dolist (font '("HackGen" "NOTONOTO HS" "NOTONOTO" "Myrica M" "MyricaM M"))
+    (dolist (font '("HackGen Console" "HackGen" "NOTONOTO HS" "NOTONOTO" "Myrica M" "MyricaM M"))
       (when (member font (font-family-list))
 	(cond
 	 ((eq system-type 'darwin)
