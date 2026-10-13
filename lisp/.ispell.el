@@ -1,14 +1,14 @@
-;; Since this setting in use-package ver. "2.4.5" `:init` section doesn't effect,
-;; `:demand t` and `:init` is also doesn't effect,
-;; DICTPATH environment setting should be outside of use-package.
-;; and DICTPATH path should be the ABSOLUTE path, not relative path.
-;; this derives from launching Emacs from app icon not shell command.
-(setenv "DICPATH" (expand-file-name "~/.emacs.d/myspell"))
-
 (use-package ispell
   :if (executable-find "hunspell")
 
-  )
+  :custom
+  (ispell-dictionary "en_US")
+
+  :config
+  ;; Skip non-ASCII text (e.g. Japanese) during spell checking
+  (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))
+
+)
 
 ;(use-package ispell
 ;  :if (executable-find "hunspell")
