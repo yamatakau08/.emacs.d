@@ -12,6 +12,8 @@
   (skk-large-jisyo "~/.emacs.d/skk-jisyo/SKK-JISYO.L")
   (skk-henkan-strict-okuri-precedence t)
 
+  (skk-auto-insert-paren t)
+
   ;; emacs-jp
   ;; covert candidate will be showin in tooltip, not mini-buffer
   ;; ddskk use the low level x-show-tip instead of tooltip-show
