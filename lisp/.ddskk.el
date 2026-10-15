@@ -14,6 +14,7 @@
 
   (skk-auto-insert-paren t)
 
+
   ;; emacs-jp
   ;; covert candidate will be showin in tooltip, not mini-buffer
   ;; ddskk use the low level x-show-tip instead of tooltip-show
@@ -30,6 +31,11 @@
   ;; dynamic completion
   (skk-dcomp-do-completion t)
   (skk-dcomp-multiple-activate t)
+
+  :config
+  (set-char-table-range char-width-table ?▽ 1)
+  (set-char-table-range char-width-table ?▼ 1)
+
   )
 
 (provide '.ddskk)
