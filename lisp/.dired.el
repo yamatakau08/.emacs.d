@@ -28,7 +28,7 @@
 	("C-j"      . my-dired-find-file)
 	("<return>" . my-dired-find-file)
 	("N"        . my-dired-ffmpeg-comp)
-	("C-@"      . my-dired-uncompress)
+	; ("C-@"      . my-dired-uncompress)
 	("r" . wdired-change-to-wdired-mode)
 	)
 
